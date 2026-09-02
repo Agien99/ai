@@ -22,6 +22,28 @@ class RouletteStatistics:
 
         return frequency
 
+    def get_recent_frequency(self, window: int) -> dict[int, int]:
+        """
+        Return number frequency for the most recent spins.
+
+        If the requested window is larger than the available history,
+        the entire available history is used.
+        """
+        if not isinstance(window, int) or window <= 0:
+            raise ValueError("Window must be a positive integer.")
+
+        recent_spins = self.spins[-window:]
+
+        frequency = {
+            number: 0
+            for number in range(37)
+        }
+
+        for number in recent_spins:
+            frequency[number] += 1
+
+        return frequency
+
     def __repr__(self):
         return (
             f"RouletteStatistics("

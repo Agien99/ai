@@ -291,14 +291,41 @@ Persist roulette sessions and model performance.
 
 Possible database entities:
 
-```text
-sessions
-spins
-prediction_runs
-prediction_items
-model_versions
-model_metrics
-```
+Step 1 - Define Persistence Requirements
+Step 2 - Finalize Database Entity Responsibilities
+Step 3 - Design sessions Table
+Step 4 - Design spins Table
+Step 5 - Design prediction_runs Table
+Step 6 - Design prediction_items Table
+Step 7 - Design model_versions Table
+Step 8 - Design model_metrics Table
+Step 9 - Define Table Relationships and Foreign Keys
+Step 10 - Define Status Fields and Constraints
+Step 11 - Define Timestamps and Audit Fields
+Step 12 - Define Supabase Schema and Naming Convention
+Step 13 - Create Tables in Supabase
+Step 14 - Configure Primary Keys and UUID Strategy
+Step 15 - Configure Indexes for Common Queries
+Step 16 - Configure Row Level Security Policies
+Step 17 - Create Python Supabase Configuration
+Step 18 - Create Supabase Database Service Module
+Step 19 - Implement Session Persistence
+Step 20 - Implement Spin Persistence
+Step 21 - Implement Prediction Run Persistence
+Step 22 - Implement Prediction Item Persistence
+Step 23 - Implement Model Version Persistence
+Step 24 - Implement Model Metrics Persistence
+Step 25 - Load Existing Session Data from Supabase
+Step 26 - Reconstruct Roulette Sessions from Stored Spins
+Step 27 - Store Evaluation Results after Each Spin
+Step 28 - Connect ML Training Data to Historical Supabase Data
+Step 29 - Connect Retraining Flow to Stored Sessions
+Step 30 - Add Database Validation and Error Handling
+Step 31 - Prevent Duplicate Records
+Step 32 - Add Supabase Integration Tests
+Step 33 - Test Full Session → Prediction → Evaluation → Database Flow
+Step 34 - Verify Historical Data Can Be Used for ML Benchmarking
+Step 35 - Final Phase 8 Integration Test
 
 The database schema will be finalized only after the local Python system is understood properly.
 

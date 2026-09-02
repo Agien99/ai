@@ -624,7 +624,7 @@ def test_evaluate_complete_prediction_set():
     assert record.actual_number == 17
 
     assert record.dozen_hit is True
-    assert record.column_hit is False
+    assert record.column_hit is True
     assert record.street_hit is False
     assert record.split_hit is True
     assert record.corner_hit is True

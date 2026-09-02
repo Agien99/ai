@@ -57,3 +57,19 @@ class RouletteSession:
             f"spin_count={len(self.spins)}"
             f")"
         )
+
+def get_spin_sequence(self) -> list[tuple[int, int]]:
+    """
+    Return all spins together with their sequence number.
+
+    Example:
+        [
+            (1, 12),
+            (2, 7),
+            (3, 31),
+        ]
+    """
+    return [
+        (index, number)
+        for index, number in enumerate(self.spins, start=1)
+    ]

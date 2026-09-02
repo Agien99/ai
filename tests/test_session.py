@@ -120,3 +120,29 @@ def test_cannot_add_invalid_spin():
         assert False
     except ValueError as error:
         assert str(error) == "Invalid roulette number: 40"
+
+def test_spin_sequence_order():
+    session = RouletteSession()
+
+    initial_spins = [
+        12, 7, 31, 4, 18,
+        22, 9, 14, 0, 27,
+    ]
+
+    session.start(initial_spins)
+
+    session.add_spin(17)
+    session.add_spin(5)
+    session.add_spin(29)
+
+    sequence = session.get_spin_sequence()
+
+    assert sequence[0] == (1, 12)
+    assert sequence[1] == (2, 7)
+    assert sequence[9] == (10, 27)
+
+    assert sequence[10] == (11, 17)
+    assert sequence[11] == (12, 5)
+    assert sequence[12] == (13, 29)
+
+    assert len(sequence) == 13

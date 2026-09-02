@@ -679,3 +679,185 @@ def test_prediction_engine_handles_zero():
     assert len(
         output["predictions"]["streets"]
     ) == 6
+
+def test_full_prediction_engine():
+    spins = [
+        12, 7, 31, 4, 18,
+        22, 7, 14, 0, 27,
+        7, 12, 5, 8, 19,
+    ]
+
+    engine = PredictionEngine(spins)
+
+    output = engine.build_prediction_output(
+        recent_window=10
+    )
+
+    assert output["version"] == "v1"
+    assert output["spin_count"] == 15
+    assert output["recent_window"] == 10
+
+    predictions = output["predictions"]
+
+    assert len(predictions["dozens"]) == 2
+    assert len(predictions["columns"]) == 2
+    assert len(predictions["corners"]) == 5
+    assert len(predictions["splits"]) == 12
+    assert len(predictions["streets"]) == 6
+
+def test_all_predictions_have_scores():
+    spins = [
+        1, 2, 3, 4, 5,
+        6, 7, 8, 9, 10,
+        11, 12, 13, 14, 15,
+    ]
+
+    engine = PredictionEngine(spins)
+
+    predictions = engine.generate_predictions()
+
+    for category in predictions.values():
+        for prediction in category:
+            assert "prediction_score" in prediction
+
+            assert isinstance(
+                prediction["prediction_score"],
+                float,
+            )
+
+def test_all_prediction_categories_are_ranked():
+    spins = [
+        1, 2, 3, 1, 2,
+        4, 5, 6, 7, 8,
+        1, 2, 3, 10, 11,
+    ]
+
+    engine = PredictionEngine(spins)
+
+    predictions = engine.generate_predictions(
+        recent_window=10
+    )
+
+    for category in predictions.values():
+        for index in range(len(category) - 1):
+            assert (
+                category[index]["prediction_score"]
+                >=
+                category[index + 1]["prediction_score"]
+            )
+
+def test_generated_predictions_have_no_duplicates():
+    spins = [
+        1, 4, 7, 10,
+        2, 5, 8,
+        3, 6, 9,
+        12, 15, 18,
+        21, 24,
+    ]
+
+    engine = PredictionEngine(spins)
+
+    predictions = engine.generate_predictions()
+
+    dozens = [
+        item["dozen"]
+        for item in predictions["dozens"]
+    ]
+
+    columns = [
+        item["column"]
+        for item in predictions["columns"]
+    ]
+
+    corners = [
+        item["corner"]
+        for item in predictions["corners"]
+    ]
+
+    splits = [
+        item["split"]
+        for item in predictions["splits"]
+    ]
+
+    streets = [
+        item["street"]
+        for item in predictions["streets"]
+    ]
+
+    assert len(dozens) == len(set(dozens))
+    assert len(columns) == len(set(columns))
+    assert len(corners) == len(set(corners))
+    assert len(splits) == len(set(splits))
+    assert len(streets) == len(set(streets))
+
+def test_predictions_are_deterministic():
+    spins = [
+        12, 7, 31, 4, 18,
+        22, 7, 14, 0, 27,
+        7, 12, 5, 8, 19,
+    ]
+
+    engine_one = PredictionEngine(spins)
+    engine_two = PredictionEngine(spins)
+
+    predictions_one = (
+        engine_one.generate_predictions(
+            recent_window=10
+        )
+    )
+
+    predictions_two = (
+        engine_two.generate_predictions(
+            recent_window=10
+        )
+    )
+
+    assert predictions_one == predictions_two
+
+def test_full_prediction_engine_empty_history():
+    engine = PredictionEngine([])
+
+    output = engine.build_prediction_output()
+
+    assert output["spin_count"] == 0
+
+    predictions = output["predictions"]
+
+    assert len(predictions["dozens"]) == 2
+    assert len(predictions["columns"]) == 2
+    assert len(predictions["corners"]) == 5
+    assert len(predictions["splits"]) == 12
+    assert len(predictions["streets"]) == 6
+
+    for category in predictions.values():
+        for prediction in category:
+            assert prediction["prediction_score"] == 0.0
+
+def test_prediction_engine_single_spin():
+    engine = PredictionEngine([7])
+
+    output = engine.build_prediction_output(
+        recent_window=10
+    )
+
+    assert output["spin_count"] == 1
+
+    assert len(
+        output["predictions"]["dozens"]
+    ) == 2
+
+    assert len(
+        output["predictions"]["columns"]
+    ) == 2
+
+    assert len(
+        output["predictions"]["corners"]
+    ) == 5
+
+    assert len(
+        output["predictions"]["splits"]
+    ) == 12
+
+    assert len(
+        output["predictions"]["streets"]
+    ) == 6

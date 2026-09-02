@@ -558,6 +558,68 @@ class PredictionEngine:
 
         return ranked[:limit]
 
+    def generate_predictions(
+        self,
+        recent_window: int = 10,
+    ) -> dict:
+        """
+        Generate the final V1 prediction set.
+
+        Returns:
+            2 dozens
+            2 columns
+            5 corners
+            12 splits
+            6 streets
+        """
+        dozens = self.score_dozens(
+            recent_window=recent_window
+        )
+
+        columns = self.score_columns(
+            recent_window=recent_window
+        )
+
+        streets = self.score_streets(
+            recent_window=recent_window
+        )
+
+        splits = self.score_splits(
+            recent_window=recent_window
+        )
+
+        corners = self.score_corners(
+            recent_window=recent_window
+        )
+
+        return {
+            "dozens": self.rank_predictions(
+                dozens,
+                key_name="dozen",
+                limit=2,
+            ),
+            "columns": self.rank_predictions(
+                columns,
+                key_name="column",
+                limit=2,
+            ),
+            "corners": self.rank_predictions(
+                corners,
+                key_name="corner",
+                limit=5,
+            ),
+            "splits": self.rank_predictions(
+                splits,
+                key_name="split",
+                limit=12,
+            ),
+            "streets": self.rank_predictions(
+                streets,
+                key_name="street",
+                limit=6,
+            ),
+        }
+
     def __repr__(self):
         return (
             f"PredictionEngine("

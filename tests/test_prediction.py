@@ -478,3 +478,76 @@ def test_rank_predictions_tie_breaker():
     assert ranked[0]["column"] == 1
     assert ranked[1]["column"] == 2
     assert ranked[2]["column"] == 3
+
+def test_generate_predictions():
+    spins = [
+        1, 2, 5, 7, 12,
+        13, 18, 22, 25, 31,
+        4, 5, 7, 8, 10,
+    ]
+
+    engine = PredictionEngine(spins)
+
+    predictions = engine.generate_predictions(
+        recent_window=10
+    )
+
+    assert len(predictions["dozens"]) == 2
+    assert len(predictions["columns"]) == 2
+    assert len(predictions["corners"]) == 5
+    assert len(predictions["splits"]) == 12
+    assert len(predictions["streets"]) == 6
+
+def test_generate_predictions_structure():
+    spins = [
+        1, 4, 7, 10,
+        2, 5, 8,
+        3, 6, 9,
+        12, 15, 18,
+    ]
+
+    engine = PredictionEngine(spins)
+
+    predictions = engine.generate_predictions()
+
+    assert set(predictions.keys()) == {
+        "dozens",
+        "columns",
+        "corners",
+        "splits",
+        "streets",
+    }
+
+    assert "dozen" in predictions["dozens"][0]
+    assert "column" in predictions["columns"][0]
+    assert "corner" in predictions["corners"][0]
+    assert "split" in predictions["splits"][0]
+    assert "street" in predictions["streets"][0]
+
+    assert "prediction_score" in predictions["dozens"][0]
+    assert "prediction_score" in predictions["columns"][0]
+    assert "prediction_score" in predictions["corners"][0]
+    assert "prediction_score" in predictions["splits"][0]
+    assert "prediction_score" in predictions["streets"][0]
+
+def test_generated_predictions_keep_highest_scores():
+    spins = [
+        1, 2, 3, 1, 2,
+        4, 5,
+        7, 8,
+        1, 2, 3,
+    ]
+
+    engine = PredictionEngine(spins)
+
+    predictions = engine.generate_predictions(
+        recent_window=5
+    )
+
+    streets = predictions["streets"]
+
+    for index in range(len(streets) - 1):
+        assert (
+            streets[index]["prediction_score"]
+            >= streets[index + 1]["prediction_score"]
+        )

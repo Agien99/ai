@@ -82,3 +82,38 @@ def get_column(number: int) -> int | None:
         return 2
 
     return 3
+
+def get_street(number: int) -> tuple[int, int, int] | None:
+    """
+    Return the street containing the given roulette number.
+
+    Example:
+        1 -> (1, 2, 3)
+        5 -> (4, 5, 6)
+        36 -> (34, 35, 36)
+
+    Returns:
+        A tuple of 3 numbers representing the street.
+        None for 0.
+
+    Raises:
+        ValueError if the number is invalid.
+    """
+    if not is_valid_number(number):
+        raise ValueError(f"Invalid roulette number: {number}")
+
+    if number == 0:
+        return None
+
+    start = ((number - 1) // 3) * 3 + 1
+
+    return (start, start + 1, start + 2)
+
+def get_all_streets() -> list[tuple[int, int, int]]:
+    """
+    Return all 12 standard street bets.
+    """
+    return [
+        (start, start + 1, start + 2)
+        for start in range(1, 37, 3)
+    ]

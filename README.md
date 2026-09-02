@@ -258,13 +258,26 @@ Goal:
 
 Introduce actual ML models after sufficient data and evaluation infrastructure exist.
 
-Possible models:
-
-* Logistic Regression
-* Random Forest
-* Gradient Boosting
-* XGBoost
-* Neural Networks later if useful
+Step 1 - Create ML Module Structure
+Step 2 - Define ML Prediction Target
+Step 3 - Build ML Training Dataset
+Step 4 - Feature Engineering
+Step 5 - Create Chronological Training / Testing Split
+Step 6 - Implement Logistic Regression
+Step 7 - Implement Random Forest
+Step 8 - Implement Gradient Boosting
+Step 9 - Implement XGBoost
+Step 10 - Standardize ML Prediction Output
+Step 11 - Convert Number Probabilities to Bet Rankings
+Step 12 - Evaluate ML Predictions
+Step 13 - Compare ML vs V1 vs Baselines
+Step 14 - Add ML Performance Metrics
+Step 15 - Select Best ML Model
+Step 16 - Create Training & Retraining Flow
+Step 17 - Add Model Persistence
+Step 18 - Validation & Edge Cases
+Step 19 - Automated ML Tests
+Step 20 - Final ML Benchmark
 
 The ML model may rank individual roulette numbers or betting combinations.
 

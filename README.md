@@ -203,11 +203,11 @@ Goal:
 
 Measure whether previous predictions hit the next roulette result.
 
-Step 1  Create Evaluation Engine
-Step 2  Define Prediction Evaluation Record
-Step 3  Evaluate Dozen Predictions
-Step 4  Evaluate Column Predictions
-Step 5  Evaluate Street Predictions
+Step 1  Create Evaluation Engine (COMPLETED)
+Step 2  Define Prediction Evaluation Record (COMPLETED)
+Step 3  Evaluate Dozen Predictions (COMPLETED)
+Step 4  Evaluate Column Predictions (COMPLETED)
+Step 5  Evaluate Street Predictions (COMPLETED)
 Step 6  Evaluate Split Predictions
 Step 7  Evaluate Corner Predictions
 Step 8  Evaluate Complete Prediction Set

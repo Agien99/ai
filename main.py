@@ -1,9 +1,14 @@
-from app.roulette import get_dozen
+from app.roulette import get_column
 
 
-print("=== Dozen Test ===")
+print("=== Column Test ===")
 
-test_numbers = [0, 1, 15, 19, 24, 33, 36]
+test_numbers = [
+    0,
+    1, 2, 3,
+    4, 5, 6,
+    34, 35, 36,
+]
 
 for number in test_numbers:
-    print(f"{number} -> Dozen {get_dozen(number)}")
+    print(f"{number} -> Column {get_column(number)}")

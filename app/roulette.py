@@ -53,3 +53,32 @@ def get_dozen(number: int) -> int | None:
         return 2
 
     return 3
+
+def get_column(number: int) -> int | None:
+    """
+    Return the roulette column for a number.
+
+    Returns:
+        1 for Column 1
+        2 for Column 2
+        3 for Column 3
+        None for 0
+
+    Raises:
+        ValueError if the number is not a valid roulette number.
+    """
+    if not is_valid_number(number):
+        raise ValueError(f"Invalid roulette number: {number}")
+
+    if number == 0:
+        return None
+
+    remainder = number % 3
+
+    if remainder == 1:
+        return 1
+
+    if remainder == 2:
+        return 2
+
+    return 3

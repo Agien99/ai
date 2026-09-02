@@ -78,3 +78,16 @@ class RouletteSession:
             "started_at": self.started_at,
             "ended_at": self.ended_at,
         }
+
+    def end(self):
+        """
+        End the current roulette session.
+        """
+        if self.status == "NEW":
+            raise ValueError("Cannot end a session that has not been started.")
+
+        if self.status == "ENDED":
+            raise ValueError("Session has already ended.")
+
+        self.status = "ENDED"
+        self.ended_at = datetime.now()

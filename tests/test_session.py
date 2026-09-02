@@ -172,3 +172,68 @@ def test_session_metadata():
 
     assert metadata["started_at"] == session.started_at
     assert metadata["ended_at"] is None
+
+def test_end_active_session():
+    session = RouletteSession()
+
+    initial_spins = [
+        12, 7, 31, 4, 18,
+        22, 9, 14, 0, 27,
+    ]
+
+    session.start(initial_spins)
+
+    session.end()
+
+    assert session.status == "ENDED"
+    assert session.ended_at is not None
+
+
+def test_cannot_add_spin_after_session_ended():
+    session = RouletteSession()
+
+    initial_spins = [
+        12, 7, 31, 4, 18,
+        22, 9, 14, 0, 27,
+    ]
+
+    session.start(initial_spins)
+    session.end()
+
+    try:
+        session.add_spin(17)
+        assert False
+    except ValueError as error:
+        assert str(error) == (
+            "Cannot add spin to a session that is not active."
+        )
+
+
+def test_cannot_end_new_session():
+    session = RouletteSession()
+
+    try:
+        session.end()
+        assert False
+    except ValueError as error:
+        assert str(error) == (
+            "Cannot end a session that has not been started."
+        )
+
+
+def test_cannot_end_session_twice():
+    session = RouletteSession()
+
+    initial_spins = [
+        12, 7, 31, 4, 18,
+        22, 9, 14, 0, 27,
+    ]
+
+    session.start(initial_spins)
+    session.end()
+
+    try:
+        session.end()
+        assert False
+    except ValueError as error:
+        assert str(error) == "Session has already ended."

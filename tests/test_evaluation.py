@@ -501,3 +501,89 @@ def test_evaluate_splits_updates_record():
     )
 
     assert updated_record.split_hit is True
+
+def test_evaluate_corners_hit():
+    engine = PredictionEvaluationEngine()
+
+    predicted_corners = [
+        {
+            "corner": (1, 2, 4, 5),
+            "prediction_score": 1.0,
+        },
+        {
+            "corner": (13, 14, 16, 17),
+            "prediction_score": 0.8,
+        },
+    ]
+
+    result = engine.evaluate_corners(
+        predicted_corners,
+        actual_number=17,
+    )
+
+    assert result is True
+
+def test_evaluate_corners_miss():
+    engine = PredictionEvaluationEngine()
+
+    predicted_corners = [
+        {
+            "corner": (1, 2, 4, 5),
+            "prediction_score": 1.0,
+        },
+        {
+            "corner": (13, 14, 16, 17),
+            "prediction_score": 0.8,
+        },
+    ]
+
+    result = engine.evaluate_corners(
+        predicted_corners,
+        actual_number=30,
+    )
+
+    assert result is False
+
+def test_evaluate_corners_zero_is_miss():
+    engine = PredictionEvaluationEngine()
+
+    predicted_corners = [
+        {
+            "corner": (1, 2, 4, 5),
+            "prediction_score": 1.0,
+        },
+    ]
+
+    result = engine.evaluate_corners(
+        predicted_corners,
+        actual_number=0,
+    )
+
+    assert result is False
+
+def test_evaluate_corners_updates_record():
+    engine = PredictionEvaluationEngine()
+
+    record = engine.create_evaluation_record(
+        actual_number=5
+    )
+
+    predicted_corners = [
+        {
+            "corner": (1, 2, 4, 5),
+            "prediction_score": 1.0,
+        },
+        {
+            "corner": (2, 3, 5, 6),
+            "prediction_score": 0.9,
+        },
+    ]
+
+    updated_record = (
+        engine.evaluate_corners_for_record(
+            record,
+            predicted_corners,
+        )
+    )
+
+    assert updated_record.corner_hit is True

@@ -225,5 +225,41 @@ class PredictionEvaluationEngine:
 
         return record
 
+    def evaluate_corners(
+        self,
+        predicted_corners: list[dict],
+        actual_number: int,
+    ) -> bool:
+        """
+        Evaluate whether the actual roulette number
+        matches any predicted corner.
+        """
+        self.validate_actual_number(actual_number)
+
+        if actual_number == 0:
+            return False
+
+        return any(
+            actual_number in item["corner"]
+            for item in predicted_corners
+        )
+
+
+    def evaluate_corners_for_record(
+        self,
+        record: PredictionEvaluationRecord,
+        predicted_corners: list[dict],
+    ) -> PredictionEvaluationRecord:
+        """
+        Update an evaluation record with
+        the corner HIT / MISS result.
+        """
+        record.corner_hit = self.evaluate_corners(
+            predicted_corners,
+            record.actual_number,
+        )
+
+        return record
+
     def __repr__(self):
         return "PredictionEvaluationEngine()"

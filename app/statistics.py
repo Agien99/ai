@@ -1,7 +1,9 @@
 from app.roulette import (
+    get_all_splits,
     get_all_streets,
     get_column,
     get_dozen,
+    get_splits_for_number,
     get_street,
 )
 
@@ -177,6 +179,28 @@ class RouletteStatistics:
 
             if street is not None:
                 activity[street] += 1
+
+        return activity
+
+    def get_split_activity(
+        self,
+    ) -> dict[tuple[int, int], int]:
+        """
+        Return activity count for all 57 standard roulette splits.
+
+        A single spin may contribute to multiple split bets.
+        Zero is ignored because standard splits currently cover 1-36 only.
+        """
+        activity = {
+            split: 0
+            for split in get_all_splits()
+        }
+
+        for number in self.spins:
+            splits = get_splits_for_number(number)
+
+            for split in splits:
+                activity[split] += 1
 
         return activity
 

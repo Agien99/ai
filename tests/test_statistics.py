@@ -253,3 +253,38 @@ def test_street_activity_empty_history():
 
     assert len(activity) == 12
     assert all(value == 0 for value in activity.values())
+
+def test_split_activity():
+    spins = [
+        1,
+        2,
+        5,
+        5,
+        36,
+        0,
+    ]
+
+    stats = RouletteStatistics(spins)
+
+    activity = stats.get_split_activity()
+
+    assert activity[(1, 2)] == 2
+    assert activity[(1, 4)] == 1
+
+    assert activity[(4, 5)] == 2
+    assert activity[(5, 6)] == 2
+    assert activity[(2, 5)] == 3
+    assert activity[(5, 8)] == 2
+
+    assert activity[(35, 36)] == 1
+    assert activity[(33, 36)] == 1
+
+    assert len(activity) == 57
+
+def test_split_activity_empty_history():
+    stats = RouletteStatistics([])
+
+    activity = stats.get_split_activity()
+
+    assert len(activity) == 57
+    assert all(value == 0 for value in activity.values())

@@ -208,11 +208,11 @@ Step 2  Define Prediction Evaluation Record (COMPLETED)
 Step 3  Evaluate Dozen Predictions (COMPLETED)
 Step 4  Evaluate Column Predictions (COMPLETED)
 Step 5  Evaluate Street Predictions (COMPLETED)
-Step 6  Evaluate Split Predictions
-Step 7  Evaluate Corner Predictions
-Step 8  Evaluate Complete Prediction Set
-Step 9  Track HIT / MISS Counts
-Step 10 Calculate Hit Rates
+Step 6  Evaluate Split Predictions (COMPLETED)
+Step 7  Evaluate Corner Predictions (COMPLETED)
+Step 8  Evaluate Complete Prediction Set (COMPLETED)
+Step 9  Track HIT / MISS Counts (COMPLETED)
+Step 10 Calculate Hit Rates (COMPLETED)
 Step 11 Session Evaluation Summary
 Step 12 Validation & Edge Cases
 Step 13 Automated Evaluation Tests

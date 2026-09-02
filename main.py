@@ -1,0 +1,1 @@
+print("Roulette AI project started")

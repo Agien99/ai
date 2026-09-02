@@ -146,3 +146,29 @@ def test_spin_sequence_order():
     assert sequence[12] == (13, 29)
 
     assert len(sequence) == 13
+
+def test_session_metadata():
+    session = RouletteSession()
+
+    initial_spins = [
+        12, 7, 31, 4, 18,
+        22, 9, 14, 0, 27,
+    ]
+
+    session.start(initial_spins)
+
+    session.add_spin(17)
+    session.add_spin(5)
+    session.add_spin(29)
+
+    metadata = session.get_metadata()
+
+    assert metadata["session_id"] == session.session_id
+    assert metadata["status"] == "ACTIVE"
+
+    assert metadata["initial_spin_count"] == 10
+    assert metadata["total_spin_count"] == 13
+    assert metadata["new_spin_count"] == 3
+
+    assert metadata["started_at"] == session.started_at
+    assert metadata["ended_at"] is None

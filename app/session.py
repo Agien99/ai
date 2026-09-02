@@ -64,3 +64,17 @@ class RouletteSession:
             f"spin_count={len(self.spins)}"
             f")"
         )
+
+    def get_metadata(self) -> dict:
+        """
+        Return current session state and useful metadata.
+        """
+        return {
+            "session_id": self.session_id,
+            "status": self.status,
+            "initial_spin_count": len(self.initial_spins),
+            "total_spin_count": len(self.spins),
+            "new_spin_count": len(self.spins) - len(self.initial_spins),
+            "started_at": self.started_at,
+            "ended_at": self.ended_at,
+        }

@@ -593,3 +593,89 @@ def test_prediction_output_recent_window():
 
     assert output["recent_window"] == 5
     assert output["spin_count"] == 10
+
+def test_invalid_recent_window_zero():
+    engine = PredictionEngine([
+        1, 2, 3,
+    ])
+
+    try:
+        engine.generate_predictions(
+            recent_window=0
+        )
+        assert False
+    except ValueError as error:
+        assert str(error) == (
+            "Recent window must be greater than zero."
+        )
+
+def test_invalid_recent_window_negative():
+    engine = PredictionEngine([
+        1, 2, 3,
+    ])
+
+    try:
+        engine.generate_predictions(
+            recent_window=-5
+        )
+        assert False
+    except ValueError as error:
+        assert str(error) == (
+            "Recent window must be greater than zero."
+        )
+
+def test_invalid_recent_window_non_integer():
+    engine = PredictionEngine([
+        1, 2, 3,
+    ])
+
+    try:
+        engine.generate_predictions(
+            recent_window="10"
+        )
+        assert False
+    except ValueError as error:
+        assert str(error) == (
+            "Recent window must be an integer."
+        )
+
+def test_recent_window_larger_than_history():
+    spins = [
+        1, 2, 3, 4, 5,
+    ]
+
+    engine = PredictionEngine(spins)
+
+    predictions = engine.generate_predictions(
+        recent_window=20
+    )
+
+    assert len(predictions["dozens"]) == 2
+    assert len(predictions["columns"]) == 2
+    assert len(predictions["corners"]) == 5
+    assert len(predictions["splits"]) == 12
+    assert len(predictions["streets"]) == 6
+
+def test_prediction_engine_handles_zero():
+    spins = [
+        0, 1, 0, 7, 12,
+        0, 18, 25, 31, 36,
+    ]
+
+    engine = PredictionEngine(spins)
+
+    output = engine.build_prediction_output()
+
+    assert output["spin_count"] == 10
+
+    assert len(
+        output["predictions"]["dozens"]
+    ) == 2
+
+    assert len(
+        output["predictions"]["columns"]
+    ) == 2
+
+    assert len(
+        output["predictions"]["streets"]
+    ) == 6

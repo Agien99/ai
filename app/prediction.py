@@ -8,6 +8,7 @@ from app.roulette import (
     get_street,
 )
 
+
 class PredictionEngine:
     """
     Generate ranked roulette bet-group predictions
@@ -26,6 +27,25 @@ class PredictionEngine:
         the prediction engine.
         """
         return self.statistics.get_summary()
+
+    def validate_recent_window(
+        self,
+        recent_window: int,
+    ) -> bool:
+        """
+        Validate the recent-window size used for prediction scoring.
+        """
+        if not isinstance(recent_window, int):
+            raise ValueError(
+                "Recent window must be an integer."
+            )
+
+        if recent_window <= 0:
+            raise ValueError(
+                "Recent window must be greater than zero."
+            )
+
+        return True
 
     def calculate_frequency_score(
         self,
@@ -89,6 +109,36 @@ class PredictionEngine:
             + activity_score
         )
 
+    def rank_predictions(
+        self,
+        predictions: list[dict],
+        key_name: str,
+        limit: int | None = None,
+    ) -> list[dict]:
+        """
+        Rank prediction candidates by prediction score.
+
+        Highest score comes first.
+
+        Ties are resolved deterministically using the
+        candidate key.
+
+        If limit is provided, only the top N predictions
+        are returned.
+        """
+        ranked = sorted(
+            predictions,
+            key=lambda item: (
+                -item["prediction_score"],
+                item[key_name],
+            ),
+        )
+
+        if limit is None:
+            return ranked
+
+        return ranked[:limit]
+
     def score_dozens(
         self,
         recent_window: int = 10,
@@ -99,6 +149,8 @@ class PredictionEngine:
         Returns a ranked list from highest score to lowest.
         Zero is excluded because it does not belong to a dozen.
         """
+        self.validate_recent_window(recent_window)
+
         summary = self.get_statistics_summary()
 
         total_spins = summary["spin_count"]
@@ -167,12 +219,9 @@ class PredictionEngine:
                 "prediction_score": prediction_score,
             })
 
-        return sorted(
+        return self.rank_predictions(
             results,
-            key=lambda item: (
-                -item["prediction_score"],
-                item["dozen"],
-            ),
+            key_name="dozen",
         )
 
     def score_columns(
@@ -185,6 +234,8 @@ class PredictionEngine:
         Returns a ranked list from highest score to lowest.
         Zero is excluded because it does not belong to a column.
         """
+        self.validate_recent_window(recent_window)
+
         summary = self.get_statistics_summary()
 
         total_spins = summary["spin_count"]
@@ -212,8 +263,10 @@ class PredictionEngine:
 
                 if remainder == 1:
                     number_column = 1
+
                 elif remainder == 2:
                     number_column = 2
+
                 else:
                     number_column = 3
 
@@ -256,12 +309,9 @@ class PredictionEngine:
                 "prediction_score": prediction_score,
             })
 
-        return sorted(
+        return self.rank_predictions(
             results,
-            key=lambda item: (
-                -item["prediction_score"],
-                item["column"],
-            ),
+            key_name="column",
         )
 
     def score_streets(
@@ -274,6 +324,8 @@ class PredictionEngine:
         Returns a ranked list from highest score to lowest.
         Zero is ignored because it does not belong to a standard street.
         """
+        self.validate_recent_window(recent_window)
+
         total_spins = len(self.statistics.spins)
 
         full_activity = (
@@ -345,12 +397,9 @@ class PredictionEngine:
                 "prediction_score": prediction_score,
             })
 
-        return sorted(
+        return self.rank_predictions(
             results,
-            key=lambda item: (
-                -item["prediction_score"],
-                item["street"],
-            ),
+            key_name="street",
         )
 
     def score_splits(
@@ -363,6 +412,8 @@ class PredictionEngine:
         A single spin may contribute to multiple split candidates.
         Zero is ignored because standard splits cover 1-36 only.
         """
+        self.validate_recent_window(recent_window)
+
         total_spins = len(self.statistics.spins)
 
         full_activity = (
@@ -434,12 +485,9 @@ class PredictionEngine:
                 "prediction_score": prediction_score,
             })
 
-        return sorted(
+        return self.rank_predictions(
             results,
-            key=lambda item: (
-                -item["prediction_score"],
-                item["split"],
-            ),
+            key_name="split",
         )
 
     def score_corners(
@@ -452,6 +500,8 @@ class PredictionEngine:
         A single spin may contribute to multiple corner candidates.
         Zero is ignored because standard corners cover 1-36 only.
         """
+        self.validate_recent_window(recent_window)
+
         total_spins = len(self.statistics.spins)
 
         full_activity = (
@@ -528,36 +578,6 @@ class PredictionEngine:
             key_name="corner",
         )
 
-    def rank_predictions(
-        self,
-        predictions: list[dict],
-        key_name: str,
-        limit: int | None = None,
-    ) -> list[dict]:
-        """
-        Rank prediction candidates by prediction score.
-
-        Highest score comes first.
-
-        Ties are resolved deterministically using the
-        candidate key.
-
-        If limit is provided, only the top N predictions
-        are returned.
-        """
-        ranked = sorted(
-            predictions,
-            key=lambda item: (
-                -item["prediction_score"],
-                item[key_name],
-            ),
-        )
-
-        if limit is None:
-            return ranked
-
-        return ranked[:limit]
-
     def generate_predictions(
         self,
         recent_window: int = 10,
@@ -572,6 +592,8 @@ class PredictionEngine:
             12 splits
             6 streets
         """
+        self.validate_recent_window(recent_window)
+
         dozens = self.score_dozens(
             recent_window=recent_window
         )
@@ -630,6 +652,8 @@ class PredictionEngine:
         This format is intended to be easy to expose later
         through an API and consume from the frontend.
         """
+        self.validate_recent_window(recent_window)
+
         predictions = self.generate_predictions(
             recent_window=recent_window
         )

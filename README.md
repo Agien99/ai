@@ -238,11 +238,11 @@ Step 2 - Implement Random Baseline (COMPLETED)
 Step 3 - Implement Frequency-Only Baseline (COMPLETED)
 Step 4 - Implement Hot Baseline (COMPLETED)
 Step 5 - Implement Cold Baseline (COMPLETED)
-Step 6 - Standardize Baseline Prediction Output
-Step 7 - Add Strategy Labels
-Step 8 - Evaluate All Strategies on the Same Next Spin
-Step 9 - Track HIT / MISS Counts per Strategy
-Step 10 - Calculate Hit Rates per Strategy
+Step 6 - Standardize Baseline Prediction Output (COMPLETED)
+Step 7 - Add Strategy Labels (COMPLETED)
+Step 8 - Evaluate All Strategies on the Same Next Spin (COMPLETED)
+Step 9 - Track HIT / MISS Counts per Strategy (COMPLETED)
+Step 10 - Calculate Hit Rates per Strategy (COMPLETED)
 Step 11 - Create Baseline Comparison Summary
 Step 12 - Calculate V1 Improvement vs Baselines
 Step 13 - Validation & Edge Cases

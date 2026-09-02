@@ -114,7 +114,7 @@ Planned steps:
 2. Define valid roulette numbers (COMPLETED)
 3. Implement Dozens (COMPLETED)
 4. Implement Columns (COMPLETED)
-5. Implement Streets
+5. Implement Streets (COMPLETED)
 6. Implement Splits
 7. Implement Corners
 8. Add validation

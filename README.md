@@ -115,7 +115,7 @@ Planned steps:
 3. Implement Dozens (COMPLETED)
 4. Implement Columns (COMPLETED)
 5. Implement Streets (COMPLETED)
-6. Implement Splits
+6. Implement Splits (COMPLETED)
 7. Implement Corners
 8. Add validation
 9. Add basic tests

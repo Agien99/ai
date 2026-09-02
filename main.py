@@ -1,27 +1,26 @@
-from app.roulette import (
-    validate_initial_history,
-    validate_spin_history,
-)
+from app.session import RouletteSession
 
 
-print("=== Validation Test ===")
+print("=== Roulette Session Test ===")
 
+session = RouletteSession()
 
-valid_history = [
-    12, 7, 31, 4, 18,
-    22, 9, 14, 0, 27,
-    6, 33,
-]
+print(session)
 
-print("Valid history:")
-print(valid_history)
+print("\nSession ID:")
+print(session.session_id)
 
-print(
-    "Spin history valid:",
-    validate_spin_history(valid_history)
-)
+print("\nStatus:")
+print(session.status)
 
-print(
-    "Initial history valid:",
-    validate_initial_history(valid_history)
-)
+print("\nInitial Spins:")
+print(session.initial_spins)
+
+print("\nAll Spins:")
+print(session.spins)
+
+print("\nStarted At:")
+print(session.started_at)
+
+print("\nEnded At:")
+print(session.ended_at)

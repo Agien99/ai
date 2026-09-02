@@ -12,6 +12,10 @@ from app.roulette import (
     validate_spin_history,
 )
 
+STRATEGY_RANDOM = "random"
+STRATEGY_FREQUENCY = "frequency"
+STRATEGY_HOT = "hot"
+STRATEGY_COLD = "cold"
 
 class RouletteBaselineEngine:
     """
@@ -403,3 +407,92 @@ class RouletteBaselineEngine:
             f"recent_window={self.recent_window}"
             ")"
         )
+
+    def _build_strategy_output(
+        self,
+        strategy: str,
+        predictions: dict,
+    ) -> dict:
+        """
+        Build a standardized baseline output.
+
+        All baseline strategies use the same structure
+        so they can later be evaluated and compared.
+        """
+        return {
+            "strategy": strategy,
+            "spin_count": len(self.spins),
+            "recent_window": self.recent_window,
+            "predictions": predictions,
+        }
+
+    def generate_random_output(
+        self,
+        seed: int | None = None,
+    ) -> dict:
+        """
+        Generate standardized Random baseline output.
+        """
+        predictions = self.generate_random_baseline(
+            seed=seed
+        )
+
+        return self._build_strategy_output(
+            STRATEGY_RANDOM,
+            predictions,
+        )
+
+
+    def generate_frequency_output(self) -> dict:
+        """
+        Generate standardized Frequency baseline output.
+        """
+        predictions = (
+            self.generate_frequency_baseline()
+        )
+
+        return self._build_strategy_output(
+            STRATEGY_FREQUENCY,
+            predictions,
+        )
+
+
+    def generate_hot_output(self) -> dict:
+        """
+        Generate standardized Hot baseline output.
+        """
+        predictions = self.generate_hot_baseline()
+
+        return self._build_strategy_output(
+            STRATEGY_HOT,
+            predictions,
+        )
+
+
+    def generate_cold_output(self) -> dict:
+        """
+        Generate standardized Cold baseline output.
+        """
+        predictions = self.generate_cold_baseline()
+
+        return self._build_strategy_output(
+            STRATEGY_COLD,
+            predictions,
+        )
+
+    def generate_all_baselines(
+        self,
+        random_seed: int | None = None,
+    ) -> list[dict]:
+        """
+        Generate all baseline strategies using
+        the same historical spin data.
+        """
+        return [
+            self.generate_random_output(
+                seed=random_seed
+            ),
+            self.generate_frequency_output(),
+            self.generate_hot_output(),
+            self.generate_cold_output(),
+        ]

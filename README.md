@@ -233,11 +233,11 @@ Goal:
 
 Determine whether the prediction engine performs differently from simple strategies.
 
-Step 1 - Create Baseline Engine
-Step 2 - Implement Random Baseline
-Step 3 - Implement Frequency-Only Baseline
-Step 4 - Implement Hot Baseline
-Step 5 - Implement Cold Baseline
+Step 1 - Create Baseline Engine (COMPLETED)
+Step 2 - Implement Random Baseline (COMPLETED)
+Step 3 - Implement Frequency-Only Baseline (COMPLETED)
+Step 4 - Implement Hot Baseline (COMPLETED)
+Step 5 - Implement Cold Baseline (COMPLETED)
 Step 6 - Standardize Baseline Prediction Output
 Step 7 - Add Strategy Labels
 Step 8 - Evaluate All Strategies on the Same Next Spin

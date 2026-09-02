@@ -290,3 +290,52 @@ def test_cold_baseline_frequency_is_lowest_first():
     ]
 
     assert frequencies == sorted(frequencies)
+
+def test_standardized_random_output():
+    engine = RouletteBaselineEngine(
+        TEST_SPINS
+    )
+
+    output = engine.generate_random_output(
+        seed=42
+    )
+
+    assert output["strategy"] == "random"
+    assert output["spin_count"] == len(
+        TEST_SPINS
+    )
+    assert output["recent_window"] == 10
+
+    assert "predictions" in output
+
+    predictions = output["predictions"]
+
+    assert len(predictions["dozens"]) == 2
+    assert len(predictions["columns"]) == 2
+    assert len(predictions["streets"]) == 6
+    assert len(predictions["splits"]) == 12
+    assert len(predictions["corners"]) == 5
+
+
+def test_generate_all_baselines():
+    engine = RouletteBaselineEngine(
+        TEST_SPINS
+    )
+
+    outputs = engine.generate_all_baselines(
+        random_seed=42
+    )
+
+    assert len(outputs) == 4
+
+    strategies = [
+        item["strategy"]
+        for item in outputs
+    ]
+
+    assert strategies == [
+        "random",
+        "frequency",
+        "hot",
+        "cold",
+    ]

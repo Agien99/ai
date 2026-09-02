@@ -203,19 +203,19 @@ Goal:
 
 Measure whether previous predictions hit the next roulette result.
 
-Example:
-
-```text
-Prediction generated
-        ↓
-Next spin occurs
-        ↓
-Actual number entered
-        ↓
-Evaluate every predicted bet
-        ↓
-HIT / MISS
-```
+Step 1  Create Evaluation Engine
+Step 2  Define Prediction Evaluation Record
+Step 3  Evaluate Dozen Predictions
+Step 4  Evaluate Column Predictions
+Step 5  Evaluate Street Predictions
+Step 6  Evaluate Split Predictions
+Step 7  Evaluate Corner Predictions
+Step 8  Evaluate Complete Prediction Set
+Step 9  Track HIT / MISS Counts
+Step 10 Calculate Hit Rates
+Step 11 Session Evaluation Summary
+Step 12 Validation & Edge Cases
+Step 13 Automated Evaluation Tests
 
 Performance will be tracked separately for:
 

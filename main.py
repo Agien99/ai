@@ -1,21 +1,9 @@
-from app.roulette import (
-    get_main_grid_numbers,
-    get_table_numbers,
-    is_valid_number,
-)
+from app.roulette import get_dozen
 
 
-print("=== Roulette AI ===")
+print("=== Dozen Test ===")
 
-print("\nAll roulette numbers:")
-print(get_table_numbers())
+test_numbers = [0, 1, 12, 13, 24, 25, 36]
 
-print("\nMain grid:")
-print(get_main_grid_numbers())
-
-print("\nValidation:")
-print("17:", is_valid_number(17))
-print("0:", is_valid_number(0))
-print("36:", is_valid_number(36))
-print("37:", is_valid_number(37))
-print("-1:", is_valid_number(-1))
+for number in test_numbers:
+    print(f"{number} -> Dozen {get_dozen(number)}")

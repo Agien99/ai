@@ -110,7 +110,7 @@ Make Python understand the European Roulette table and its betting structures.
 
 Planned steps:
 
-1. Create Python repository and project structure
+1. Create Python repository and project structure (COMPLETED)
 2. Define valid roulette numbers
 3. Implement Dozens
 4. Implement Columns

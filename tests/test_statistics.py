@@ -438,3 +438,88 @@ def test_empty_statistics_summary():
         "column_3": 0,
         "zero": 0,
     }
+
+def test_full_statistics_engine():
+    spins = [
+        7, 12, 31, 4, 18,
+        22, 7, 14, 0, 27,
+        7, 12, 5, 6, 36,
+    ]
+
+    stats = RouletteStatistics(spins)
+
+    summary = stats.get_summary()
+
+    # Basic session statistics
+    assert summary["spin_count"] == 15
+
+    # Number frequency
+    assert summary["number_frequency"][7] == 3
+    assert summary["number_frequency"][12] == 2
+    assert summary["number_frequency"][0] == 1
+
+    # Recent frequency
+    recent_5 = summary["recent_frequency"]["last_5"]
+
+    # Last 5 spins:
+    # 7, 12, 5, 6, 36
+    assert recent_5[7] == 1
+    assert recent_5[12] == 1
+    assert recent_5[5] == 1
+    assert recent_5[6] == 1
+    assert recent_5[36] == 1
+
+    # Spins since last appearance
+    since_last = summary[
+        "spins_since_last_appearance"
+    ]
+
+    assert since_last[36] == 0
+    assert since_last[6] == 1
+    assert since_last[5] == 2
+    assert since_last[12] == 3
+    assert since_last[7] == 4
+
+    # Hot numbers
+    assert summary["hot_numbers"][0] == (7, 3)
+    assert summary["hot_numbers"][1] == (12, 2)
+
+    # Dozens
+    dozen_frequency = summary["dozen_frequency"]
+
+    assert dozen_frequency["zero"] == 1
+    assert sum(dozen_frequency.values()) == 15
+
+    # Columns
+    column_frequency = summary["column_frequency"]
+
+    assert column_frequency["zero"] == 1
+    assert sum(column_frequency.values()) == 15
+
+    # Streets
+    street_activity = summary["street_activity"]
+
+    assert len(street_activity) == 12
+    assert street_activity[(4, 5, 6)] == 3
+
+    # Splits
+    split_activity = summary["split_activity"]
+
+    assert len(split_activity) == 57
+    assert split_activity[(5, 6)] == 2
+
+    # Corners
+    corner_activity = summary["corner_activity"]
+
+    assert len(corner_activity) == 22
+    assert corner_activity[(4, 5, 7, 8)] == 5
+
+def test_statistics_does_not_modify_original_history():
+    spins = [1, 7, 12, 18]
+
+    stats = RouletteStatistics(spins)
+
+    spins.append(36)
+
+    assert stats.spins == [1, 7, 12, 18]
+    assert stats.get_number_frequency()[36] == 0

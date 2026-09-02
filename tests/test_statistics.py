@@ -163,3 +163,33 @@ def test_hot_and_cold_invalid_limit():
         assert False
     except ValueError as error:
         assert str(error) == "Limit must be a positive integer."
+
+def test_dozen_frequency():
+    spins = [
+        1, 7, 12,
+        13, 18, 24,
+        25, 31, 36,
+        0,
+        5,
+    ]
+
+    stats = RouletteStatistics(spins)
+
+    frequency = stats.get_dozen_frequency()
+
+    assert frequency["dozen_1"] == 4
+    assert frequency["dozen_2"] == 3
+    assert frequency["dozen_3"] == 3
+    assert frequency["zero"] == 1
+
+def test_dozen_frequency_empty_history():
+    stats = RouletteStatistics([])
+
+    frequency = stats.get_dozen_frequency()
+
+    assert frequency == {
+        "dozen_1": 0,
+        "dozen_2": 0,
+        "dozen_3": 0,
+        "zero": 0,
+    }

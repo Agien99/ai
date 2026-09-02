@@ -1,3 +1,5 @@
+from app.roulette import get_dozen
+
 class RouletteStatistics:
     """
     Analyze roulette spin history without modifying the session.
@@ -102,6 +104,30 @@ class RouletteStatistics:
         )
 
         return ranked[:limit]
+
+    def get_dozen_frequency(self) -> dict[str, int]:
+        """
+        Return frequency for each roulette dozen.
+
+        Zero is tracked separately because it does not
+        belong to any dozen.
+        """
+        frequency = {
+            "dozen_1": 0,
+            "dozen_2": 0,
+            "dozen_3": 0,
+            "zero": 0,
+        }
+
+        for number in self.spins:
+            dozen = get_dozen(number)
+
+            if dozen is None:
+                frequency["zero"] += 1
+            else:
+                frequency[f"dozen_{dozen}"] += 1
+
+        return frequency
 
     def __repr__(self):
         return (

@@ -147,28 +147,19 @@ Goal:
 
 Extract useful features from the current roulette session.
 
-Possible statistics include:
-
-* Number frequency
-* Recent frequency
-* Spins since last appearance
-* Hot numbers
-* Cold numbers
-* Dozen frequency
-* Column frequency
-* Street activity
-* Split activity
-* Corner activity
-* Different recent-spin windows
-
-Examples:
-
-```text
-Last 5 spins
-Last 10 spins
-Last 20 spins
-Entire current session
-```
+Step 1  — Create Statistics Engine
+Step 2  — Number Frequency
+Step 3  — Recent-Window Frequency
+Step 4  — Spins Since Last Appearance
+Step 5  — Hot & Cold Numbers
+Step 6  — Dozen Frequency
+Step 7  — Column Frequency
+Step 8  — Street Activity
+Step 9  — Split Activity
+Step 10 — Corner Activity
+Step 11 — Combined Session Statistics
+Step 12 — Validation & Edge Cases
+Step 13 — Automated Statistical Tests
 
 ---
 

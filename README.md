@@ -233,22 +233,20 @@ Goal:
 
 Determine whether the prediction engine performs differently from simple strategies.
 
-Possible baselines:
-
-* Random selection
-* Frequency-only prediction
-* Hot-number prediction
-* Cold-number prediction
-
-Example comparison:
-
-```text
-Prediction Engine V1
-vs
-Random Baseline
-vs
-Frequency Baseline
-```
+Step 1 - Create Baseline Engine
+Step 2 - Implement Random Baseline
+Step 3 - Implement Frequency-Only Baseline
+Step 4 - Implement Hot Baseline
+Step 5 - Implement Cold Baseline
+Step 6 - Standardize Baseline Prediction Output
+Step 7 - Add Strategy Labels
+Step 8 - Evaluate All Strategies on the Same Next Spin
+Step 9 - Track HIT / MISS Counts per Strategy
+Step 10 - Calculate Hit Rates per Strategy
+Step 11 - Create Baseline Comparison Summary
+Step 12 - Calculate V1 Improvement vs Baselines
+Step 13 - Validation & Edge Cases
+Step 14 - Automated Baseline Tests
 
 This is important for determining whether improvements are meaningful or only random variation.
 

@@ -33,7 +33,7 @@ class PredictionEvaluationEngine:
     """
 
     def __init__(self):
-        pass
+        self.evaluation_records = []
 
     def validate_actual_number(
         self,
@@ -299,7 +299,66 @@ class PredictionEvaluationEngine:
             predictions["corners"],
         )
 
+        self.evaluation_records.append(record)
+
         return record
+
+    def get_hit_miss_counts(self) -> dict:
+        """
+        Calculate HIT / MISS counts from all
+        completed prediction evaluations.
+        """
+        counts = {
+            "dozens": {
+                "hits": 0,
+                "misses": 0,
+            },
+            "columns": {
+                "hits": 0,
+                "misses": 0,
+            },
+            "streets": {
+                "hits": 0,
+                "misses": 0,
+            },
+            "splits": {
+                "hits": 0,
+                "misses": 0,
+            },
+            "corners": {
+                "hits": 0,
+                "misses": 0,
+            },
+        }
+
+        for record in self.evaluation_records:
+
+            if record.dozen_hit:
+                counts["dozens"]["hits"] += 1
+            else:
+                counts["dozens"]["misses"] += 1
+
+            if record.column_hit:
+                counts["columns"]["hits"] += 1
+            else:
+                counts["columns"]["misses"] += 1
+
+            if record.street_hit:
+                counts["streets"]["hits"] += 1
+            else:
+                counts["streets"]["misses"] += 1
+
+            if record.split_hit:
+                counts["splits"]["hits"] += 1
+            else:
+                counts["splits"]["misses"] += 1
+
+            if record.corner_hit:
+                counts["corners"]["hits"] += 1
+            else:
+                counts["corners"]["misses"] += 1
+
+        return counts
 
     def __repr__(self):
         return "PredictionEvaluationEngine()"

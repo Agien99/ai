@@ -694,3 +694,132 @@ def test_evaluate_complete_prediction_set_zero():
     assert record.street_hit is False
     assert record.split_hit is False
     assert record.corner_hit is False
+
+def test_hit_miss_counts_initially_zero():
+    engine = PredictionEvaluationEngine()
+
+    counts = engine.get_hit_miss_counts()
+
+    assert counts["dozens"]["hits"] == 0
+    assert counts["dozens"]["misses"] == 0
+
+    assert counts["columns"]["hits"] == 0
+    assert counts["columns"]["misses"] == 0
+
+    assert counts["streets"]["hits"] == 0
+    assert counts["streets"]["misses"] == 0
+
+    assert counts["splits"]["hits"] == 0
+    assert counts["splits"]["misses"] == 0
+
+    assert counts["corners"]["hits"] == 0
+    assert counts["corners"]["misses"] == 0
+
+def test_hit_miss_counts_after_one_evaluation():
+    engine = PredictionEvaluationEngine()
+
+    predictions = {
+        "dozens": [
+            {"dozen": 2, "prediction_score": 1.0},
+        ],
+        "columns": [
+            {"column": 2, "prediction_score": 1.0},
+        ],
+        "streets": [
+            {
+                "street": (13, 14, 15),
+                "prediction_score": 1.0,
+            },
+        ],
+        "splits": [
+            {
+                "split": (14, 17),
+                "prediction_score": 1.0,
+            },
+        ],
+        "corners": [
+            {
+                "corner": (13, 14, 16, 17),
+                "prediction_score": 1.0,
+            },
+        ],
+    }
+
+    engine.evaluate_prediction_set(
+        predictions,
+        actual_number=17,
+    )
+
+    counts = engine.get_hit_miss_counts()
+
+    assert counts["dozens"]["hits"] == 1
+    assert counts["dozens"]["misses"] == 0
+
+    assert counts["columns"]["hits"] == 1
+    assert counts["columns"]["misses"] == 0
+
+    assert counts["streets"]["hits"] == 0
+    assert counts["streets"]["misses"] == 1
+
+    assert counts["splits"]["hits"] == 1
+    assert counts["splits"]["misses"] == 0
+
+    assert counts["corners"]["hits"] == 1
+    assert counts["corners"]["misses"] == 0
+
+def test_hit_miss_counts_multiple_evaluations():
+    engine = PredictionEvaluationEngine()
+
+    predictions = {
+        "dozens": [
+            {"dozen": 1, "prediction_score": 1.0},
+        ],
+        "columns": [
+            {"column": 1, "prediction_score": 1.0},
+        ],
+        "streets": [
+            {
+                "street": (1, 2, 3),
+                "prediction_score": 1.0,
+            },
+        ],
+        "splits": [
+            {
+                "split": (1, 2),
+                "prediction_score": 1.0,
+            },
+        ],
+        "corners": [
+            {
+                "corner": (1, 2, 4, 5),
+                "prediction_score": 1.0,
+            },
+        ],
+    }
+
+    engine.evaluate_prediction_set(
+        predictions,
+        actual_number=1,
+    )
+
+    engine.evaluate_prediction_set(
+        predictions,
+        actual_number=36,
+    )
+
+    counts = engine.get_hit_miss_counts()
+
+    assert counts["dozens"]["hits"] == 1
+    assert counts["dozens"]["misses"] == 1
+
+    assert counts["columns"]["hits"] == 1
+    assert counts["columns"]["misses"] == 1
+
+    assert counts["streets"]["hits"] == 1
+    assert counts["streets"]["misses"] == 1
+
+    assert counts["splits"]["hits"] == 1
+    assert counts["splits"]["misses"] == 1
+
+    assert counts["corners"]["hits"] == 1
+    assert counts["corners"]["misses"] == 1

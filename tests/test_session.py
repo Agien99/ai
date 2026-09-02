@@ -237,3 +237,43 @@ def test_cannot_end_session_twice():
         assert False
     except ValueError as error:
         assert str(error) == "Session has already ended."
+
+def test_new_session_is_independent_from_previous_session():
+    session_a = RouletteSession()
+
+    initial_spins_a = [
+        12, 7, 31, 4, 18,
+        22, 9, 14, 0, 27,
+    ]
+
+    session_a.start(initial_spins_a)
+
+    session_a.add_spin(17)
+    session_a.add_spin(5)
+
+    session_a.end()
+
+    session_b = RouletteSession()
+
+    initial_spins_b = [
+        3, 11, 26, 8, 19,
+        32, 6, 15, 24, 1,
+    ]
+
+    session_b.start(initial_spins_b)
+
+    assert session_a.session_id != session_b.session_id
+
+    assert session_a.status == "ENDED"
+    assert session_b.status == "ACTIVE"
+
+    assert session_a.spins == [
+        12, 7, 31, 4, 18,
+        22, 9, 14, 0, 27,
+        17, 5,
+    ]
+
+    assert session_b.spins == initial_spins_b
+
+    assert 17 not in session_b.spins
+    assert 5 not in session_b.spins

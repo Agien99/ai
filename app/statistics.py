@@ -1,4 +1,4 @@
-from app.roulette import get_dozen
+from app.roulette import get_column, get_dozen
 
 class RouletteStatistics:
     """
@@ -126,6 +126,30 @@ class RouletteStatistics:
                 frequency["zero"] += 1
             else:
                 frequency[f"dozen_{dozen}"] += 1
+
+        return frequency
+
+    def get_column_frequency(self) -> dict[str, int]:
+        """
+        Return frequency for each roulette column.
+
+        Zero is tracked separately because it does not
+        belong to any column.
+        """
+        frequency = {
+            "column_1": 0,
+            "column_2": 0,
+            "column_3": 0,
+            "zero": 0,
+        }
+
+        for number in self.spins:
+            column = get_column(number)
+
+            if column is None:
+                frequency["zero"] += 1
+            else:
+                frequency[f"column_{column}"] += 1
 
         return frequency
 

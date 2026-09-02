@@ -193,3 +193,33 @@ def test_dozen_frequency_empty_history():
         "dozen_3": 0,
         "zero": 0,
     }
+
+def test_column_frequency():
+    spins = [
+        1, 4, 7,
+        2, 5, 8,
+        3, 6, 9,
+        0,
+        34, 35, 36,
+    ]
+
+    stats = RouletteStatistics(spins)
+
+    frequency = stats.get_column_frequency()
+
+    assert frequency["column_1"] == 4
+    assert frequency["column_2"] == 4
+    assert frequency["column_3"] == 4
+    assert frequency["zero"] == 1
+
+def test_column_frequency_empty_history():
+    stats = RouletteStatistics([])
+
+    frequency = stats.get_column_frequency()
+
+    assert frequency == {
+        "column_1": 0,
+        "column_2": 0,
+        "column_3": 0,
+        "zero": 0,
+    }

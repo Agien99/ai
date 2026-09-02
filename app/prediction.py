@@ -168,6 +168,95 @@ class PredictionEngine:
             ),
         )
 
+    def score_columns(
+        self,
+        recent_window: int = 10,
+    ) -> list[dict]:
+        """
+        Score all three roulette columns.
+
+        Returns a ranked list from highest score to lowest.
+        Zero is excluded because it does not belong to a column.
+        """
+        summary = self.get_statistics_summary()
+
+        total_spins = summary["spin_count"]
+
+        recent_frequency = self.statistics.get_recent_frequency(
+            recent_window
+        )
+
+        column_frequency = summary["column_frequency"]
+
+        results = []
+
+        for column in range(1, 4):
+            key = f"column_{column}"
+
+            total_hits = column_frequency[key]
+
+            recent_hits = 0
+
+            for number, count in recent_frequency.items():
+                if number == 0:
+                    continue
+
+                remainder = number % 3
+
+                if remainder == 1:
+                    number_column = 1
+                elif remainder == 2:
+                    number_column = 2
+                else:
+                    number_column = 3
+
+                if number_column == column:
+                    recent_hits += count
+
+            actual_recent_window = min(
+                recent_window,
+                total_spins,
+            )
+
+            frequency_score = self.calculate_frequency_score(
+                total_hits,
+                total_spins,
+            )
+
+            recency_score = self.calculate_recency_score(
+                recent_hits,
+                actual_recent_window,
+            )
+
+            activity_score = self.calculate_activity_score(
+                total_hits,
+                total_spins,
+            )
+
+            prediction_score = self.calculate_prediction_score(
+                frequency_score,
+                recency_score,
+                activity_score,
+            )
+
+            results.append({
+                "column": column,
+                "total_hits": total_hits,
+                "recent_hits": recent_hits,
+                "frequency_score": frequency_score,
+                "recency_score": recency_score,
+                "activity_score": activity_score,
+                "prediction_score": prediction_score,
+            })
+
+        return sorted(
+            results,
+            key=lambda item: (
+                -item["prediction_score"],
+                item["column"],
+            ),
+        )
+
     def __repr__(self):
         return (
             f"PredictionEngine("

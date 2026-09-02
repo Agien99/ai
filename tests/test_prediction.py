@@ -146,3 +146,65 @@ def test_score_dozens_empty_history():
         assert result["recency_score"] == 0.0
         assert result["activity_score"] == 0.0
         assert result["prediction_score"] == 0.0
+
+def test_score_columns():
+    spins = [
+        1, 4, 7, 10,
+        2, 5, 8,
+        3, 6, 9,
+        1, 4, 7, 10, 13,
+    ]
+
+    engine = PredictionEngine(spins)
+
+    results = engine.score_columns(
+        recent_window=5
+    )
+
+    assert len(results) == 3
+
+    assert results[0]["column"] == 1
+    assert results[0]["total_hits"] == 9
+    assert results[0]["recent_hits"] == 5
+
+    assert results[0]["prediction_score"] > (
+        results[1]["prediction_score"]
+    )
+
+def test_columns_are_ranked_by_score():
+    spins = [
+        1, 4, 7, 10,
+        2, 5, 8,
+        3, 6,
+    ]
+
+    engine = PredictionEngine(spins)
+
+    results = engine.score_columns(
+        recent_window=5
+    )
+
+    assert (
+        results[0]["prediction_score"]
+        >= results[1]["prediction_score"]
+    )
+
+    assert (
+        results[1]["prediction_score"]
+        >= results[2]["prediction_score"]
+    )
+
+def test_score_columns_empty_history():
+    engine = PredictionEngine([])
+
+    results = engine.score_columns()
+
+    assert len(results) == 3
+
+    for result in results:
+        assert result["total_hits"] == 0
+        assert result["recent_hits"] == 0
+        assert result["frequency_score"] == 0.0
+        assert result["recency_score"] == 0.0
+        assert result["activity_score"] == 0.0
+        assert result["prediction_score"] == 0.0

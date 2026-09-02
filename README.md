@@ -147,11 +147,11 @@ Goal:
 
 Extract useful features from the current roulette session.
 
-Step 1  — Create Statistics Engine
-Step 2  — Number Frequency
-Step 3  — Recent-Window Frequency
-Step 4  — Spins Since Last Appearance
-Step 5  — Hot & Cold Numbers
+Step 1  — Create Statistics Engine (COMPLETED)
+Step 2  — Number Frequency (COMPLETED)
+Step 3  — Recent-Window Frequency (COMPLETED)
+Step 4  — Spins Since Last Appearance (COMPLETED)
+Step 5  — Hot & Cold Numbers (COMPLETED)
 Step 6  — Dozen Frequency
 Step 7  — Column Frequency
 Step 8  — Street Activity

@@ -1180,3 +1180,179 @@ def test_failed_evaluation_not_recorded():
         pass
 
     assert len(engine.evaluation_records) == 0
+
+def test_full_evaluation_workflow():
+    engine = PredictionEvaluationEngine()
+
+    prediction_1 = {
+        "dozens": [
+            {"dozen": 1, "prediction_score": 1.0},
+            {"dozen": 2, "prediction_score": 0.8},
+        ],
+        "columns": [
+            {"column": 1, "prediction_score": 1.0},
+            {"column": 2, "prediction_score": 0.8},
+        ],
+        "streets": [
+            {"street": (7, 8, 9), "prediction_score": 1.0},
+        ],
+        "splits": [
+            {"split": (7, 8), "prediction_score": 1.0},
+        ],
+        "corners": [
+            {"corner": (4, 5, 7, 8), "prediction_score": 1.0},
+        ],
+    }
+
+    record_1 = engine.evaluate_prediction_set(
+        prediction_1,
+        actual_number=8,
+    )
+
+    assert record_1.actual_number == 8
+    assert record_1.dozen_hit is True
+    assert record_1.column_hit is True
+    assert record_1.street_hit is True
+    assert record_1.split_hit is True
+    assert record_1.corner_hit is True
+
+    prediction_2 = {
+        "dozens": [
+            {"dozen": 1, "prediction_score": 1.0},
+        ],
+        "columns": [
+            {"column": 1, "prediction_score": 1.0},
+        ],
+        "streets": [
+            {"street": (1, 2, 3), "prediction_score": 1.0},
+        ],
+        "splits": [
+            {"split": (1, 2), "prediction_score": 1.0},
+        ],
+        "corners": [
+            {"corner": (1, 2, 4, 5), "prediction_score": 1.0},
+        ],
+    }
+
+    record_2 = engine.evaluate_prediction_set(
+        prediction_2,
+        actual_number=36,
+    )
+
+    assert record_2.actual_number == 36
+    assert record_2.dozen_hit is False
+    assert record_2.column_hit is False
+    assert record_2.street_hit is False
+    assert record_2.split_hit is False
+    assert record_2.corner_hit is False
+
+    summary = engine.get_session_evaluation_summary()
+
+    assert summary["evaluation_count"] == 2
+
+    assert summary["dozens"]["hits"] == 1
+    assert summary["dozens"]["misses"] == 1
+    assert summary["dozens"]["hit_rate"] == 0.5
+
+    assert summary["columns"]["hits"] == 1
+    assert summary["columns"]["misses"] == 1
+    assert summary["columns"]["hit_rate"] == 0.5
+
+    assert summary["streets"]["hits"] == 1
+    assert summary["streets"]["misses"] == 1
+    assert summary["streets"]["hit_rate"] == 0.5
+
+    assert summary["splits"]["hits"] == 1
+    assert summary["splits"]["misses"] == 1
+    assert summary["splits"]["hit_rate"] == 0.5
+
+    assert summary["corners"]["hits"] == 1
+    assert summary["corners"]["misses"] == 1
+    assert summary["corners"]["hit_rate"] == 0.5
+
+def test_evaluation_records_preserve_order():
+    engine = PredictionEvaluationEngine()
+
+    predictions = {
+        "dozens": [],
+        "columns": [],
+        "streets": [],
+        "splits": [],
+        "corners": [],
+    }
+
+    engine.evaluate_prediction_set(
+        predictions,
+        actual_number=5,
+    )
+
+    engine.evaluate_prediction_set(
+        predictions,
+        actual_number=17,
+    )
+
+    engine.evaluate_prediction_set(
+        predictions,
+        actual_number=32,
+    )
+
+    assert len(engine.evaluation_records) == 3
+
+    assert (
+        engine.evaluation_records[0].actual_number
+        == 5
+    )
+
+    assert (
+        engine.evaluation_records[1].actual_number
+        == 17
+    )
+
+    assert (
+        engine.evaluation_records[2].actual_number
+        == 32
+    )
+
+def test_zero_evaluation_is_recorded_as_all_misses():
+    engine = PredictionEvaluationEngine()
+
+    predictions = {
+        "dozens": [
+            {"dozen": 1, "prediction_score": 1.0},
+            {"dozen": 2, "prediction_score": 0.8},
+        ],
+        "columns": [
+            {"column": 1, "prediction_score": 1.0},
+            {"column": 2, "prediction_score": 0.8},
+        ],
+        "streets": [
+            {"street": (1, 2, 3), "prediction_score": 1.0},
+        ],
+        "splits": [
+            {"split": (1, 2), "prediction_score": 1.0},
+        ],
+        "corners": [
+            {"corner": (1, 2, 4, 5), "prediction_score": 1.0},
+        ],
+    }
+
+    record = engine.evaluate_prediction_set(
+        predictions,
+        actual_number=0,
+    )
+
+    assert record.dozen_hit is False
+    assert record.column_hit is False
+    assert record.street_hit is False
+    assert record.split_hit is False
+    assert record.corner_hit is False
+
+    summary = engine.get_session_evaluation_summary()
+
+    assert summary["evaluation_count"] == 1
+
+    assert summary["dozens"]["misses"] == 1
+    assert summary["columns"]["misses"] == 1
+    assert summary["streets"]["misses"] == 1
+    assert summary["splits"]["misses"] == 1
+    assert summary["corners"]["misses"] == 1

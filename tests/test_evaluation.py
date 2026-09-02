@@ -176,22 +176,6 @@ def test_evaluate_dozens_zero_is_miss():
 
     assert result is False
 
-def evaluate_dozens_for_record(
-    self,
-    record: PredictionEvaluationRecord,
-    predicted_dozens: list[dict],
-) -> PredictionEvaluationRecord:
-    """
-    Update an evaluation record with
-    the dozen HIT / MISS result.
-    """
-    record.dozen_hit = self.evaluate_dozens(
-        predicted_dozens,
-        record.actual_number,
-    )
-
-    return record
-
 def test_evaluate_dozens_updates_record():
     engine = PredictionEvaluationEngine()
 

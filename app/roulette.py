@@ -117,3 +117,48 @@ def get_all_streets() -> list[tuple[int, int, int]]:
         (start, start + 1, start + 2)
         for start in range(1, 37, 3)
     ]
+
+def get_all_splits() -> list[tuple[int, int]]:
+    """
+    Return all standard split bets for numbers 1-36.
+
+    Includes:
+        - Horizontal splits
+        - Vertical splits
+    """
+    splits = []
+
+    # Horizontal splits
+    # Example: (1, 2), (2, 3), (4, 5), (5, 6)
+    for row_start in range(1, 37, 3):
+        splits.append((row_start, row_start + 1))
+        splits.append((row_start + 1, row_start + 2))
+
+    # Vertical splits
+    # Example: (1, 4), (2, 5), (3, 6)
+    for number in range(1, 34):
+        splits.append((number, number + 3))
+
+    return splits
+
+def get_splits_for_number(number: int) -> list[tuple[int, int]]:
+    """
+    Return all standard split bets containing the given number.
+
+    Returns:
+        A list of split tuples.
+
+    Raises:
+        ValueError if the number is invalid.
+    """
+    if not is_valid_number(number):
+        raise ValueError(f"Invalid roulette number: {number}")
+
+    if number == 0:
+        return []
+
+    return [
+        split
+        for split in get_all_splits()
+        if number in split
+    ]

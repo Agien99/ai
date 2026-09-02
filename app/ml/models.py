@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 
 from sklearn.ensemble import (
     GradientBoostingClassifier,
@@ -58,13 +58,6 @@ class RouletteMLModel(ABC):
         self,
         features: list[float],
     ) -> dict[int, float]:
-        """
-        Return probabilities for every roulette
-        number 0-36.
-
-        Numbers not learned by the classifier
-        receive probability 0.
-        """
 
         if not self.is_fitted:
             raise ValueError(
@@ -152,13 +145,9 @@ class RouletteXGBoost(
     ):
         super().__init__()
 
-        try:
-            from xgboost import XGBClassifier
+        from xgboost import XGBClassifier
 
-        except ImportError as error:
-            raise ImportError(
-                "XGBoost is not installed."
-            ) from error
+        self.random_state = random_state
 
         self.model = XGBClassifier(
             n_estimators=100,
@@ -167,3 +156,93 @@ class RouletteXGBoost(
             random_state=random_state,
             eval_metric="mlogloss",
         )
+
+        self.original_classes = []
+
+    def fit(
+        self,
+        X: list[list[float]],
+        y: list[int],
+    ):
+
+        if not X or not y:
+            raise ValueError(
+                "Training data cannot be empty."
+            )
+
+        if len(X) != len(y):
+            raise ValueError(
+                "Training feature and target "
+                "counts do not match."
+            )
+
+        self.original_classes = sorted(
+            set(y)
+        )
+
+        if len(self.original_classes) < 2:
+            raise ValueError(
+                "Training data must contain at least "
+                "two target classes."
+            )
+
+        class_to_encoded = {
+            number: index
+            for index, number
+            in enumerate(
+                self.original_classes
+            )
+        }
+
+        encoded_y = [
+            class_to_encoded[number]
+            for number in y
+        ]
+
+        self.model.fit(
+            X,
+            encoded_y,
+        )
+
+        self.is_fitted = True
+
+        return self
+
+    def predict_number_probabilities(
+        self,
+        features: list[float],
+    ) -> dict[int, float]:
+
+        if not self.is_fitted:
+            raise ValueError(
+                "Model has not been fitted."
+            )
+
+        probabilities = (
+            self.model.predict_proba(
+                [features]
+            )[0]
+        )
+
+        result = {
+            number: 0.0
+            for number in range(37)
+        }
+
+        for encoded_class, probability in enumerate(
+            probabilities
+        ):
+
+            original_number = (
+                self.original_classes[
+                    encoded_class
+                ]
+            )
+
+            result[
+                original_number
+            ] = float(
+                probability
+            )
+
+        return result

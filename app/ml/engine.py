@@ -2,13 +2,16 @@ from app.ml.features import (
     RouletteMLFeatureBuilder,
 )
 from app.ml.models import RouletteMLModel
+from app.ml.ranking import (
+    RouletteMLBetRanker,
+)
 from app.roulette import validate_spin_history
 
 
 class RouletteMLEngine:
     """
-    Coordinate ML feature generation and
-    standardized prediction output.
+    Generate complete standardized ML
+    roulette predictions.
     """
 
     def __init__(
@@ -16,6 +19,7 @@ class RouletteMLEngine:
         model: RouletteMLModel,
         recent_window: int = 10,
     ):
+
         if not isinstance(
             model,
             RouletteMLModel,
@@ -32,13 +36,60 @@ class RouletteMLEngine:
             )
         )
 
+        self.ranker = RouletteMLBetRanker()
+
+    def predict_from_features(
+        self,
+        features: list[float],
+        spin_count: int = 0,
+    ) -> dict:
+
+        probabilities = (
+            self.model
+            .predict_number_probabilities(
+                features
+            )
+        )
+
+        predictions = self.ranker.rank(
+            probabilities
+        )
+
+        ranked_numbers = sorted(
+            probabilities.items(),
+            key=lambda item: (
+                -item[1],
+                item[0],
+            ),
+        )
+
+        return {
+            "strategy":
+                f"ml_{self.model.model_name}",
+
+            "model":
+                self.model.model_name,
+
+            "spin_count":
+                spin_count,
+
+            "number_probabilities": [
+                {
+                    "number": number,
+                    "probability": probability,
+                }
+                for number, probability
+                in ranked_numbers
+            ],
+
+            "predictions": predictions,
+        }
+
     def predict(
         self,
         spins: list[int],
     ) -> dict:
-        """
-        Generate standardized ML prediction output.
-        """
+
         validate_spin_history(spins)
 
         if not spins:
@@ -51,31 +102,7 @@ class RouletteMLEngine:
             .build_features(spins)
         )
 
-        probabilities = (
-            self.model
-            .predict_number_probabilities(
-                features
-            )
+        return self.predict_from_features(
+            features,
+            spin_count=len(spins),
         )
-
-        ranked_numbers = sorted(
-            probabilities.items(),
-            key=lambda item: (
-                -item[1],
-                item[0],
-            ),
-        )
-
-        return {
-            "model": self.model.model_name,
-            "spin_count": len(spins),
-
-            "number_probabilities": [
-                {
-                    "number": number,
-                    "probability": probability,
-                }
-                for number, probability
-                in ranked_numbers
-            ],
-        }

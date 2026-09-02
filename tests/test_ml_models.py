@@ -184,3 +184,30 @@ def test_xgboost_model_creation():
 
     assert model.model_name == "xgboost"
     assert model.is_fitted is False
+
+def test_xgboost_training():
+
+    X, y = build_training_data()
+
+    model = RouletteXGBoost(
+        random_state=42
+    )
+
+    model.fit(
+        X,
+        y,
+    )
+
+    probabilities = (
+        model.predict_number_probabilities(
+            X[0]
+        )
+    )
+
+    assert model.is_fitted is True
+    assert len(probabilities) == 37
+
+    assert abs(
+        sum(probabilities.values())
+        - 1.0
+    ) < 0.000001

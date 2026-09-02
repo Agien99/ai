@@ -331,3 +331,68 @@ def test_score_splits_empty_history():
         assert result["recency_score"] == 0.0
         assert result["activity_score"] == 0.0
         assert result["prediction_score"] == 0.0
+
+def test_score_corners():
+    spins = [
+        1,
+        2,
+        4,
+        5,
+        8,
+        1,
+        2,
+        4,
+        5,
+        5,
+    ]
+
+    engine = PredictionEngine(spins)
+
+    results = engine.score_corners(
+        recent_window=5
+    )
+
+    assert len(results) == 22
+
+    assert results[0]["corner"] == (
+        1, 2, 4, 5
+    )
+
+    assert results[0]["total_hits"] == 9
+    assert results[0]["recent_hits"] == 5
+
+def test_corners_are_ranked_by_score():
+    spins = [
+        1, 2, 4, 5,
+        8, 9, 11,
+        12, 14,
+    ]
+
+    engine = PredictionEngine(spins)
+
+    results = engine.score_corners(
+        recent_window=5
+    )
+
+    for index in range(len(results) - 1):
+        assert (
+            results[index]["prediction_score"]
+            >= results[index + 1][
+                "prediction_score"
+            ]
+        )
+        
+def test_score_corners_empty_history():
+    engine = PredictionEngine([])
+
+    results = engine.score_corners()
+
+    assert len(results) == 22
+
+    for result in results:
+        assert result["total_hits"] == 0
+        assert result["recent_hits"] == 0
+        assert result["frequency_score"] == 0.0
+        assert result["recency_score"] == 0.0
+        assert result["activity_score"] == 0.0
+        assert result["prediction_score"] == 0.0

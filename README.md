@@ -136,8 +136,8 @@ Steps:
 5. Track session state and metadata (COMPLETED)
 6. End/close session (COMPLETED)
 7. Start fresh independent session (COMPLETED)
-8. Session validation and edge cases
-9. Automated session tests
+8. Session validation and edge cases (COMPLETED)
+9. Automated session tests (COMPLETED)
 
 ---
 

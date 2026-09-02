@@ -113,7 +113,7 @@ Planned steps:
 1. Create Python repository and project structure (COMPLETED)
 2. Define valid roulette numbers (COMPLETED)
 3. Implement Dozens (COMPLETED)
-4. Implement Columns
+4. Implement Columns (COMPLETED)
 5. Implement Streets
 6. Implement Splits
 7. Implement Corners

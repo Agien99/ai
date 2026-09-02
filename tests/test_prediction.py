@@ -396,3 +396,85 @@ def test_score_corners_empty_history():
         assert result["recency_score"] == 0.0
         assert result["activity_score"] == 0.0
         assert result["prediction_score"] == 0.0
+
+def test_rank_predictions():
+    engine = PredictionEngine([1, 2, 3])
+
+    predictions = [
+        {
+            "street": (4, 5, 6),
+            "prediction_score": 0.5,
+        },
+        {
+            "street": (1, 2, 3),
+            "prediction_score": 0.9,
+        },
+        {
+            "street": (7, 8, 9),
+            "prediction_score": 0.7,
+        },
+    ]
+
+    ranked = engine.rank_predictions(
+        predictions,
+        key_name="street",
+    )
+
+    assert ranked[0]["street"] == (1, 2, 3)
+    assert ranked[1]["street"] == (7, 8, 9)
+    assert ranked[2]["street"] == (4, 5, 6)
+
+def test_rank_predictions_with_limit():
+    engine = PredictionEngine([1, 2, 3])
+
+    predictions = [
+        {
+            "dozen": 1,
+            "prediction_score": 0.8,
+        },
+        {
+            "dozen": 2,
+            "prediction_score": 0.9,
+        },
+        {
+            "dozen": 3,
+            "prediction_score": 0.7,
+        },
+    ]
+
+    ranked = engine.rank_predictions(
+        predictions,
+        key_name="dozen",
+        limit=2,
+    )
+
+    assert len(ranked) == 2
+    assert ranked[0]["dozen"] == 2
+    assert ranked[1]["dozen"] == 1
+
+def test_rank_predictions_tie_breaker():
+    engine = PredictionEngine([1, 2, 3])
+
+    predictions = [
+        {
+            "column": 3,
+            "prediction_score": 0.5,
+        },
+        {
+            "column": 1,
+            "prediction_score": 0.5,
+        },
+        {
+            "column": 2,
+            "prediction_score": 0.5,
+        },
+    ]
+
+    ranked = engine.rank_predictions(
+        predictions,
+        key_name="column",
+    )
+
+    assert ranked[0]["column"] == 1
+    assert ranked[1]["column"] == 2
+    assert ranked[2]["column"] == 3

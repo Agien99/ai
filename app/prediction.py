@@ -531,6 +531,36 @@ class PredictionEngine:
             ),
         )
 
+        def rank_predictions(
+            self,
+            predictions: list[dict],
+            key_name: str,
+            limit: int | None = None,
+        ) -> list[dict]:
+            """
+            Rank prediction candidates by prediction score.
+
+            Highest score comes first.
+
+            Ties are resolved deterministically using the
+            candidate key.
+
+            If limit is provided, only the top N predictions
+            are returned.
+            """
+            ranked = sorted(
+                predictions,
+                key=lambda item: (
+                    -item["prediction_score"],
+                    item[key_name],
+                ),
+            )
+
+            if limit is None:
+                return ranked
+
+            return ranked[:limit]
+
     def __repr__(self):
         return (
             f"PredictionEngine("

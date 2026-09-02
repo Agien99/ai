@@ -228,6 +228,30 @@ class RouletteStatistics:
 
         return activity
 
+    def get_summary(self) -> dict:
+        """
+        Return a combined statistical summary for the current spin history.
+        """
+        return {
+            "spin_count": len(self.spins),
+            "number_frequency": self.get_number_frequency(),
+            "recent_frequency": {
+                "last_5": self.get_recent_frequency(5),
+                "last_10": self.get_recent_frequency(10),
+                "last_20": self.get_recent_frequency(20),
+            },
+            "spins_since_last_appearance": (
+                self.get_spins_since_last_appearance()
+            ),
+            "hot_numbers": self.get_hot_numbers(),
+            "cold_numbers": self.get_cold_numbers(),
+            "dozen_frequency": self.get_dozen_frequency(),
+            "column_frequency": self.get_column_frequency(),
+            "street_activity": self.get_street_activity(),
+            "split_activity": self.get_split_activity(),
+            "corner_activity": self.get_corner_activity(),
+        }
+
     def __repr__(self):
         return (
             f"RouletteStatistics("

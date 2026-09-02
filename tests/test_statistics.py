@@ -321,3 +321,51 @@ def test_corner_activity_empty_history():
 
     assert len(activity) == 22
     assert all(value == 0 for value in activity.values())
+
+def test_combined_statistics_summary():
+    spins = [
+        12, 7, 31, 4, 18,
+        22, 7, 14, 0, 27,
+        7, 12,
+    ]
+
+    stats = RouletteStatistics(spins)
+
+    summary = stats.get_summary()
+
+    assert summary["spin_count"] == 12
+
+    assert "number_frequency" in summary
+    assert "recent_frequency" in summary
+    assert "spins_since_last_appearance" in summary
+    assert "hot_numbers" in summary
+    assert "cold_numbers" in summary
+    assert "dozen_frequency" in summary
+    assert "column_frequency" in summary
+    assert "street_activity" in summary
+    assert "split_activity" in summary
+    assert "corner_activity" in summary
+
+    assert summary["number_frequency"][7] == 3
+    assert summary["number_frequency"][12] == 2
+
+    assert len(summary["street_activity"]) == 12
+    assert len(summary["split_activity"]) == 57
+    assert len(summary["corner_activity"]) == 22
+
+def test_summary_recent_windows():
+    spins = [
+        1, 2, 3, 4, 5,
+        6, 7, 8, 9, 10,
+    ]
+
+    stats = RouletteStatistics(spins)
+
+    summary = stats.get_summary()
+
+    assert summary["recent_frequency"]["last_5"][6] == 1
+    assert summary["recent_frequency"]["last_5"][10] == 1
+    assert summary["recent_frequency"]["last_5"][1] == 0
+
+    assert summary["recent_frequency"]["last_10"][1] == 1
+    assert summary["recent_frequency"]["last_20"][1] == 1

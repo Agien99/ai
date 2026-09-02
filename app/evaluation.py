@@ -261,5 +261,45 @@ class PredictionEvaluationEngine:
 
         return record
 
+    def evaluate_prediction_set(
+        self,
+        predictions: dict,
+        actual_number: int,
+    ) -> PredictionEvaluationRecord:
+        """
+        Evaluate a complete prediction set against
+        one actual roulette result.
+        """
+        record = self.create_evaluation_record(
+            actual_number=actual_number
+        )
+
+        self.evaluate_dozens_for_record(
+            record,
+            predictions["dozens"],
+        )
+
+        self.evaluate_columns_for_record(
+            record,
+            predictions["columns"],
+        )
+
+        self.evaluate_streets_for_record(
+            record,
+            predictions["streets"],
+        )
+
+        self.evaluate_splits_for_record(
+            record,
+            predictions["splits"],
+        )
+
+        self.evaluate_corners_for_record(
+            record,
+            predictions["corners"],
+        )
+
+        return record
+
     def __repr__(self):
         return "PredictionEvaluationEngine()"

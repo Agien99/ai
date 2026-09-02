@@ -587,3 +587,126 @@ def test_evaluate_corners_updates_record():
     )
 
     assert updated_record.corner_hit is True
+
+def test_evaluate_complete_prediction_set():
+    engine = PredictionEvaluationEngine()
+
+    predictions = {
+        "dozens": [
+            {
+                "dozen": 1,
+                "prediction_score": 1.0,
+            },
+            {
+                "dozen": 2,
+                "prediction_score": 0.8,
+            },
+        ],
+        "columns": [
+            {
+                "column": 2,
+                "prediction_score": 1.0,
+            },
+            {
+                "column": 3,
+                "prediction_score": 0.8,
+            },
+        ],
+        "streets": [
+            {
+                "street": (13, 14, 15),
+                "prediction_score": 1.0,
+            },
+        ],
+        "splits": [
+            {
+                "split": (14, 17),
+                "prediction_score": 1.0,
+            },
+        ],
+        "corners": [
+            {
+                "corner": (13, 14, 16, 17),
+                "prediction_score": 1.0,
+            },
+        ],
+    }
+
+    record = engine.evaluate_prediction_set(
+        predictions,
+        actual_number=17,
+    )
+
+    assert record.actual_number == 17
+
+    assert record.dozen_hit is True
+    assert record.column_hit is False
+    assert record.street_hit is False
+    assert record.split_hit is True
+    assert record.corner_hit is True
+
+def test_evaluate_complete_prediction_set_with_misses():
+    engine = PredictionEvaluationEngine()
+
+    predictions = {
+        "dozens": [
+            {"dozen": 1, "prediction_score": 1.0},
+        ],
+        "columns": [
+            {"column": 1, "prediction_score": 1.0},
+        ],
+        "streets": [
+            {"street": (1, 2, 3), "prediction_score": 1.0},
+        ],
+        "splits": [
+            {"split": (1, 2), "prediction_score": 1.0},
+        ],
+        "corners": [
+            {"corner": (1, 2, 4, 5), "prediction_score": 1.0},
+        ],
+    }
+
+    record = engine.evaluate_prediction_set(
+        predictions,
+        actual_number=36,
+    )
+
+    assert record.dozen_hit is False
+    assert record.column_hit is False
+    assert record.street_hit is False
+    assert record.split_hit is False
+    assert record.corner_hit is False
+
+def test_evaluate_complete_prediction_set_zero():
+    engine = PredictionEvaluationEngine()
+
+    predictions = {
+        "dozens": [
+            {"dozen": 1, "prediction_score": 1.0},
+        ],
+        "columns": [
+            {"column": 1, "prediction_score": 1.0},
+        ],
+        "streets": [
+            {"street": (1, 2, 3), "prediction_score": 1.0},
+        ],
+        "splits": [
+            {"split": (1, 2), "prediction_score": 1.0},
+        ],
+        "corners": [
+            {"corner": (1, 2, 4, 5), "prediction_score": 1.0},
+        ],
+    }
+
+    record = engine.evaluate_prediction_set(
+        predictions,
+        actual_number=0,
+    )
+
+    assert record.actual_number == 0
+
+    assert record.dozen_hit is False
+    assert record.column_hit is False
+    assert record.street_hit is False
+    assert record.split_hit is False
+    assert record.corner_hit is False

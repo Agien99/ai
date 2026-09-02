@@ -329,3 +329,89 @@ def test_evaluate_columns_updates_record():
     )
 
     assert updated_record.column_hit is True
+
+def test_evaluate_streets_hit():
+    engine = PredictionEvaluationEngine()
+
+    predicted_streets = [
+        {
+            "street": (7, 8, 9),
+            "prediction_score": 1.0,
+        },
+        {
+            "street": (13, 14, 15),
+            "prediction_score": 0.8,
+        },
+    ]
+
+    result = engine.evaluate_streets(
+        predicted_streets,
+        actual_number=8,
+    )
+
+    assert result is True
+
+def test_evaluate_streets_miss():
+    engine = PredictionEvaluationEngine()
+
+    predicted_streets = [
+        {
+            "street": (7, 8, 9),
+            "prediction_score": 1.0,
+        },
+        {
+            "street": (13, 14, 15),
+            "prediction_score": 0.8,
+        },
+    ]
+
+    result = engine.evaluate_streets(
+        predicted_streets,
+        actual_number=20,
+    )
+
+    assert result is False
+
+def test_evaluate_streets_zero_is_miss():
+    engine = PredictionEvaluationEngine()
+
+    predicted_streets = [
+        {
+            "street": (1, 2, 3),
+            "prediction_score": 1.0,
+        },
+    ]
+
+    result = engine.evaluate_streets(
+        predicted_streets,
+        actual_number=0,
+    )
+
+    assert result is False
+
+def test_evaluate_streets_updates_record():
+    engine = PredictionEvaluationEngine()
+
+    record = engine.create_evaluation_record(
+        actual_number=14
+    )
+
+    predicted_streets = [
+        {
+            "street": (10, 11, 12),
+            "prediction_score": 1.0,
+        },
+        {
+            "street": (13, 14, 15),
+            "prediction_score": 0.8,
+        },
+    ]
+
+    updated_record = (
+        engine.evaluate_streets_for_record(
+            record,
+            predicted_streets,
+        )
+    )
+
+    assert updated_record.street_hit is True

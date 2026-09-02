@@ -154,5 +154,41 @@ class PredictionEvaluationEngine:
 
         return record
 
+    def evaluate_streets(
+        self,
+        predicted_streets: list[dict],
+        actual_number: int,
+    ) -> bool:
+        """
+        Evaluate whether the actual roulette number
+        matches any predicted street.
+        """
+        self.validate_actual_number(actual_number)
+
+        if actual_number == 0:
+            return False
+
+        return any(
+            actual_number in item["street"]
+            for item in predicted_streets
+        )
+
+
+    def evaluate_streets_for_record(
+        self,
+        record: PredictionEvaluationRecord,
+        predicted_streets: list[dict],
+    ) -> PredictionEvaluationRecord:
+        """
+        Update an evaluation record with
+        the street HIT / MISS result.
+        """
+        record.street_hit = self.evaluate_streets(
+            predicted_streets,
+            record.actual_number,
+        )
+
+        return record
+
     def __repr__(self):
         return "PredictionEvaluationEngine()"

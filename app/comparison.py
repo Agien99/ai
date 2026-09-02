@@ -202,6 +202,173 @@ class BaselineComparisonEngine:
             in self.evaluators.items()
         }
 
+    def get_comparison_summary(
+        self,
+    ) -> dict:
+        """
+        Build a comparison summary showing
+        hit rates for every strategy by category.
+        """
+
+        rates = self.get_hit_rates_by_strategy()
+
+        categories = [
+            "dozens",
+            "columns",
+            "streets",
+            "splits",
+            "corners",
+        ]
+
+        summary = {
+            category: {}
+            for category in categories
+        }
+
+        for strategy, strategy_rates in rates.items():
+
+            for category in categories:
+
+                summary[category][strategy] = (
+                    strategy_rates[
+                        category
+                    ]["hit_rate"]
+                )
+
+        return {
+            "strategy_count": len(
+                self.evaluators
+            ),
+            "comparison": summary,
+        }
+
+    def get_improvement_over_baselines(
+        self,
+        reference_strategy: str = "prediction_v1",
+    ) -> dict:
+        """
+        Compare the reference strategy against
+        every other strategy.
+
+        Difference is returned both as:
+        - decimal difference
+        - percentage points
+        """
+
+        if reference_strategy not in self.evaluators:
+            raise ValueError(
+                f"Strategy not found: "
+                f"{reference_strategy}"
+            )
+
+        rates = self.get_hit_rates_by_strategy()
+
+        reference_rates = rates[
+            reference_strategy
+        ]
+
+        categories = [
+            "dozens",
+            "columns",
+            "streets",
+            "splits",
+            "corners",
+        ]
+
+        improvements = {}
+
+        for strategy, strategy_rates in rates.items():
+
+            if strategy == reference_strategy:
+                continue
+
+            improvements[strategy] = {}
+
+            for category in categories:
+
+                reference_rate = (
+                    reference_rates[
+                        category
+                    ]["hit_rate"]
+                )
+
+                baseline_rate = (
+                    strategy_rates[
+                        category
+                    ]["hit_rate"]
+                )
+
+                difference = (
+                    reference_rate
+                    - baseline_rate
+                )
+
+                improvements[strategy][category] = {
+                    "reference_hit_rate":
+                        reference_rate,
+
+                    "baseline_hit_rate":
+                        baseline_rate,
+
+                    "difference":
+                        difference,
+
+                    "percentage_points":
+                        difference * 100,
+                }
+
+        return improvements
+
+    def validate_comparison_ready(
+        self,
+        reference_strategy: str = "prediction_v1",
+    ) -> bool:
+        """
+        Validate that strategy comparison is fair
+        and ready for analysis.
+        """
+
+        if reference_strategy not in self.evaluators:
+            raise ValueError(
+                f"Reference strategy not found: "
+                f"{reference_strategy}"
+            )
+
+        if len(self.evaluators) < 2:
+            raise ValueError(
+                "At least two strategies are required "
+                "for comparison."
+            )
+
+        evaluation_counts = {
+            strategy: len(
+                evaluator.evaluation_records
+            )
+            for strategy, evaluator
+            in self.evaluators.items()
+        }
+
+        if any(
+            count == 0
+            for count in evaluation_counts.values()
+        ):
+            raise ValueError(
+                "Every strategy must have at least "
+                "one evaluation."
+            )
+
+        unique_counts = set(
+            evaluation_counts.values()
+        )
+
+        if len(unique_counts) != 1:
+            raise ValueError(
+                "All strategies must be evaluated "
+                "against the same number of spins."
+            )
+
+        return True
+
     def __repr__(self):
         return (
             "BaselineComparisonEngine("

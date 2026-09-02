@@ -67,5 +67,31 @@ class PredictionEvaluationEngine:
             evaluated_at=datetime.now(),
         )
 
+    def evaluate_dozens(
+        self,
+        predicted_dozens: list[dict],
+        actual_number: int,
+    ) -> bool:
+        """
+        Evaluate whether the actual roulette number
+        matches any predicted dozen.
+        """
+        self.validate_actual_number(actual_number)
+
+        if actual_number == 0:
+            return False
+
+        if 1 <= actual_number <= 12:
+            actual_dozen = 1
+        elif 13 <= actual_number <= 24:
+            actual_dozen = 2
+        else:
+            actual_dozen = 3
+
+        return any(
+            item["dozen"] == actual_dozen
+            for item in predicted_dozens
+        )
+
     def __repr__(self):
         return "PredictionEvaluationEngine()"

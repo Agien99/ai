@@ -91,3 +91,130 @@ def test_create_evaluation_record_invalid_number():
         assert str(error) == (
             "Invalid roulette number: 37"
         )
+
+def test_evaluate_dozens_hit():
+    engine = PredictionEvaluationEngine()
+
+    predicted_dozens = [
+        {
+            "dozen": 1,
+            "prediction_score": 1.0,
+        },
+        {
+            "dozen": 3,
+            "prediction_score": 0.8,
+        },
+    ]
+
+    result = engine.evaluate_dozens(
+        predicted_dozens,
+        actual_number=7,
+    )
+
+    assert result is True
+
+def test_evaluate_dozens_miss():
+    engine = PredictionEvaluationEngine()
+
+    predicted_dozens = [
+        {
+            "dozen": 1,
+            "prediction_score": 1.0,
+        },
+        {
+            "dozen": 3,
+            "prediction_score": 0.8,
+        },
+    ]
+
+    result = engine.evaluate_dozens(
+        predicted_dozens,
+        actual_number=18,
+    )
+
+    assert result is False
+
+def test_evaluate_dozens_third_dozen_hit():
+    engine = PredictionEvaluationEngine()
+
+    predicted_dozens = [
+        {
+            "dozen": 2,
+            "prediction_score": 1.0,
+        },
+        {
+            "dozen": 3,
+            "prediction_score": 0.9,
+        },
+    ]
+
+    result = engine.evaluate_dozens(
+        predicted_dozens,
+        actual_number=31,
+    )
+
+    assert result is True
+
+def test_evaluate_dozens_zero_is_miss():
+    engine = PredictionEvaluationEngine()
+
+    predicted_dozens = [
+        {
+            "dozen": 1,
+            "prediction_score": 1.0,
+        },
+        {
+            "dozen": 2,
+            "prediction_score": 0.8,
+        },
+    ]
+
+    result = engine.evaluate_dozens(
+        predicted_dozens,
+        actual_number=0,
+    )
+
+    assert result is False
+
+def evaluate_dozens_for_record(
+    self,
+    record: PredictionEvaluationRecord,
+    predicted_dozens: list[dict],
+) -> PredictionEvaluationRecord:
+    """
+    Update an evaluation record with
+    the dozen HIT / MISS result.
+    """
+    record.dozen_hit = self.evaluate_dozens(
+        predicted_dozens,
+        record.actual_number,
+    )
+
+    return record
+
+def test_evaluate_dozens_updates_record():
+    engine = PredictionEvaluationEngine()
+
+    record = engine.create_evaluation_record(
+        actual_number=9
+    )
+
+    predicted_dozens = [
+        {
+            "dozen": 1,
+            "prediction_score": 1.0,
+        },
+        {
+            "dozen": 2,
+            "prediction_score": 0.8,
+        },
+    ]
+
+    updated_record = (
+        engine.evaluate_dozens_for_record(
+            record,
+            predicted_dozens,
+        )
+    )
+
+    assert updated_record.dozen_hit is True

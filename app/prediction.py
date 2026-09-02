@@ -1,6 +1,10 @@
 from app.statistics import RouletteStatistics
-from app.roulette import get_all_streets, get_street
-
+from app.roulette import (
+    get_all_splits,
+    get_all_streets,
+    get_splits_for_number,
+    get_street,
+)
 
 class PredictionEngine:
     """
@@ -344,6 +348,95 @@ class PredictionEngine:
             key=lambda item: (
                 -item["prediction_score"],
                 item["street"],
+            ),
+        )
+
+    def score_splits(
+        self,
+        recent_window: int = 10,
+    ) -> list[dict]:
+        """
+        Score all 57 standard roulette splits.
+
+        A single spin may contribute to multiple split candidates.
+        Zero is ignored because standard splits cover 1-36 only.
+        """
+        total_spins = len(self.statistics.spins)
+
+        full_activity = (
+            self.statistics.get_split_activity()
+        )
+
+        recent_spins = self.statistics.spins[
+            -recent_window:
+        ]
+
+        recent_activity = {
+            split: 0
+            for split in get_all_splits()
+        }
+
+        for number in recent_spins:
+            splits = get_splits_for_number(number)
+
+            for split in splits:
+                recent_activity[split] += 1
+
+        actual_recent_window = min(
+            recent_window,
+            total_spins,
+        )
+
+        results = []
+
+        for split in get_all_splits():
+            total_hits = full_activity[split]
+            recent_hits = recent_activity[split]
+
+            frequency_score = (
+                self.calculate_frequency_score(
+                    total_hits,
+                    total_spins,
+                )
+            )
+
+            recency_score = (
+                self.calculate_recency_score(
+                    recent_hits,
+                    actual_recent_window,
+                )
+            )
+
+            activity_score = (
+                self.calculate_activity_score(
+                    total_hits,
+                    total_spins,
+                )
+            )
+
+            prediction_score = (
+                self.calculate_prediction_score(
+                    frequency_score,
+                    recency_score,
+                    activity_score,
+                )
+            )
+
+            results.append({
+                "split": split,
+                "total_hits": total_hits,
+                "recent_hits": recent_hits,
+                "frequency_score": frequency_score,
+                "recency_score": recency_score,
+                "activity_score": activity_score,
+                "prediction_score": prediction_score,
+            })
+
+        return sorted(
+            results,
+            key=lambda item: (
+                -item["prediction_score"],
+                item["split"],
             ),
         )
 

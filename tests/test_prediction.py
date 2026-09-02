@@ -268,3 +268,66 @@ def test_score_streets_empty_history():
         assert result["recency_score"] == 0.0
         assert result["activity_score"] == 0.0
         assert result["prediction_score"] == 0.0
+
+def test_score_splits():
+    spins = [
+        1,
+        2,
+        5,
+        5,
+        8,
+        2,
+        5,
+        2,
+        5,
+        2,
+    ]
+
+    engine = PredictionEngine(spins)
+
+    results = engine.score_splits(
+        recent_window=5
+    )
+
+    assert len(results) == 57
+
+    assert results[0]["split"] == (2, 5)
+
+    assert results[0]["total_hits"] == 8
+    assert results[0]["recent_hits"] == 5
+
+def test_splits_are_ranked_by_score():
+    spins = [
+        1, 2, 5,
+        8, 11, 14,
+        17, 20,
+    ]
+
+    engine = PredictionEngine(spins)
+
+    results = engine.score_splits(
+        recent_window=5
+    )
+
+    for index in range(len(results) - 1):
+        assert (
+            results[index]["prediction_score"]
+            >= results[index + 1][
+                "prediction_score"
+            ]
+        )
+
+def test_score_splits_empty_history():
+    engine = PredictionEngine([])
+
+    results = engine.score_splits()
+
+    assert len(results) == 57
+
+    for result in results:
+        assert result["total_hits"] == 0
+        assert result["recent_hits"] == 0
+        assert result["frequency_score"] == 0.0
+        assert result["recency_score"] == 0.0
+        assert result["activity_score"] == 0.0
+        assert result["prediction_score"] == 0.0

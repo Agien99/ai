@@ -208,3 +208,63 @@ def test_score_columns_empty_history():
         assert result["recency_score"] == 0.0
         assert result["activity_score"] == 0.0
         assert result["prediction_score"] == 0.0
+
+def test_score_streets():
+    spins = [
+        1, 2, 3,
+        4, 5,
+        10,
+        1, 2, 3, 1, 2,
+    ]
+
+    engine = PredictionEngine(spins)
+
+    results = engine.score_streets(
+        recent_window=5
+    )
+
+    assert len(results) == 12
+
+    assert results[0]["street"] == (1, 2, 3)
+    assert results[0]["total_hits"] == 8
+    assert results[0]["recent_hits"] == 5
+
+    assert results[0]["prediction_score"] > (
+        results[1]["prediction_score"]
+    )
+
+def test_streets_are_ranked_by_score():
+    spins = [
+        1, 2, 3, 1,
+        4, 5, 6,
+        7, 8,
+    ]
+
+    engine = PredictionEngine(spins)
+
+    results = engine.score_streets(
+        recent_window=5
+    )
+
+    for index in range(len(results) - 1):
+        assert (
+            results[index]["prediction_score"]
+            >= results[index + 1][
+                "prediction_score"
+            ]
+        )
+
+def test_score_streets_empty_history():
+    engine = PredictionEngine([])
+
+    results = engine.score_streets()
+
+    assert len(results) == 12
+
+    for result in results:
+        assert result["total_hits"] == 0
+        assert result["recent_hits"] == 0
+        assert result["frequency_score"] == 0.0
+        assert result["recency_score"] == 0.0
+        assert result["activity_score"] == 0.0
+        assert result["prediction_score"] == 0.0

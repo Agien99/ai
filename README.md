@@ -174,11 +174,11 @@ Step 2  — Define Scoring Components (COMPLETED)
 Step 3  — Score Dozens (COMPLETED)
 Step 4  — Score Columns (COMPLETED)
 Step 5  — Score Streets (COMPLETED)
-Step 6  — Score Splits
-Step 7  — Score Corners
-Step 8  — Rank Predictions
-Step 9  — Generate Final Prediction Set
-Step 10 — Prediction Output Structure
+Step 6  — Score Splits (COMPLETED)
+Step 7  — Score Corners (COMPLETED)
+Step 8  — Rank Predictions (COMPLETED)
+Step 9  — Generate Final Prediction Set (COMPLETED)
+Step 10 — Prediction Output Structure (COMPLETED)
 Step 11 — Validation & Edge Cases
 Step 12 — Automated Prediction Tests
 Step 13 — Baseline Evaluation Preparation

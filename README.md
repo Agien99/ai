@@ -169,11 +169,11 @@ Goal:
 
 Generate ranked predictions without machine learning first.
 
-Step 1  — Create Prediction Engine
-Step 2  — Define Scoring Components
-Step 3  — Score Dozens
-Step 4  — Score Columns
-Step 5  — Score Streets
+Step 1  — Create Prediction Engine (COMPLETED)
+Step 2  — Define Scoring Components (COMPLETED)
+Step 3  — Score Dozens (COMPLETED)
+Step 4  — Score Columns (COMPLETED)
+Step 5  — Score Streets (COMPLETED)
 Step 6  — Score Splits
 Step 7  — Score Corners
 Step 8  — Rank Predictions

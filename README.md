@@ -179,9 +179,9 @@ Step 7  — Score Corners (COMPLETED)
 Step 8  — Rank Predictions (COMPLETED)
 Step 9  — Generate Final Prediction Set (COMPLETED)
 Step 10 — Prediction Output Structure (COMPLETED)
-Step 11 — Validation & Edge Cases
-Step 12 — Automated Prediction Tests
-Step 13 — Baseline Evaluation Preparation
+Step 11 — Validation & Edge Cases (COMPLETED)
+Step 12 — Automated Prediction Tests (COMPLETED)
+Step 13 — Baseline Evaluation Preparation (COMPLETED)
 
 Expected output:
 

@@ -118,7 +118,7 @@ Planned steps:
 6. Implement Splits (COMPLETED)
 7. Implement Corners (COMPLETED)
 8. Add validation (COMPLETED)
-9. Add basic tests
+9. Add basic tests (COMPLETED)
 
 Status:
 

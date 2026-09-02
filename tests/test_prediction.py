@@ -861,3 +861,155 @@ def test_prediction_engine_single_spin():
     assert len(
         output["predictions"]["streets"]
     ) == 6
+
+def test_evaluate_prediction():
+    engine = PredictionEngine([
+        1, 2, 3,
+    ])
+
+    predictions = {
+        "dozens": [
+            {
+                "dozen": 1,
+                "prediction_score": 1.0,
+            },
+            {
+                "dozen": 2,
+                "prediction_score": 0.5,
+            },
+        ],
+        "columns": [
+            {
+                "column": 1,
+                "prediction_score": 1.0,
+            },
+            {
+                "column": 2,
+                "prediction_score": 0.5,
+            },
+        ],
+        "streets": [
+            {
+                "street": (7, 8, 9),
+                "prediction_score": 1.0,
+            },
+        ],
+        "splits": [
+            {
+                "split": (7, 8),
+                "prediction_score": 1.0,
+            },
+        ],
+        "corners": [
+            {
+                "corner": (7, 8, 10, 11),
+                "prediction_score": 1.0,
+            },
+        ],
+    }
+
+    result = engine.evaluate_prediction(
+        predictions,
+        actual_number=7,
+    )
+
+    assert result["dozen_hit"] is True
+    assert result["column_hit"] is True
+    assert result["street_hit"] is True
+    assert result["split_hit"] is True
+    assert result["corner_hit"] is True
+
+def test_evaluate_prediction_miss():
+    engine = PredictionEngine([
+        1, 2, 3,
+    ])
+
+    predictions = {
+        "dozens": [
+            {
+                "dozen": 1,
+                "prediction_score": 1.0,
+            },
+            {
+                "dozen": 2,
+                "prediction_score": 0.5,
+            },
+        ],
+        "columns": [
+            {
+                "column": 1,
+                "prediction_score": 1.0,
+            },
+            {
+                "column": 2,
+                "prediction_score": 0.5,
+            },
+        ],
+        "streets": [
+            {
+                "street": (1, 2, 3),
+                "prediction_score": 1.0,
+            },
+        ],
+        "splits": [
+            {
+                "split": (1, 2),
+                "prediction_score": 1.0,
+            },
+        ],
+        "corners": [
+            {
+                "corner": (1, 2, 4, 5),
+                "prediction_score": 1.0,
+            },
+        ],
+    }
+
+    result = engine.evaluate_prediction(
+        predictions,
+        actual_number=36,
+    )
+
+    assert result["dozen_hit"] is False
+    assert result["column_hit"] is False
+    assert result["street_hit"] is False
+    assert result["split_hit"] is False
+    assert result["corner_hit"] is False
+
+def test_evaluate_prediction_zero():
+    engine = PredictionEngine([
+        1, 2, 3,
+    ])
+
+    predictions = engine.generate_predictions()
+
+    result = engine.evaluate_prediction(
+        predictions,
+        actual_number=0,
+    )
+
+    assert result["actual_number"] == 0
+    assert result["dozen_hit"] is False
+    assert result["column_hit"] is False
+    assert result["street_hit"] is False
+    assert result["split_hit"] is False
+    assert result["corner_hit"] is False
+
+def test_evaluate_prediction_invalid_number():
+    engine = PredictionEngine([
+        1, 2, 3,
+    ])
+
+    predictions = engine.generate_predictions()
+
+    try:
+        engine.evaluate_prediction(
+            predictions,
+            actual_number=37,
+        )
+        assert False
+
+    except ValueError as error:
+        assert str(error) == (
+            "Actual number must be between 0 and 36."
+        )

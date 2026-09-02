@@ -665,6 +665,82 @@ class PredictionEngine:
             "predictions": predictions,
         }
 
+    def evaluate_prediction(
+        self,
+        predictions: dict,
+        actual_number: int,
+    ) -> dict:
+        """
+        Evaluate one actual roulette result
+        against a previously generated prediction set.
+        """
+        if not isinstance(actual_number, int):
+            raise ValueError(
+                "Actual number must be an integer."
+            )
+
+        if actual_number < 0 or actual_number > 36:
+            raise ValueError(
+                "Actual number must be between 0 and 36."
+            )
+
+        dozen_hit = False
+        column_hit = False
+        street_hits = []
+        split_hits = []
+        corner_hits = []
+
+        if actual_number != 0:
+            if 1 <= actual_number <= 12:
+                actual_dozen = 1
+            elif 13 <= actual_number <= 24:
+                actual_dozen = 2
+            else:
+                actual_dozen = 3
+
+            remainder = actual_number % 3
+
+            if remainder == 1:
+                actual_column = 1
+            elif remainder == 2:
+                actual_column = 2
+            else:
+                actual_column = 3
+
+            dozen_hit = any(
+                item["dozen"] == actual_dozen
+                for item in predictions["dozens"]
+            )
+
+            column_hit = any(
+                item["column"] == actual_column
+                for item in predictions["columns"]
+            )
+
+        for item in predictions["streets"]:
+            if actual_number in item["street"]:
+                street_hits.append(item["street"])
+
+        for item in predictions["splits"]:
+            if actual_number in item["split"]:
+                split_hits.append(item["split"])
+
+        for item in predictions["corners"]:
+            if actual_number in item["corner"]:
+                corner_hits.append(item["corner"])
+
+        return {
+            "actual_number": actual_number,
+            "dozen_hit": dozen_hit,
+            "column_hit": column_hit,
+            "street_hit": len(street_hits) > 0,
+            "split_hit": len(split_hits) > 0,
+            "corner_hit": len(corner_hits) > 0,
+            "matching_streets": street_hits,
+            "matching_splits": split_hits,
+            "matching_corners": corner_hits,
+        }
+
     def __repr__(self):
         return (
             f"PredictionEngine("

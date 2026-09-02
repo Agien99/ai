@@ -152,11 +152,11 @@ Step 2  — Number Frequency (COMPLETED)
 Step 3  — Recent-Window Frequency (COMPLETED)
 Step 4  — Spins Since Last Appearance (COMPLETED)
 Step 5  — Hot & Cold Numbers (COMPLETED)
-Step 6  — Dozen Frequency
-Step 7  — Column Frequency
-Step 8  — Street Activity
-Step 9  — Split Activity
-Step 10 — Corner Activity
+Step 6  — Dozen Frequency (COMPLETED)
+Step 7  — Column Frequency (COMPLETED)
+Step 8  — Street Activity (COMPLETED)
+Step 9  — Split Activity (COMPLETED)
+Step 10 — Corner Activity (COMPLETED)
 Step 11 — Combined Session Statistics
 Step 12 — Validation & Edge Cases
 Step 13 — Automated Statistical Tests

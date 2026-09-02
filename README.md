@@ -258,16 +258,16 @@ Goal:
 
 Introduce actual ML models after sufficient data and evaluation infrastructure exist.
 
-Step 1 - Create ML Module Structure
-Step 2 - Define ML Prediction Target
-Step 3 - Build ML Training Dataset
-Step 4 - Feature Engineering
-Step 5 - Create Chronological Training / Testing Split
-Step 6 - Implement Logistic Regression
-Step 7 - Implement Random Forest
-Step 8 - Implement Gradient Boosting
-Step 9 - Implement XGBoost
-Step 10 - Standardize ML Prediction Output
+Step 1 - Create ML Module Structure (COMPLETED)
+Step 2 - Define ML Prediction Target (COMPLETED)
+Step 3 - Build ML Training Dataset (COMPLETED)
+Step 4 - Feature Engineering (COMPLETED)
+Step 5 - Create Chronological Training / Testing Split (COMPLETED)
+Step 6 - Implement Logistic Regression (COMPLETED)
+Step 7 - Implement Random Forest (COMPLETED)
+Step 8 - Implement Gradient Boosting (COMPLETED)
+Step 9 - Implement XGBoost (COMPLETED)
+Step 10 - Standardize ML Prediction Output (COMPLETED)
 Step 11 - Convert Number Probabilities to Bet Rankings
 Step 12 - Evaluate ML Predictions
 Step 13 - Compare ML vs V1 vs Baselines

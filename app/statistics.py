@@ -7,6 +7,7 @@ from app.roulette import (
     get_dozen,
     get_splits_for_number,
     get_street,
+    validate_spin_history,
 )
 
 class RouletteStatistics:
@@ -15,6 +16,8 @@ class RouletteStatistics:
     """
 
     def __init__(self, spins: list[int]):
+        validate_spin_history(spins)
+
         self.spins = spins.copy()
 
     def get_number_frequency(self) -> dict[int, int]:

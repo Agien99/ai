@@ -369,3 +369,72 @@ def test_summary_recent_windows():
 
     assert summary["recent_frequency"]["last_10"][1] == 1
     assert summary["recent_frequency"]["last_20"][1] == 1
+
+def test_statistics_invalid_roulette_number():
+    try:
+        RouletteStatistics([1, 7, 37])
+        assert False
+    except ValueError as error:
+        assert str(error) == (
+            "Invalid roulette number at position 2: 37"
+        )
+
+def test_statistics_negative_number():
+    try:
+        RouletteStatistics([1, -1, 12])
+        assert False
+    except ValueError as error:
+        assert str(error) == (
+            "Invalid roulette number at position 1: -1"
+        )
+
+def test_statistics_non_integer_spin():
+    try:
+        RouletteStatistics([1, "7", 12])
+        assert False
+    except ValueError as error:
+        assert str(error) == (
+            "Invalid roulette number at position 1: 7"
+        )
+
+def test_statistics_history_must_be_list():
+    try:
+        RouletteStatistics((1, 7, 12))
+        assert False
+    except ValueError as error:
+        assert str(error) == (
+            "Spin history must be provided as a list."
+        )
+
+def test_empty_statistics_summary():
+    stats = RouletteStatistics([])
+
+    summary = stats.get_summary()
+
+    assert summary["spin_count"] == 0
+
+    assert all(
+        value == 0
+        for value in summary["number_frequency"].values()
+    )
+
+    assert all(
+        value is None
+        for value in summary[
+            "spins_since_last_appearance"
+        ].values()
+    )
+
+    assert summary["dozen_frequency"] == {
+        "dozen_1": 0,
+        "dozen_2": 0,
+        "dozen_3": 0,
+        "zero": 0,
+    }
+
+    assert summary["column_frequency"] == {
+        "column_1": 0,
+        "column_2": 0,
+        "column_3": 0,
+        "zero": 0,
+    }

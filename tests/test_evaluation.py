@@ -415,3 +415,89 @@ def test_evaluate_streets_updates_record():
     )
 
     assert updated_record.street_hit is True
+
+def test_evaluate_splits_hit():
+    engine = PredictionEvaluationEngine()
+
+    predicted_splits = [
+        {
+            "split": (7, 8),
+            "prediction_score": 1.0,
+        },
+        {
+            "split": (14, 17),
+            "prediction_score": 0.8,
+        },
+    ]
+
+    result = engine.evaluate_splits(
+        predicted_splits,
+        actual_number=17,
+    )
+
+    assert result is True
+
+def test_evaluate_splits_miss():
+    engine = PredictionEvaluationEngine()
+
+    predicted_splits = [
+        {
+            "split": (7, 8),
+            "prediction_score": 1.0,
+        },
+        {
+            "split": (14, 17),
+            "prediction_score": 0.8,
+        },
+    ]
+
+    result = engine.evaluate_splits(
+        predicted_splits,
+        actual_number=25,
+    )
+
+    assert result is False
+
+def test_evaluate_splits_zero_is_miss():
+    engine = PredictionEvaluationEngine()
+
+    predicted_splits = [
+        {
+            "split": (1, 2),
+            "prediction_score": 1.0,
+        },
+    ]
+
+    result = engine.evaluate_splits(
+        predicted_splits,
+        actual_number=0,
+    )
+
+    assert result is False
+
+def test_evaluate_splits_updates_record():
+    engine = PredictionEvaluationEngine()
+
+    record = engine.create_evaluation_record(
+        actual_number=5
+    )
+
+    predicted_splits = [
+        {
+            "split": (2, 5),
+            "prediction_score": 1.0,
+        },
+        {
+            "split": (5, 8),
+            "prediction_score": 0.9,
+        },
+    ]
+
+    updated_record = (
+        engine.evaluate_splits_for_record(
+            record,
+            predicted_splits,
+        )
+    )
+
+    assert updated_record.split_hit is True

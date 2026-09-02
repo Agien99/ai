@@ -173,7 +173,6 @@ class PredictionEvaluationEngine:
             for item in predicted_streets
         )
 
-
     def evaluate_streets_for_record(
         self,
         record: PredictionEvaluationRecord,
@@ -185,6 +184,42 @@ class PredictionEvaluationEngine:
         """
         record.street_hit = self.evaluate_streets(
             predicted_streets,
+            record.actual_number,
+        )
+
+        return record
+
+    def evaluate_splits(
+        self,
+        predicted_splits: list[dict],
+        actual_number: int,
+    ) -> bool:
+        """
+        Evaluate whether the actual roulette number
+        matches any predicted split.
+        """
+        self.validate_actual_number(actual_number)
+
+        if actual_number == 0:
+            return False
+
+        return any(
+            actual_number in item["split"]
+            for item in predicted_splits
+        )
+
+
+    def evaluate_splits_for_record(
+        self,
+        record: PredictionEvaluationRecord,
+        predicted_splits: list[dict],
+    ) -> PredictionEvaluationRecord:
+        """
+        Update an evaluation record with
+        the split HIT / MISS result.
+        """
+        record.split_hit = self.evaluate_splits(
+            predicted_splits,
             record.actual_number,
         )
 

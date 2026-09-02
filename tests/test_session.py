@@ -277,3 +277,117 @@ def test_new_session_is_independent_from_previous_session():
 
     assert 17 not in session_b.spins
     assert 5 not in session_b.spins
+
+def test_start_session_with_invalid_number():
+    session = RouletteSession()
+
+    initial_spins = [
+        12, 7, 31, 4, 18,
+        22, 9, 14, 0, 40,
+    ]
+
+    try:
+        session.start(initial_spins)
+        assert False
+    except ValueError as error:
+        assert "Invalid roulette number" in str(error)
+
+
+def test_start_session_with_non_integer():
+    session = RouletteSession()
+
+    initial_spins = [
+        12, 7, 31, 4, 18,
+        22, 9, 14, 0, "27",
+    ]
+
+    try:
+        session.start(initial_spins)
+        assert False
+    except ValueError as error:
+        assert "Invalid roulette number" in str(error)
+
+
+def test_start_session_with_too_many_spins():
+    session = RouletteSession()
+
+    initial_spins = [
+        1, 2, 3, 4, 5,
+        6, 7, 8, 9, 10,
+        11, 12, 13, 14, 15,
+        16,
+    ]
+
+    try:
+        session.start(initial_spins)
+        assert False
+    except ValueError as error:
+        assert str(error) == "Maximum initial history is 15 spins."
+
+
+def test_start_session_with_empty_history():
+    session = RouletteSession()
+
+    try:
+        session.start([])
+        assert False
+    except ValueError as error:
+        assert str(error) == "At least 10 previous spins are required."
+
+
+def test_cannot_add_non_integer_spin():
+    session = RouletteSession()
+
+    initial_spins = [
+        12, 7, 31, 4, 18,
+        22, 9, 14, 0, 27,
+    ]
+
+    session.start(initial_spins)
+
+    try:
+        session.add_spin("17")
+        assert False
+    except ValueError as error:
+        assert str(error) == "Invalid roulette number: 17"
+
+
+def test_cannot_add_negative_spin():
+    session = RouletteSession()
+
+    initial_spins = [
+        12, 7, 31, 4, 18,
+        22, 9, 14, 0, 27,
+    ]
+
+    session.start(initial_spins)
+
+    try:
+        session.add_spin(-1)
+        assert False
+    except ValueError as error:
+        assert str(error) == "Invalid roulette number: -1"
+
+
+def test_metadata_after_session_ended():
+    session = RouletteSession()
+
+    initial_spins = [
+        12, 7, 31, 4, 18,
+        22, 9, 14, 0, 27,
+    ]
+
+    session.start(initial_spins)
+
+    session.add_spin(17)
+    session.add_spin(5)
+
+    session.end()
+
+    metadata = session.get_metadata()
+
+    assert metadata["status"] == "ENDED"
+    assert metadata["initial_spin_count"] == 10
+    assert metadata["total_spin_count"] == 12
+    assert metadata["new_spin_count"] == 2
+    assert metadata["ended_at"] is not None

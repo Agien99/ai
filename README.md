@@ -132,8 +132,8 @@ Steps:
 1. Define RouletteSession model (COMPLETED)
 2. Start session with 10-15 initial spins (COMPLETED)
 3. Add new spins sequentially (COMPLETED)
-4. Maintain spin sequence/order
-5. Track session state and metadata
+4. Maintain spin sequence/order (COMPLETED)
+5. Track session state and metadata (COMPLETED)
 6. End/close session
 7. Start fresh independent session
 8. Session validation and edge cases

@@ -388,5 +388,23 @@ class PredictionEvaluationEngine:
 
         return rates
 
+    def get_session_evaluation_summary(self) -> dict:
+        """
+        Return a complete summary of all prediction
+        evaluations completed in the current session.
+        """
+        rates = self.get_hit_rates()
+
+        return {
+            "evaluation_count": len(
+                self.evaluation_records
+            ),
+            "dozens": rates["dozens"],
+            "columns": rates["columns"],
+            "streets": rates["streets"],
+            "splits": rates["splits"],
+            "corners": rates["corners"],
+        }
+
     def __repr__(self):
         return "PredictionEvaluationEngine()"

@@ -944,3 +944,95 @@ def test_hit_rates_three_evaluations():
     assert rates["dozens"]["hit_rate"] == (
         2 / 3
     )
+
+def test_session_evaluation_summary_initially_empty():
+    engine = PredictionEvaluationEngine()
+
+    summary = (
+        engine.get_session_evaluation_summary()
+    )
+
+    assert summary["evaluation_count"] == 0
+
+    assert summary["dozens"]["hits"] == 0
+    assert summary["dozens"]["misses"] == 0
+    assert summary["dozens"]["total"] == 0
+    assert summary["dozens"]["hit_rate"] == 0.0
+
+    assert summary["columns"]["total"] == 0
+    assert summary["streets"]["total"] == 0
+    assert summary["splits"]["total"] == 0
+    assert summary["corners"]["total"] == 0
+
+def test_session_evaluation_summary():
+    engine = PredictionEvaluationEngine()
+
+    predictions = {
+        "dozens": [
+            {
+                "dozen": 1,
+                "prediction_score": 1.0,
+            },
+        ],
+        "columns": [
+            {
+                "column": 1,
+                "prediction_score": 1.0,
+            },
+        ],
+        "streets": [
+            {
+                "street": (1, 2, 3),
+                "prediction_score": 1.0,
+            },
+        ],
+        "splits": [
+            {
+                "split": (1, 2),
+                "prediction_score": 1.0,
+            },
+        ],
+        "corners": [
+            {
+                "corner": (1, 2, 4, 5),
+                "prediction_score": 1.0,
+            },
+        ],
+    }
+
+    engine.evaluate_prediction_set(
+        predictions,
+        actual_number=1,
+    )
+
+    engine.evaluate_prediction_set(
+        predictions,
+        actual_number=36,
+    )
+
+    summary = (
+        engine.get_session_evaluation_summary()
+    )
+
+    assert summary["evaluation_count"] == 2
+
+    assert summary["dozens"]["hits"] == 1
+    assert summary["dozens"]["misses"] == 1
+    assert summary["dozens"]["total"] == 2
+    assert summary["dozens"]["hit_rate"] == 0.5
+
+    assert summary["columns"]["hits"] == 1
+    assert summary["columns"]["misses"] == 1
+    assert summary["columns"]["hit_rate"] == 0.5
+
+    assert summary["streets"]["hits"] == 1
+    assert summary["streets"]["misses"] == 1
+    assert summary["streets"]["hit_rate"] == 0.5
+
+    assert summary["splits"]["hits"] == 1
+    assert summary["splits"]["misses"] == 1
+    assert summary["splits"]["hit_rate"] == 0.5
+
+    assert summary["corners"]["hits"] == 1
+    assert summary["corners"]["misses"] == 1
+    assert summary["corners"]["hit_rate"] == 0.5

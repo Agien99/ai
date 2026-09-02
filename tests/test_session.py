@@ -391,3 +391,51 @@ def test_metadata_after_session_ended():
     assert metadata["total_spin_count"] == 12
     assert metadata["new_spin_count"] == 2
     assert metadata["ended_at"] is not None
+
+def test_full_session_lifecycle():
+    session = RouletteSession()
+
+    initial_spins = [
+        12, 7, 31, 4, 18,
+        22, 9, 14, 0, 27,
+    ]
+
+    # Start session
+    session.start(initial_spins)
+
+    assert session.status == "ACTIVE"
+    assert len(session.spins) == 10
+
+    # Add new observed spins
+    session.add_spin(17)
+    session.add_spin(5)
+    session.add_spin(29)
+
+    assert session.spins[-3:] == [17, 5, 29]
+    assert len(session.spins) == 13
+
+    # Check sequence
+    sequence = session.get_spin_sequence()
+
+    assert sequence[0] == (1, 12)
+    assert sequence[-1] == (13, 29)
+
+    # Check metadata
+    metadata = session.get_metadata()
+
+    assert metadata["status"] == "ACTIVE"
+    assert metadata["initial_spin_count"] == 10
+    assert metadata["total_spin_count"] == 13
+    assert metadata["new_spin_count"] == 3
+
+    # End session
+    session.end()
+
+    assert session.status == "ENDED"
+    assert session.ended_at is not None
+
+    # Metadata should update after ending
+    metadata = session.get_metadata()
+
+    assert metadata["status"] == "ENDED"
+    assert metadata["ended_at"] is not None

@@ -82,6 +82,92 @@ class PredictionEngine:
             + activity_score
         )
 
+    def score_dozens(
+        self,
+        recent_window: int = 10,
+    ) -> list[dict]:
+        """
+        Score all three roulette dozens.
+
+        Returns a ranked list from highest score to lowest.
+        Zero is excluded because it does not belong to a dozen.
+        """
+        summary = self.get_statistics_summary()
+
+        total_spins = summary["spin_count"]
+
+        recent_frequency = self.statistics.get_recent_frequency(
+            recent_window
+        )
+
+        dozen_frequency = summary["dozen_frequency"]
+
+        results = []
+
+        for dozen in range(1, 4):
+            key = f"dozen_{dozen}"
+
+            total_hits = dozen_frequency[key]
+
+            recent_hits = 0
+
+            for number, count in recent_frequency.items():
+                if number == 0:
+                    continue
+
+                if 1 <= number <= 12 and dozen == 1:
+                    recent_hits += count
+
+                elif 13 <= number <= 24 and dozen == 2:
+                    recent_hits += count
+
+                elif 25 <= number <= 36 and dozen == 3:
+                    recent_hits += count
+
+            actual_recent_window = min(
+                recent_window,
+                total_spins,
+            )
+
+            frequency_score = self.calculate_frequency_score(
+                total_hits,
+                total_spins,
+            )
+
+            recency_score = self.calculate_recency_score(
+                recent_hits,
+                actual_recent_window,
+            )
+
+            activity_score = self.calculate_activity_score(
+                total_hits,
+                total_spins,
+            )
+
+            prediction_score = self.calculate_prediction_score(
+                frequency_score,
+                recency_score,
+                activity_score,
+            )
+
+            results.append({
+                "dozen": dozen,
+                "total_hits": total_hits,
+                "recent_hits": recent_hits,
+                "frequency_score": frequency_score,
+                "recency_score": recency_score,
+                "activity_score": activity_score,
+                "prediction_score": prediction_score,
+            })
+
+        return sorted(
+            results,
+            key=lambda item: (
+                -item["prediction_score"],
+                item["dozen"],
+            ),
+        )
+
     def __repr__(self):
         return (
             f"PredictionEngine("

@@ -80,3 +80,69 @@ def test_scoring_with_zero_denominator():
     assert engine.calculate_frequency_score(0, 0) == 0.0
     assert engine.calculate_recency_score(0, 0) == 0.0
     assert engine.calculate_activity_score(0, 0) == 0.0
+
+def test_score_dozens():
+    spins = [
+        1, 2, 5, 7,
+        13, 18, 20,
+        25, 31, 36,
+        1, 2, 3, 4, 5,
+    ]
+
+    engine = PredictionEngine(spins)
+
+    results = engine.score_dozens(
+        recent_window=5
+    )
+
+    assert len(results) == 3
+
+    assert results[0]["dozen"] == 1
+
+    assert results[0]["total_hits"] == 9
+    assert results[0]["recent_hits"] == 5
+
+    assert results[1]["dozen"] in [2, 3]
+    assert results[2]["dozen"] in [2, 3]
+
+    assert results[0]["prediction_score"] > (
+        results[1]["prediction_score"]
+    )
+
+def test_dozens_are_ranked_by_score():
+    spins = [
+        1, 2, 3, 4, 5,
+        13, 14, 15,
+        25, 26,
+    ]
+
+    engine = PredictionEngine(spins)
+
+    results = engine.score_dozens(
+        recent_window=5
+    )
+
+    assert (
+        results[0]["prediction_score"]
+        >= results[1]["prediction_score"]
+    )
+
+    assert (
+        results[1]["prediction_score"]
+        >= results[2]["prediction_score"]
+    )
+
+def test_score_dozens_empty_history():
+    engine = PredictionEngine([])
+
+    results = engine.score_dozens()
+
+    assert len(results) == 3
+
+    for result in results:
+        assert result["total_hits"] == 0
+        assert result["recent_hits"] == 0
+        assert result["frequency_score"] == 0.0
+        assert result["recency_score"] == 0.0
+        assert result["activity_score"] == 0.0
+        assert result["prediction_score"] == 0.0

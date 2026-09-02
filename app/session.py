@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import uuid4
 
-from app.roulette import validate_initial_history
+from app.roulette import is_valid_number, validate_initial_history
 
 
 class RouletteSession:
@@ -32,6 +32,22 @@ class RouletteSession:
         self.spins = initial_spins.copy()
 
         self.status = "ACTIVE"
+
+    def add_spin(self, number: int):
+        """
+        Add one new roulette result to an active session.
+
+        The new spin is appended to the end of the spin history.
+        """
+        if self.status != "ACTIVE":
+            raise ValueError(
+                "Cannot add spin to a session that is not active."
+            )
+
+        if not is_valid_number(number):
+            raise ValueError(f"Invalid roulette number: {number}")
+
+        self.spins.append(number)
 
     def __repr__(self):
         return (

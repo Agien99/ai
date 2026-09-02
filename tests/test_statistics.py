@@ -102,3 +102,64 @@ def test_spins_since_last_appearance():
     assert result[36] is None
 
     assert len(result) == 37
+
+def test_hot_numbers():
+    spins = [
+        7, 12, 7, 31, 7,
+        12, 18, 22, 12, 7,
+    ]
+
+    stats = RouletteStatistics(spins)
+
+    hot = stats.get_hot_numbers(3)
+
+    assert hot[0] == (7, 4)
+    assert hot[1] == (12, 3)
+    assert hot[2] == (18, 1)
+
+
+def test_cold_numbers():
+    spins = [
+        7, 12, 7, 31, 7,
+        12, 18, 22, 12, 7,
+    ]
+
+    stats = RouletteStatistics(spins)
+
+    cold = stats.get_cold_numbers(3)
+
+    assert cold == [
+        (0, 0),
+        (1, 0),
+        (2, 0),
+    ]
+
+
+def test_hot_numbers_default_limit():
+    stats = RouletteStatistics([
+        7, 7, 7,
+        12, 12,
+        31,
+    ])
+
+    hot = stats.get_hot_numbers()
+
+    assert len(hot) == 5
+    assert hot[0] == (7, 3)
+    assert hot[1] == (12, 2)
+
+
+def test_hot_and_cold_invalid_limit():
+    stats = RouletteStatistics([7, 12, 31])
+
+    try:
+        stats.get_hot_numbers(0)
+        assert False
+    except ValueError as error:
+        assert str(error) == "Limit must be a positive integer."
+
+    try:
+        stats.get_cold_numbers(0)
+        assert False
+    except ValueError as error:
+        assert str(error) == "Limit must be a positive integer."

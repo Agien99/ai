@@ -64,6 +64,45 @@ class RouletteStatistics:
 
         return result
 
+    def get_hot_numbers(self, limit: int = 5) -> list[tuple[int, int]]:
+        """
+        Return the most frequently appearing roulette numbers.
+
+        Each result is:
+            (number, frequency)
+        """
+        if not isinstance(limit, int) or limit <= 0:
+            raise ValueError("Limit must be a positive integer.")
+
+        frequency = self.get_number_frequency()
+
+        ranked = sorted(
+            frequency.items(),
+            key=lambda item: (-item[1], item[0]),
+        )
+
+        return ranked[:limit]
+
+
+    def get_cold_numbers(self, limit: int = 5) -> list[tuple[int, int]]:
+        """
+        Return the least frequently appearing roulette numbers.
+
+        Each result is:
+            (number, frequency)
+        """
+        if not isinstance(limit, int) or limit <= 0:
+            raise ValueError("Limit must be a positive integer.")
+
+        frequency = self.get_number_frequency()
+
+        ranked = sorted(
+            frequency.items(),
+            key=lambda item: (item[1], item[0]),
+        )
+
+        return ranked[:limit]
+
     def __repr__(self):
         return (
             f"RouletteStatistics("

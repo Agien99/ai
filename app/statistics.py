@@ -1,4 +1,9 @@
-from app.roulette import get_column, get_dozen
+from app.roulette import (
+    get_all_streets,
+    get_column,
+    get_dozen,
+    get_street,
+)
 
 class RouletteStatistics:
     """
@@ -152,6 +157,28 @@ class RouletteStatistics:
                 frequency[f"column_{column}"] += 1
 
         return frequency
+
+    def get_street_activity(
+        self,
+    ) -> dict[tuple[int, int, int], int]:
+        """
+        Return activity count for all 12 standard roulette streets.
+
+        Zero is ignored because it does not belong to a
+        standard street.
+        """
+        activity = {
+            street: 0
+            for street in get_all_streets()
+        }
+
+        for number in self.spins:
+            street = get_street(number)
+
+            if street is not None:
+                activity[street] += 1
+
+        return activity
 
     def __repr__(self):
         return (

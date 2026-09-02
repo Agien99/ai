@@ -223,3 +223,33 @@ def test_column_frequency_empty_history():
         "column_3": 0,
         "zero": 0,
     }
+
+def test_street_activity():
+    spins = [
+        1, 2,
+        5, 6, 6,
+        17, 18,
+        34,
+        0,
+    ]
+
+    stats = RouletteStatistics(spins)
+
+    activity = stats.get_street_activity()
+
+    assert activity[(1, 2, 3)] == 2
+    assert activity[(4, 5, 6)] == 3
+    assert activity[(16, 17, 18)] == 2
+    assert activity[(34, 35, 36)] == 1
+
+    assert activity[(7, 8, 9)] == 0
+
+    assert len(activity) == 12
+
+def test_street_activity_empty_history():
+    stats = RouletteStatistics([])
+
+    activity = stats.get_street_activity()
+
+    assert len(activity) == 12
+    assert all(value == 0 for value in activity.values())

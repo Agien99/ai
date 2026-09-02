@@ -243,10 +243,10 @@ Step 7 - Add Strategy Labels (COMPLETED)
 Step 8 - Evaluate All Strategies on the Same Next Spin (COMPLETED)
 Step 9 - Track HIT / MISS Counts per Strategy (COMPLETED)
 Step 10 - Calculate Hit Rates per Strategy (COMPLETED)
-Step 11 - Create Baseline Comparison Summary
-Step 12 - Calculate V1 Improvement vs Baselines
-Step 13 - Validation & Edge Cases
-Step 14 - Automated Baseline Tests
+Step 11 - Create Baseline Comparison Summary (COMPLETED)
+Step 12 - Calculate V1 Improvement vs Baselines (COMPLETED)
+Step 13 - Validation & Edge Cases (COMPLETED)
+Step 14 - Automated Baseline Tests (COMPLETED)
 
 This is important for determining whether improvements are meaningful or only random variation.
 

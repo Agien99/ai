@@ -130,8 +130,8 @@ Create isolated roulette observation sessions.
 Steps:
 
 1. Define RouletteSession model (COMPLETED)
-2. Start session with 10-15 initial spins
-3. Add new spins sequentially
+2. Start session with 10-15 initial spins (COMPLETED)
+3. Add new spins sequentially (COMPLETED)
 4. Maintain spin sequence/order
 5. Track session state and metadata
 6. End/close session

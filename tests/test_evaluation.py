@@ -823,3 +823,124 @@ def test_hit_miss_counts_multiple_evaluations():
 
     assert counts["corners"]["hits"] == 1
     assert counts["corners"]["misses"] == 1
+
+def test_hit_rates_initially_zero():
+    engine = PredictionEvaluationEngine()
+
+    rates = engine.get_hit_rates()
+
+    assert rates["dozens"]["hits"] == 0
+    assert rates["dozens"]["misses"] == 0
+    assert rates["dozens"]["total"] == 0
+    assert rates["dozens"]["hit_rate"] == 0.0
+
+    assert rates["columns"]["hit_rate"] == 0.0
+    assert rates["streets"]["hit_rate"] == 0.0
+    assert rates["splits"]["hit_rate"] == 0.0
+    assert rates["corners"]["hit_rate"] == 0.0
+
+def test_hit_rates_after_multiple_evaluations():
+    engine = PredictionEvaluationEngine()
+
+    predictions = {
+        "dozens": [
+            {"dozen": 1, "prediction_score": 1.0},
+        ],
+        "columns": [
+            {"column": 1, "prediction_score": 1.0},
+        ],
+        "streets": [
+            {
+                "street": (1, 2, 3),
+                "prediction_score": 1.0,
+            },
+        ],
+        "splits": [
+            {
+                "split": (1, 2),
+                "prediction_score": 1.0,
+            },
+        ],
+        "corners": [
+            {
+                "corner": (1, 2, 4, 5),
+                "prediction_score": 1.0,
+            },
+        ],
+    }
+
+    engine.evaluate_prediction_set(
+        predictions,
+        actual_number=1,
+    )
+
+    engine.evaluate_prediction_set(
+        predictions,
+        actual_number=36,
+    )
+
+    rates = engine.get_hit_rates()
+
+    assert rates["dozens"]["hits"] == 1
+    assert rates["dozens"]["misses"] == 1
+    assert rates["dozens"]["total"] == 2
+    assert rates["dozens"]["hit_rate"] == 0.5
+
+    assert rates["columns"]["hit_rate"] == 0.5
+    assert rates["streets"]["hit_rate"] == 0.5
+    assert rates["splits"]["hit_rate"] == 0.5
+    assert rates["corners"]["hit_rate"] == 0.5
+
+def test_hit_rates_three_evaluations():
+    engine = PredictionEvaluationEngine()
+
+    predictions = {
+        "dozens": [
+            {"dozen": 1, "prediction_score": 1.0},
+        ],
+        "columns": [
+            {"column": 1, "prediction_score": 1.0},
+        ],
+        "streets": [
+            {
+                "street": (1, 2, 3),
+                "prediction_score": 1.0,
+            },
+        ],
+        "splits": [
+            {
+                "split": (1, 2),
+                "prediction_score": 1.0,
+            },
+        ],
+        "corners": [
+            {
+                "corner": (1, 2, 4, 5),
+                "prediction_score": 1.0,
+            },
+        ],
+    }
+
+    engine.evaluate_prediction_set(
+        predictions,
+        actual_number=1,
+    )
+
+    engine.evaluate_prediction_set(
+        predictions,
+        actual_number=2,
+    )
+
+    engine.evaluate_prediction_set(
+        predictions,
+        actual_number=36,
+    )
+
+    rates = engine.get_hit_rates()
+
+    assert rates["dozens"]["hits"] == 2
+    assert rates["dozens"]["misses"] == 1
+    assert rates["dozens"]["total"] == 3
+    assert rates["dozens"]["hit_rate"] == (
+        2 / 3
+    )

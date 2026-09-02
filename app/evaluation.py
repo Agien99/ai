@@ -360,5 +360,33 @@ class PredictionEvaluationEngine:
 
         return counts
 
+    def get_hit_rates(self) -> dict:
+        """
+        Calculate hit rates for each prediction category.
+        """
+        counts = self.get_hit_miss_counts()
+
+        rates = {}
+
+        for category, result in counts.items():
+            hits = result["hits"]
+            misses = result["misses"]
+
+            total = hits + misses
+
+            if total == 0:
+                hit_rate = 0.0
+            else:
+                hit_rate = hits / total
+
+            rates[category] = {
+                "hits": hits,
+                "misses": misses,
+                "total": total,
+                "hit_rate": hit_rate,
+            }
+
+        return rates
+
     def __repr__(self):
         return "PredictionEvaluationEngine()"

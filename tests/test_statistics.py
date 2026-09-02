@@ -288,3 +288,36 @@ def test_split_activity_empty_history():
 
     assert len(activity) == 57
     assert all(value == 0 for value in activity.values())
+
+def test_corner_activity():
+    spins = [
+        1,
+        2,
+        5,
+        5,
+        6,
+        36,
+        0,
+    ]
+
+    stats = RouletteStatistics(spins)
+
+    activity = stats.get_corner_activity()
+
+    assert activity[(1, 2, 4, 5)] == 4
+    assert activity[(2, 3, 5, 6)] == 4
+
+    assert activity[(4, 5, 7, 8)] == 2
+    assert activity[(5, 6, 8, 9)] == 3
+
+    assert activity[(32, 33, 35, 36)] == 1
+
+    assert len(activity) == 22
+
+def test_corner_activity_empty_history():
+    stats = RouletteStatistics([])
+
+    activity = stats.get_corner_activity()
+
+    assert len(activity) == 22
+    assert all(value == 0 for value in activity.values())

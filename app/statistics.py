@@ -1,7 +1,9 @@
 from app.roulette import (
+    get_all_corners,
     get_all_splits,
     get_all_streets,
     get_column,
+    get_corners_for_number,
     get_dozen,
     get_splits_for_number,
     get_street,
@@ -201,6 +203,28 @@ class RouletteStatistics:
 
             for split in splits:
                 activity[split] += 1
+
+        return activity
+
+    def get_corner_activity(
+        self,
+    ) -> dict[tuple[int, int, int, int], int]:
+        """
+        Return activity count for all 22 standard roulette corners.
+
+        A single spin may contribute to multiple corner bets.
+        Zero is ignored because standard corners currently cover 1-36 only.
+        """
+        activity = {
+            corner: 0
+            for corner in get_all_corners()
+        }
+
+        for number in self.spins:
+            corners = get_corners_for_number(number)
+
+            for corner in corners:
+                activity[corner] += 1
 
         return activity
 

@@ -36,8 +36,6 @@ class RouletteSession:
     def add_spin(self, number: int):
         """
         Add one new roulette result to an active session.
-
-        The new spin is appended to the end of the spin history.
         """
         if self.status != "ACTIVE":
             raise ValueError(
@@ -49,6 +47,15 @@ class RouletteSession:
 
         self.spins.append(number)
 
+    def get_spin_sequence(self) -> list[tuple[int, int]]:
+        """
+        Return all spins together with their sequence number.
+        """
+        return [
+            (index, number)
+            for index, number in enumerate(self.spins, start=1)
+        ]
+
     def __repr__(self):
         return (
             f"RouletteSession("
@@ -57,19 +64,3 @@ class RouletteSession:
             f"spin_count={len(self.spins)}"
             f")"
         )
-
-def get_spin_sequence(self) -> list[tuple[int, int]]:
-    """
-    Return all spins together with their sequence number.
-
-    Example:
-        [
-            (1, 12),
-            (2, 7),
-            (3, 31),
-        ]
-    """
-    return [
-        (index, number)
-        for index, number in enumerate(self.spins, start=1)
-    ]

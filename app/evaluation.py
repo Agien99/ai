@@ -109,5 +109,50 @@ class PredictionEvaluationEngine:
 
         return record
 
+    def evaluate_columns(
+        self,
+        predicted_columns: list[dict],
+        actual_number: int,
+    ) -> bool:
+        """
+        Evaluate whether the actual roulette number
+        matches any predicted column.
+        """
+        self.validate_actual_number(actual_number)
+
+        if actual_number == 0:
+            return False
+
+        remainder = actual_number % 3
+
+        if remainder == 1:
+            actual_column = 1
+        elif remainder == 2:
+            actual_column = 2
+        else:
+            actual_column = 3
+
+        return any(
+            item["column"] == actual_column
+            for item in predicted_columns
+        )
+
+
+    def evaluate_columns_for_record(
+        self,
+        record: PredictionEvaluationRecord,
+        predicted_columns: list[dict],
+    ) -> PredictionEvaluationRecord:
+        """
+        Update an evaluation record with
+        the column HIT / MISS result.
+        """
+        record.column_hit = self.evaluate_columns(
+            predicted_columns,
+            record.actual_number,
+        )
+
+        return record
+
     def __repr__(self):
         return "PredictionEvaluationEngine()"

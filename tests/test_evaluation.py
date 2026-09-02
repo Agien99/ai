@@ -218,3 +218,114 @@ def test_evaluate_dozens_updates_record():
     )
 
     assert updated_record.dozen_hit is True
+
+def test_evaluate_columns_hit():
+    engine = PredictionEvaluationEngine()
+
+    predicted_columns = [
+        {
+            "column": 1,
+            "prediction_score": 1.0,
+        },
+        {
+            "column": 3,
+            "prediction_score": 0.8,
+        },
+    ]
+
+    result = engine.evaluate_columns(
+        predicted_columns,
+        actual_number=7,
+    )
+
+    assert result is True
+
+def test_evaluate_columns_miss():
+    engine = PredictionEvaluationEngine()
+
+    predicted_columns = [
+        {
+            "column": 1,
+            "prediction_score": 1.0,
+        },
+        {
+            "column": 3,
+            "prediction_score": 0.8,
+        },
+    ]
+
+    result = engine.evaluate_columns(
+        predicted_columns,
+        actual_number=8,
+    )
+
+    assert result is False
+
+def test_evaluate_columns_third_column_hit():
+    engine = PredictionEvaluationEngine()
+
+    predicted_columns = [
+        {
+            "column": 2,
+            "prediction_score": 1.0,
+        },
+        {
+            "column": 3,
+            "prediction_score": 0.9,
+        },
+    ]
+
+    result = engine.evaluate_columns(
+        predicted_columns,
+        actual_number=36,
+    )
+
+    assert result is True
+
+def test_evaluate_columns_zero_is_miss():
+    engine = PredictionEvaluationEngine()
+
+    predicted_columns = [
+        {
+            "column": 1,
+            "prediction_score": 1.0,
+        },
+        {
+            "column": 2,
+            "prediction_score": 0.8,
+        },
+    ]
+
+    result = engine.evaluate_columns(
+        predicted_columns,
+        actual_number=0,
+    )
+
+    assert result is False
+
+def test_evaluate_columns_updates_record():
+    engine = PredictionEvaluationEngine()
+
+    record = engine.create_evaluation_record(
+        actual_number=11
+    )
+
+    predicted_columns = [
+        {
+            "column": 1,
+            "prediction_score": 1.0,
+        },
+        {
+            "column": 2,
+            "prediction_score": 0.8,
+        },
+    ]
+
+    updated_record = (
+        engine.evaluate_columns_for_record(
+            record,
+            predicted_columns,
+        )
+    )
+
+    assert updated_record.column_hit is True

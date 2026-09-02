@@ -120,32 +120,24 @@ Planned steps:
 8. Add validation (COMPLETED)
 9. Add basic tests (COMPLETED)
 
-Status:
-
-```text
-Step 1 - COMPLETE
-Step 2 - NEXT
-```
-
 ---
 
 ### Phase 2 - Session Engine
 
 Goal:
-
 Create isolated roulette observation sessions.
 
-Planned functionality:
+Steps:
 
-* Start new session
-* Enter initial 10-15 spin results
-* Add spins sequentially
-* Maintain spin order
-* Track session state
-* End session
-* Start fresh session
-
-No database integration is required initially.
+1. Define RouletteSession model
+2. Start session with 10-15 initial spins
+3. Add new spins sequentially
+4. Maintain spin sequence/order
+5. Track session state and metadata
+6. End/close session
+7. Start fresh independent session
+8. Session validation and edge cases
+9. Automated session tests
 
 ---
 

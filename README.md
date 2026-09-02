@@ -169,19 +169,19 @@ Goal:
 
 Generate ranked predictions without machine learning first.
 
-Initial approach:
-
-```text
-Session statistics
-        +
-Recency
-        +
-Frequency
-        +
-Bet-group activity
-        ↓
-Prediction score
-```
+Step 1  — Create Prediction Engine
+Step 2  — Define Scoring Components
+Step 3  — Score Dozens
+Step 4  — Score Columns
+Step 5  — Score Streets
+Step 6  — Score Splits
+Step 7  — Score Corners
+Step 8  — Rank Predictions
+Step 9  — Generate Final Prediction Set
+Step 10 — Prediction Output Structure
+Step 11 — Validation & Edge Cases
+Step 12 — Automated Prediction Tests
+Step 13 — Baseline Evaluation Preparation
 
 Expected output:
 

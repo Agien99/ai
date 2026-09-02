@@ -551,3 +551,45 @@ def test_generated_predictions_keep_highest_scores():
             streets[index]["prediction_score"]
             >= streets[index + 1]["prediction_score"]
         )
+
+def test_prediction_output_structure():
+    spins = [
+        1, 2, 5, 7, 12,
+        13, 18, 22, 25, 31,
+        4, 5, 7, 8, 10,
+    ]
+
+    engine = PredictionEngine(spins)
+
+    output = engine.build_prediction_output(
+        recent_window=10
+    )
+
+    assert output["version"] == "v1"
+    assert output["recent_window"] == 10
+    assert output["spin_count"] == 15
+
+    assert "predictions" in output
+
+    predictions = output["predictions"]
+
+    assert len(predictions["dozens"]) == 2
+    assert len(predictions["columns"]) == 2
+    assert len(predictions["corners"]) == 5
+    assert len(predictions["splits"]) == 12
+    assert len(predictions["streets"]) == 6
+
+def test_prediction_output_recent_window():
+    spins = [
+        1, 2, 3, 4, 5,
+        6, 7, 8, 9, 10,
+    ]
+
+    engine = PredictionEngine(spins)
+
+    output = engine.build_prediction_output(
+        recent_window=5
+    )
+
+    assert output["recent_window"] == 5
+    assert output["spin_count"] == 10

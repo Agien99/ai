@@ -620,6 +620,27 @@ class PredictionEngine:
             ),
         }
 
+    def build_prediction_output(
+        self,
+        recent_window: int = 10,
+    ) -> dict:
+        """
+        Build a structured V1 prediction response.
+
+        This format is intended to be easy to expose later
+        through an API and consume from the frontend.
+        """
+        predictions = self.generate_predictions(
+            recent_window=recent_window
+        )
+
+        return {
+            "version": "v1",
+            "recent_window": recent_window,
+            "spin_count": len(self.statistics.spins),
+            "predictions": predictions,
+        }
+
     def __repr__(self):
         return (
             f"PredictionEngine("

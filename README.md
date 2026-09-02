@@ -147,19 +147,19 @@ Goal:
 
 Extract useful features from the current roulette session.
 
-Step 1  — Create Statistics Engine (COMPLETED)
-Step 2  — Number Frequency (COMPLETED)
-Step 3  — Recent-Window Frequency (COMPLETED)
-Step 4  — Spins Since Last Appearance (COMPLETED)
-Step 5  — Hot & Cold Numbers (COMPLETED)
-Step 6  — Dozen Frequency (COMPLETED)
-Step 7  — Column Frequency (COMPLETED)
-Step 8  — Street Activity (COMPLETED)
-Step 9  — Split Activity (COMPLETED)
-Step 10 — Corner Activity (COMPLETED)
-Step 11 — Combined Session Statistics (COMPLETED)
-Step 12 — Validation & Edge Cases (COMPLETED)
-Step 13 — Automated Statistical Tests (COMPLETED)
+1. Create Statistics Engine (COMPLETED)
+2. Number Frequency (COMPLETED)
+3. Recent-Window Frequency (COMPLETED)
+4. Spins Since Last Appearance (COMPLETED)
+5. Hot & Cold Numbers (COMPLETED)
+6. Dozen Frequency (COMPLETED)
+7. Column Frequency (COMPLETED)
+8. Street Activity (COMPLETED)
+9. Split Activity (COMPLETED)
+10. Corner Activity (COMPLETED)
+11. Combined Session Statistics (COMPLETED)
+12. Validation & Edge Cases (COMPLETED)
+13. Automated Statistical Tests (COMPLETED)
 
 ---
 
@@ -169,19 +169,19 @@ Goal:
 
 Generate ranked predictions without machine learning first.
 
-Step 1  — Create Prediction Engine (COMPLETED)
-Step 2  — Define Scoring Components (COMPLETED)
-Step 3  — Score Dozens (COMPLETED)
-Step 4  — Score Columns (COMPLETED)
-Step 5  — Score Streets (COMPLETED)
-Step 6  — Score Splits (COMPLETED)
-Step 7  — Score Corners (COMPLETED)
-Step 8  — Rank Predictions (COMPLETED)
-Step 9  — Generate Final Prediction Set (COMPLETED)
-Step 10 — Prediction Output Structure (COMPLETED)
-Step 11 — Validation & Edge Cases (COMPLETED)
-Step 12 — Automated Prediction Tests (COMPLETED)
-Step 13 — Baseline Evaluation Preparation (COMPLETED)
+1. Create Prediction Engine (COMPLETED)
+2. Define Scoring Components (COMPLETED)
+3. Score Dozens (COMPLETED)
+4. Score Columns (COMPLETED)
+5. Score Streets (COMPLETED)
+6. Score Splits (COMPLETED)
+7. Score Corners (COMPLETED)
+8. Rank Predictions (COMPLETED)
+9. Generate Final Prediction Set (COMPLETED)
+10. Prediction Output Structure (COMPLETED)
+11. Validation & Edge Cases (COMPLETED)
+12. Automated Prediction Tests (COMPLETED)
+13. Baseline Evaluation Preparation (COMPLETED)
 
 Expected output:
 
@@ -203,19 +203,19 @@ Goal:
 
 Measure whether previous predictions hit the next roulette result.
 
-Step 1  Create Evaluation Engine (COMPLETED)
-Step 2  Define Prediction Evaluation Record (COMPLETED)
-Step 3  Evaluate Dozen Predictions (COMPLETED)
-Step 4  Evaluate Column Predictions (COMPLETED)
-Step 5  Evaluate Street Predictions (COMPLETED)
-Step 6  Evaluate Split Predictions (COMPLETED)
-Step 7  Evaluate Corner Predictions (COMPLETED)
-Step 8  Evaluate Complete Prediction Set (COMPLETED)
-Step 9  Track HIT / MISS Counts (COMPLETED)
-Step 10 Calculate Hit Rates (COMPLETED)
-Step 11 Session Evaluation Summary (COMPLETED)
-Step 12 Validation & Edge Cases (COMPLETED)
-Step 13 Automated Evaluation Tests (COMPLETED)
+1. Create Evaluation Engine (COMPLETED)
+2. Define Prediction Evaluation Record (COMPLETED)
+3. Evaluate Dozen Predictions (COMPLETED)
+4. Evaluate Column Predictions (COMPLETED)
+5. Evaluate Street Predictions (COMPLETED)
+6. Evaluate Split Predictions (COMPLETED)
+7. Evaluate Corner Predictions (COMPLETED)
+8. Evaluate Complete Prediction Set (COMPLETED)
+9. Track HIT / MISS Counts (COMPLETED)
+10. Calculate Hit Rates (COMPLETED)
+11. Session Evaluation Summary (COMPLETED)
+12. Validation & Edge Cases (COMPLETED)
+13. Automated Evaluation Tests (COMPLETED)
 
 Performance will be tracked separately for:
 
@@ -233,20 +233,20 @@ Goal:
 
 Determine whether the prediction engine performs differently from simple strategies.
 
-Step 1 - Create Baseline Engine (COMPLETED)
-Step 2 - Implement Random Baseline (COMPLETED)
-Step 3 - Implement Frequency-Only Baseline (COMPLETED)
-Step 4 - Implement Hot Baseline (COMPLETED)
-Step 5 - Implement Cold Baseline (COMPLETED)
-Step 6 - Standardize Baseline Prediction Output (COMPLETED)
-Step 7 - Add Strategy Labels (COMPLETED)
-Step 8 - Evaluate All Strategies on the Same Next Spin (COMPLETED)
-Step 9 - Track HIT / MISS Counts per Strategy (COMPLETED)
-Step 10 - Calculate Hit Rates per Strategy (COMPLETED)
-Step 11 - Create Baseline Comparison Summary (COMPLETED)
-Step 12 - Calculate V1 Improvement vs Baselines (COMPLETED)
-Step 13 - Validation & Edge Cases (COMPLETED)
-Step 14 - Automated Baseline Tests (COMPLETED)
+1. Create Baseline Engine (COMPLETED)
+2. Implement Random Baseline (COMPLETED)
+3. Implement Frequency-Only Baseline (COMPLETED)
+4. Implement Hot Baseline (COMPLETED)
+5. Implement Cold Baseline (COMPLETED)
+6. Standardize Baseline Prediction Output (COMPLETED)
+7. Add Strategy Labels (COMPLETED)
+8. Evaluate All Strategies on the Same Next Spin (COMPLETED)
+9. Track HIT / MISS Counts per Strategy (COMPLETED)
+10. Calculate Hit Rates per Strategy (COMPLETED)
+11. Create Baseline Comparison Summary (COMPLETED)
+12. Calculate V1 Improvement vs Baselines (COMPLETED)
+13. Validation & Edge Cases (COMPLETED)
+14. Automated Baseline Tests (COMPLETED)
 
 This is important for determining whether improvements are meaningful or only random variation.
 
@@ -258,26 +258,26 @@ Goal:
 
 Introduce actual ML models after sufficient data and evaluation infrastructure exist.
 
-Step 1 - Create ML Module Structure (COMPLETED)
-Step 2 - Define ML Prediction Target (COMPLETED)
-Step 3 - Build ML Training Dataset (COMPLETED)
-Step 4 - Feature Engineering (COMPLETED)
-Step 5 - Create Chronological Training / Testing Split (COMPLETED)
-Step 6 - Implement Logistic Regression (COMPLETED)
-Step 7 - Implement Random Forest (COMPLETED)
-Step 8 - Implement Gradient Boosting (COMPLETED)
-Step 9 - Implement XGBoost (COMPLETED)
-Step 10 - Standardize ML Prediction Output (COMPLETED)
-Step 11 - Convert Number Probabilities to Bet Rankings (COMPLETED)
-Step 12 - Evaluate ML Predictions (COMPLETED)
-Step 13 - Compare ML vs V1 vs Baselines (COMPLETED)
-Step 14 - Add ML Performance Metrics (COMPLETED)
-Step 15 - Select Best ML Model (COMPLETED)
-Step 16 - Create Training & Retraining Flow (COMPLETED)
-Step 17 - Add Model Persistence (COMPLETED)
-Step 18 - Validation & Edge Cases (COMPLETED)
-Step 19 - Automated ML Tests (COMPLETED)
-Step 20 - Final ML Benchmark (COMPLETED)
+1. Create ML Module Structure (COMPLETED)
+2. Define ML Prediction Target (COMPLETED)
+3. Build ML Training Dataset (COMPLETED)
+4. Feature Engineering (COMPLETED)
+5. Create Chronological Training / Testing Split (COMPLETED)
+6. Implement Logistic Regression (COMPLETED)
+7. Implement Random Forest (COMPLETED)
+8. Implement Gradient Boosting (COMPLETED)
+9. Implement XGBoost (COMPLETED)
+10. Standardize ML Prediction Output (COMPLETED)
+11. Convert Number Probabilities to Bet Rankings (COMPLETED)
+12. Evaluate ML Predictions (COMPLETED)
+13. Compare ML vs V1 vs Baselines (COMPLETED)
+14. Add ML Performance Metrics (COMPLETED)
+15. Select Best ML Model (COMPLETED)
+16. Create Training & Retraining Flow (COMPLETED)
+17. Add Model Persistence (COMPLETED)
+18. Validation & Edge Cases (COMPLETED)
+19. Automated ML Tests (COMPLETED)
+20. Final ML Benchmark (COMPLETED)
 
 The ML model may rank individual roulette numbers or betting combinations.
 
@@ -291,41 +291,41 @@ Persist roulette sessions and model performance.
 
 Possible database entities:
 
-Step 1 - Define Persistence Requirements
-Step 2 - Finalize Database Entity Responsibilities
-Step 3 - Design sessions Table
-Step 4 - Design spins Table
-Step 5 - Design prediction_runs Table
-Step 6 - Design prediction_items Table
-Step 7 - Design model_versions Table
-Step 8 - Design model_metrics Table
-Step 9 - Define Table Relationships and Foreign Keys
-Step 10 - Define Status Fields and Constraints
-Step 11 - Define Timestamps and Audit Fields
-Step 12 - Define Supabase Schema and Naming Convention
-Step 13 - Create Tables in Supabase
-Step 14 - Configure Primary Keys and UUID Strategy
-Step 15 - Configure Indexes for Common Queries
-Step 16 - Configure Row Level Security Policies
-Step 17 - Create Python Supabase Configuration
-Step 18 - Create Supabase Database Service Module
-Step 19 - Implement Session Persistence
-Step 20 - Implement Spin Persistence
-Step 21 - Implement Prediction Run Persistence
-Step 22 - Implement Prediction Item Persistence
-Step 23 - Implement Model Version Persistence
-Step 24 - Implement Model Metrics Persistence
-Step 25 - Load Existing Session Data from Supabase
-Step 26 - Reconstruct Roulette Sessions from Stored Spins
-Step 27 - Store Evaluation Results after Each Spin
-Step 28 - Connect ML Training Data to Historical Supabase Data
-Step 29 - Connect Retraining Flow to Stored Sessions
-Step 30 - Add Database Validation and Error Handling
-Step 31 - Prevent Duplicate Records
-Step 32 - Add Supabase Integration Tests
-Step 33 - Test Full Session → Prediction → Evaluation → Database Flow
-Step 34 - Verify Historical Data Can Be Used for ML Benchmarking
-Step 35 - Final Phase 8 Integration Test
+1. Define Persistence Requirements
+2. Finalize Database Entity Responsibilities
+3. Design sessions Table
+4. Design spins Table
+5. Design prediction_runs Table
+6. Design prediction_items Table
+7. Design model_versions Table
+8. Design model_metrics Table
+9. Define Table Relationships and Foreign Keys
+10. Define Status Fields and Constraints
+11. Define Timestamps and Audit Fields
+12. Define Supabase Schema and Naming Convention
+13. Create Tables in Supabase
+14. Configure Primary Keys and UUID Strategy
+15. Configure Indexes for Common Queries
+16. Configure Row Level Security Policies
+17. Create Python Supabase Configuration
+18. Create Supabase Database Service Module
+19. Implement Session Persistence
+20. Implement Spin Persistence
+21. Implement Prediction Run Persistence
+22. Implement Prediction Item Persistence
+23. Implement Model Version Persistence
+24. Implement Model Metrics Persistence
+25. Load Existing Session Data from Supabase
+26. Reconstruct Roulette Sessions from Stored Spins
+27. Store Evaluation Results after Each Spin
+28. Connect ML Training Data to Historical Supabase Data
+29. Connect Retraining Flow to Stored Sessions
+30. Add Database Validation and Error Handling
+31. Prevent Duplicate Records
+32. Add Supabase Integration Tests
+33. Test Full Session → Prediction → Evaluation → Database Flow
+34. Verify Historical Data Can Be Used for ML Benchmarking
+35. Final Phase 8 Integration Test
 
 The database schema will be finalized only after the local Python system is understood properly.
 

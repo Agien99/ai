@@ -1036,3 +1036,147 @@ def test_session_evaluation_summary():
     assert summary["corners"]["hits"] == 1
     assert summary["corners"]["misses"] == 1
     assert summary["corners"]["hit_rate"] == 0.5
+
+def test_validate_prediction_set():
+    engine = PredictionEvaluationEngine()
+
+    predictions = {
+        "dozens": [],
+        "columns": [],
+        "streets": [],
+        "splits": [],
+        "corners": [],
+    }
+
+    assert (
+        engine.validate_prediction_set(predictions)
+        is True
+    )
+
+def test_validate_prediction_set_invalid_type():
+    engine = PredictionEvaluationEngine()
+
+    try:
+        engine.validate_prediction_set(
+            ["invalid"]
+        )
+        assert False
+
+    except ValueError as error:
+        assert str(error) == (
+            "Predictions must be provided "
+            "as a dictionary."
+        )
+
+def test_validate_prediction_set_missing_category():
+    engine = PredictionEvaluationEngine()
+
+    predictions = {
+        "dozens": [],
+        "columns": [],
+        "streets": [],
+        "splits": [],
+    }
+
+    try:
+        engine.validate_prediction_set(
+            predictions
+        )
+        assert False
+
+    except ValueError as error:
+        assert str(error) == (
+            "Missing prediction category: corners"
+        )
+
+def test_validate_prediction_category_not_list():
+    engine = PredictionEvaluationEngine()
+
+    predictions = {
+        "dozens": [],
+        "columns": [],
+        "streets": [],
+        "splits": [],
+        "corners": {
+            "corner": (1, 2, 4, 5),
+        },
+    }
+
+    try:
+        engine.validate_prediction_set(
+            predictions
+        )
+        assert False
+
+    except ValueError as error:
+        assert str(error) == (
+            "Prediction category 'corners' "
+            "must be a list."
+        )
+
+def test_empty_prediction_lists_are_all_misses():
+    engine = PredictionEvaluationEngine()
+
+    predictions = {
+        "dozens": [],
+        "columns": [],
+        "streets": [],
+        "splits": [],
+        "corners": [],
+    }
+
+    record = engine.evaluate_prediction_set(
+        predictions,
+        actual_number=17,
+    )
+
+    assert record.dozen_hit is False
+    assert record.column_hit is False
+    assert record.street_hit is False
+    assert record.split_hit is False
+    assert record.corner_hit is False
+
+def test_prediction_set_invalid_actual_number():
+    engine = PredictionEvaluationEngine()
+
+    predictions = {
+        "dozens": [],
+        "columns": [],
+        "streets": [],
+        "splits": [],
+        "corners": [],
+    }
+
+    try:
+        engine.evaluate_prediction_set(
+            predictions,
+            actual_number=37,
+        )
+        assert False
+
+    except ValueError as error:
+        assert str(error) == (
+            "Invalid roulette number: 37"
+        )
+
+def test_failed_evaluation_not_recorded():
+    engine = PredictionEvaluationEngine()
+
+    predictions = {
+        "dozens": [],
+        "columns": [],
+        "streets": [],
+        "splits": [],
+        "corners": [],
+    }
+
+    try:
+        engine.evaluate_prediction_set(
+            predictions,
+            actual_number=99,
+        )
+
+    except ValueError:
+        pass
+
+    assert len(engine.evaluation_records) == 0

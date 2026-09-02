@@ -270,6 +270,7 @@ class PredictionEvaluationEngine:
         Evaluate a complete prediction set against
         one actual roulette result.
         """
+        self.validate_prediction_set(predictions)
         record = self.create_evaluation_record(
             actual_number=actual_number
         )
@@ -405,6 +406,44 @@ class PredictionEvaluationEngine:
             "splits": rates["splits"],
             "corners": rates["corners"],
         }
+
+    def validate_prediction_set(
+        self,
+        predictions: dict,
+    ) -> bool:
+        """
+        Validate the structure of a complete
+        prediction set before evaluation.
+        """
+        if not isinstance(predictions, dict):
+            raise ValueError(
+                "Predictions must be provided as a dictionary."
+            )
+
+        required_categories = [
+            "dozens",
+            "columns",
+            "streets",
+            "splits",
+            "corners",
+        ]
+
+        for category in required_categories:
+            if category not in predictions:
+                raise ValueError(
+                    f"Missing prediction category: {category}"
+                )
+
+            if not isinstance(
+                predictions[category],
+                list,
+            ):
+                raise ValueError(
+                    f"Prediction category '{category}' "
+                    "must be a list."
+                )
+
+        return True
 
     def __repr__(self):
         return "PredictionEvaluationEngine()"

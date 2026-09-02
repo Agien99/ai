@@ -117,7 +117,7 @@ Planned steps:
 5. Implement Streets (COMPLETED)
 6. Implement Splits (COMPLETED)
 7. Implement Corners (COMPLETED)
-8. Add validation
+8. Add validation (COMPLETED)
 9. Add basic tests
 
 Status:

@@ -1,19 +1,22 @@
-from app.roulette import get_all_splits, get_splits_for_number
+from app.roulette import (
+    get_all_corners,
+    get_corners_for_number,
+)
 
 
-print("=== Split Test ===")
+print("=== Corner Test ===")
 
 test_numbers = [0, 1, 2, 5, 17, 36]
 
 for number in test_numbers:
-    print(f"{number} -> {get_splits_for_number(number)}")
+    print(f"{number} -> {get_corners_for_number(number)}")
 
 
-print("\n=== All Splits ===")
+print("\n=== All Corners ===")
 
-all_splits = get_all_splits()
+all_corners = get_all_corners()
 
-for index, split in enumerate(all_splits, start=1):
-    print(f"Split {index}: {split}")
+for index, corner in enumerate(all_corners, start=1):
+    print(f"Corner {index}: {corner}")
 
-print(f"\nTotal splits: {len(all_splits)}")
+print(f"\nTotal corners: {len(all_corners)}")

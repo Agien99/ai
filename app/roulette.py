@@ -162,3 +162,54 @@ def get_splits_for_number(number: int) -> list[tuple[int, int]]:
         for split in get_all_splits()
         if number in split
     ]
+
+def get_all_corners() -> list[tuple[int, int, int, int]]:
+    """
+    Return all standard corner bets for numbers 1-36.
+
+    Each corner covers a 2x2 block on the roulette grid.
+    """
+    corners = []
+
+    # There are 11 gaps between the 12 roulette rows.
+    # Each gap has 2 possible corner bets.
+    for row_start in range(1, 34, 3):
+        corners.append((
+            row_start,
+            row_start + 1,
+            row_start + 3,
+            row_start + 4,
+        ))
+
+        corners.append((
+            row_start + 1,
+            row_start + 2,
+            row_start + 4,
+            row_start + 5,
+        ))
+
+    return corners
+
+def get_corners_for_number(
+    number: int
+) -> list[tuple[int, int, int, int]]:
+    """
+    Return all standard corner bets containing the given number.
+
+    Returns:
+        A list of corner tuples.
+
+    Raises:
+        ValueError if the number is invalid.
+    """
+    if not is_valid_number(number):
+        raise ValueError(f"Invalid roulette number: {number}")
+
+    if number == 0:
+        return []
+
+    return [
+        corner
+        for corner in get_all_corners()
+        if number in corner
+    ]

@@ -213,3 +213,52 @@ def get_corners_for_number(
         for corner in get_all_corners()
         if number in corner
     ]
+
+def validate_spin_history(spins: list[int]) -> bool:
+    """
+    Validate a list of roulette spin results.
+
+    Every value must be an integer from 0 to 36.
+
+    Returns:
+        True if all spins are valid.
+
+    Raises:
+        ValueError if any spin is invalid.
+    """
+    if not isinstance(spins, list):
+        raise ValueError("Spin history must be provided as a list.")
+
+    for index, number in enumerate(spins):
+        if not is_valid_number(number):
+            raise ValueError(
+                f"Invalid roulette number at position {index}: {number}"
+            )
+
+    return True
+
+def validate_initial_history(
+    spins: list[int],
+    minimum: int = 10,
+    maximum: int = 15,
+) -> bool:
+    """
+    Validate the initial spin history used to start a session.
+
+    Default requirement:
+        minimum 10 spins
+        maximum 15 spins
+    """
+    validate_spin_history(spins)
+
+    if len(spins) < minimum:
+        raise ValueError(
+            f"At least {minimum} previous spins are required."
+        )
+
+    if len(spins) > maximum:
+        raise ValueError(
+            f"Maximum initial history is {maximum} spins."
+        )
+
+    return True

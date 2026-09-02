@@ -1,22 +1,27 @@
 from app.roulette import (
-    get_all_corners,
-    get_corners_for_number,
+    validate_initial_history,
+    validate_spin_history,
 )
 
 
-print("=== Corner Test ===")
-
-test_numbers = [0, 1, 2, 5, 17, 36]
-
-for number in test_numbers:
-    print(f"{number} -> {get_corners_for_number(number)}")
+print("=== Validation Test ===")
 
 
-print("\n=== All Corners ===")
+valid_history = [
+    12, 7, 31, 4, 18,
+    22, 9, 14, 0, 27,
+    6, 33,
+]
 
-all_corners = get_all_corners()
+print("Valid history:")
+print(valid_history)
 
-for index, corner in enumerate(all_corners, start=1):
-    print(f"Corner {index}: {corner}")
+print(
+    "Spin history valid:",
+    validate_spin_history(valid_history)
+)
 
-print(f"\nTotal corners: {len(all_corners)}")
+print(
+    "Initial history valid:",
+    validate_initial_history(valid_history)
+)

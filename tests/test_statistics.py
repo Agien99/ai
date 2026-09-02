@@ -82,3 +82,23 @@ def test_recent_frequency_invalid_window():
         assert False
     except ValueError as error:
         assert str(error) == "Window must be a positive integer."
+
+def test_spins_since_last_appearance():
+    spins = [
+        12, 5, 17, 8, 31, 5, 22,
+    ]
+
+    stats = RouletteStatistics(spins)
+
+    result = stats.get_spins_since_last_appearance()
+
+    assert result[22] == 0
+    assert result[5] == 1
+    assert result[31] == 2
+    assert result[8] == 3
+    assert result[17] == 4
+    assert result[12] == 6
+
+    assert result[36] is None
+
+    assert len(result) == 37

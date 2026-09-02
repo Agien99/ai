@@ -44,6 +44,26 @@ class RouletteStatistics:
 
         return frequency
 
+    def get_spins_since_last_appearance(self) -> dict[int, int | None]:
+        """
+        Return how many spins have occurred since each roulette number
+        last appeared.
+
+        Returns:
+            0 if the number was the most recent spin.
+            None if the number has never appeared.
+        """
+        result = {
+            number: None
+            for number in range(37)
+        }
+
+        for distance, number in enumerate(reversed(self.spins)):
+            if result[number] is None:
+                result[number] = distance
+
+        return result
+
     def __repr__(self):
         return (
             f"RouletteStatistics("

@@ -308,21 +308,22 @@ def test_start_session_with_non_integer():
         assert "Invalid roulette number" in str(error)
 
 
-def test_start_session_with_too_many_spins():
+def test_start_session_with_more_than_15_spins():
     session = RouletteSession()
 
     initial_spins = [
         1, 2, 3, 4, 5,
         6, 7, 8, 9, 10,
         11, 12, 13, 14, 15,
-        16,
+        16, 17, 18, 19, 20,
     ]
 
-    try:
-        session.start(initial_spins)
-        assert False
-    except ValueError as error:
-        assert str(error) == "Maximum initial history is 15 spins."
+    session.start(initial_spins)
+
+    assert session.status == "ACTIVE"
+    assert session.initial_spins == initial_spins
+    assert session.spins == initial_spins
+    assert len(session.initial_spins) == 20
 
 
 def test_start_session_with_empty_history():

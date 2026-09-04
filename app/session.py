@@ -21,7 +21,7 @@ class RouletteSession:
 
     def start(self, initial_spins: list[int]):
         """
-        Start the session using 10-15 recent roulette results.
+        Start the session using at least 10 recent roulette results.
         """
         if self.status != "NEW":
             raise ValueError("Session has already been started.")

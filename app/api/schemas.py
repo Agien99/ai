@@ -58,7 +58,6 @@ class InitialSpinsRequest(
 ):
     spins: list[RouletteNumber] = Field(
         min_length=10,
-        max_length=15,
     )
 
 

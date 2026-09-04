@@ -240,25 +240,18 @@ def validate_spin_history(spins: list[int]) -> bool:
 def validate_initial_history(
     spins: list[int],
     minimum: int = 10,
-    maximum: int = 15,
 ) -> bool:
     """
     Validate the initial spin history used to start a session.
 
     Default requirement:
-        minimum 10 spins
-        maximum 15 spins
+    minimum 10 spins
     """
     validate_spin_history(spins)
 
     if len(spins) < minimum:
         raise ValueError(
             f"At least {minimum} previous spins are required."
-        )
-
-    if len(spins) > maximum:
-        raise ValueError(
-            f"Maximum initial history is {maximum} spins."
         )
 
     return True

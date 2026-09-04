@@ -58,6 +58,15 @@ def test_add_spin(monkeypatch):
         ),
     )
 
+    monkeypatch.setattr(
+        "app.api.routers.sessions."
+        "APIEvaluationService."
+        "evaluate_pending_for_spin",
+        MagicMock(
+            return_value=[]
+        ),
+    )
+
     create_spin = MagicMock(
         return_value={
             "spin_id": spin_id,

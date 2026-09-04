@@ -295,46 +295,52 @@ combinations.
 
 ------------------------------------------------------------------------
 
-### Phase 8 - Supabase Integration
+### Phase 8 - Neon PostgreSQL Integration
 
 Goal:
 
-Persist roulette sessions and model performance.
+Persist roulette sessions, spins, prediction results, evaluation results, model versions, and model performance using Neon PostgreSQL.
 
-Possible database entities:
+Database configuration:
 
-1.  Define Persistence Requirements
-2.  Finalize Database Entity Responsibilities
-3.  Design sessions Table
-4.  Design spins Table
-5.  Design prediction_runs Table
-6.  Design prediction_items Table
-7.  Design model_versions Table
-8.  Design model_metrics Table
-9.  Define Table Relationships and Foreign Keys
-10. Define Status Fields and Constraints
-11. Define Timestamps and Audit Fields
-12. Define Supabase Schema and Naming Convention
-13. Create Tables in Supabase
-14. Configure Primary Keys and UUID Strategy
-15. Configure Indexes for Common Queries
-16. Configure Row Level Security Policies
-17. Create Python Supabase Configuration
-18. Create Supabase Database Service Module
+Platform: Neon
+Database: roulette_ai
+Schema: public
+
+Planned steps:
+
+1. Define Persistence Requirements — COMPLETED
+2. Finalize Database Entity Responsibilities — COMPLETED
+3. Design sessions Table — COMPLETED
+4. Design spins Table — COMPLETED
+5. Design prediction_runs Table — COMPLETED
+6. Design prediction_items Table — COMPLETED
+7. Design model_versions Table — COMPLETED
+8. Design model_metrics Table — COMPLETED
+9. Define Table Relationships and Foreign Keys — COMPLETED
+10. Define Status Fields and Constraints — COMPLETED
+11. Define Timestamps and Audit Fields — COMPLETED
+12. Define PostgreSQL Schema and Naming Convention — COMPLETED
+13. Create Tables in Neon — COMPLETED
+14. Configure Primary Keys and UUID Strategy — COMPLETED
+15. Configure Indexes for Common Queries — COMPLETED
+16. Configure Database Security Strategy — COMPLETED
+17. Create Python Neon Database Configuration
+18. Create PostgreSQL Database Service Module
 19. Implement Session Persistence
 20. Implement Spin Persistence
 21. Implement Prediction Run Persistence
 22. Implement Prediction Item Persistence
 23. Implement Model Version Persistence
 24. Implement Model Metrics Persistence
-25. Load Existing Session Data from Supabase
+25. Load Existing Session Data from Neon
 26. Reconstruct Roulette Sessions from Stored Spins
 27. Store Evaluation Results after Each Spin
-28. Connect ML Training Data to Historical Supabase Data
+28. Connect ML Training Data to Historical Neon Data
 29. Connect Retraining Flow to Stored Sessions
 30. Add Database Validation and Error Handling
 31. Prevent Duplicate Records
-32. Add Supabase Integration Tests
+32. Add Neon PostgreSQL Integration Tests
 33. Test Full Session → Prediction → Evaluation → Database Flow
 34. Verify Historical Data Can Be Used for ML Benchmarking
 35. Final Phase 8 Integration Test

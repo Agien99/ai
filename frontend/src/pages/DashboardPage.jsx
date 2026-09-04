@@ -1,79 +1,196 @@
-const pageDetails = {
-  dashboard: {
-    eyebrow: "Roulette AI",
-    title: "Dashboard",
-    description:
-      "Session overview, predictions, statistics and model performance.",
-  },
-
-  "new-session": {
-    eyebrow: "Session",
-    title: "New Session",
-    description:
-      "Create a roulette observation session and enter the initial spin history.",
-  },
-
-  "active-session": {
-    eyebrow: "Live Analysis",
-    title: "Active Session",
-    description:
-      "Enter roulette results and review predictions as the session progresses.",
-  },
-
-  history: {
-    eyebrow: "Historical Data",
-    title: "Session History",
-    description:
-      "Review previous roulette sessions and their prediction performance.",
-  },
-
-  models: {
-    eyebrow: "Machine Learning",
-    title: "Models",
-    description:
-      "Compare trained models, evaluation results and the current best model.",
-  },
-};
-
 function DashboardPage({
-  activePage,
+  session,
+  spins,
+  onNewSession,
+  onOpenSession,
 }) {
-  const page =
-    pageDetails[activePage] ||
-    pageDetails.dashboard;
+  const hasSession =
+    session?.status === "ACTIVE";
+
+  const initialCount =
+    spins.filter(
+      (spin) =>
+        spin.spin_type === "INITIAL"
+    ).length;
+
+  const observedCount =
+    spins.filter(
+      (spin) =>
+        spin.spin_type === "OBSERVED"
+    ).length;
 
   return (
     <section className="page">
-      <div className="page-heading">
+      <div className="dashboard-hero">
         <div>
           <span className="page-eyebrow">
-            {page.eyebrow}
+            AI-Powered Analysis
           </span>
 
-          <h1>{page.title}</h1>
+          <h1>
+            Roulette AI
+          </h1>
 
-          <p>{page.description}</p>
+          <p>
+            Analyze session patterns,
+            generate ranked predictions
+            and evaluate performance
+            over time.
+          </p>
         </div>
 
-        <span className="development-badge">
-          Phase 10
-        </span>
+        <button
+          type="button"
+          className="button button-primary"
+          onClick={
+            hasSession
+              ? onOpenSession
+              : onNewSession
+          }
+        >
+          {hasSession
+            ? "Open Active Session"
+            : "Start New Session"}
+        </button>
       </div>
 
-      <div className="dashboard-placeholder">
-        <div className="placeholder-content">
-          <span className="placeholder-label">
-            UI FOUNDATION
+      <div className="dashboard-metrics">
+        <article className="metric-card">
+          <span>
+            Session
+          </span>
+
+          <strong
+            className={
+              hasSession
+                ? "metric-green"
+                : ""
+            }
+          >
+            {hasSession
+              ? "ACTIVE"
+              : "NONE"}
+          </strong>
+
+          <small>
+            Current state
+          </small>
+        </article>
+
+        <article className="metric-card">
+          <span>
+            Initial Spins
+          </span>
+
+          <strong>
+            {initialCount}
+          </strong>
+
+          <small>
+            Starting history
+          </small>
+        </article>
+
+        <article className="metric-card">
+          <span>
+            Live Spins
+          </span>
+
+          <strong>
+            {observedCount}
+          </strong>
+
+          <small>
+            Observed results
+          </small>
+        </article>
+
+        <article className="metric-card">
+          <span>
+            Total Spins
+          </span>
+
+          <strong>
+            {spins.length}
+          </strong>
+
+          <small>
+            Current session
+          </small>
+        </article>
+      </div>
+
+      <div className="dashboard-sections">
+        <div className="panel dashboard-main-panel">
+          <span className="panel-eyebrow">
+            Prediction Engine
           </span>
 
           <h2>
-            {page.title} interface
+            AI Predictions
           </h2>
 
           <p>
-            This area is ready for the
-            Phase 10 components.
+            Ranked dozens, columns,
+            streets, splits and corners
+            will appear here in the
+            next batch.
           </p>
+
+          <div className="coming-soon-grid">
+            <span>Dozens</span>
+            <span>Columns</span>
+            <span>Streets</span>
+            <span>Splits</span>
+            <span>Corners</span>
+          </div>
+        </div>
+
+        <div className="panel dashboard-side-panel">
+          <span className="panel-eyebrow">
+            Current Session
+          </span>
+
+          <h2>
+            Session Status
+          </h2>
+
+          {hasSession ? (
+            <>
+              <div className="dashboard-session-status">
+                <span className="status-dot" />
+                Active
+              </div>
+
+              <p>
+                Continue entering live
+                roulette results.
+              </p>
+
+              <button
+                type="button"
+                className="button button-secondary"
+                onClick={onOpenSession}
+              >
+                View Session
+              </button>
+            </>
+          ) : (
+            <>
+              <p>
+                Start a session to begin
+                collecting roulette data.
+              </p>
+
+              <button
+                type="button"
+                className="button button-secondary"
+                onClick={onNewSession}
+              >
+                New Session
+              </button>
+            </>
+          )}
         </div>
       </div>
     </section>

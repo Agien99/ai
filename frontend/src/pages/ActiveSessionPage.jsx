@@ -43,6 +43,102 @@ import {
 } from "../services/sessionApi";
 
 
+const predictionCategoryMap = {
+  DOZENS: "dozens",
+  COLUMNS: "columns",
+  STREETS: "streets",
+  SPLITS: "splits",
+  CORNERS: "corners",
+};
+
+
+function normalizeStoredPrediction(
+  storedPrediction
+) {
+  if (
+    !storedPrediction
+    ?.prediction_run
+  ) {
+    return null;
+  }
+
+  const run =
+    storedPrediction
+      .prediction_run;
+
+  const predictions = {
+    dozens: [],
+    columns: [],
+    streets: [],
+    splits: [],
+    corners: [],
+  };
+
+  let numberProbabilities =
+    null;
+
+
+  for (
+    const item of
+    storedPrediction
+      .prediction_items || []
+  ) {
+    if (
+      item.category ===
+      "NUMBER_PROBABILITIES"
+    ) {
+      numberProbabilities =
+        item.payload;
+
+      continue;
+    }
+
+    const predictionKey =
+      predictionCategoryMap[
+        item.category
+      ];
+
+    if (!predictionKey) {
+      continue;
+    }
+
+    predictions[
+      predictionKey
+    ] =
+      item.payload || [];
+  }
+
+
+  return {
+    prediction_run_id:
+      run.prediction_run_id,
+
+    session_id:
+      run.session_id,
+
+    strategy:
+      run.strategy_key,
+
+    prediction_for_spin_index:
+      run.prediction_for_spin_index,
+
+    input_spin_count:
+      run.input_spin_count,
+
+    recent_window:
+      run.recent_window,
+
+    model_version_id:
+      run.model_version_id,
+
+    predictions,
+
+    number_probabilities:
+      numberProbabilities,
+  };
+}
+
+
 function ActiveSessionPage({
   session,
   spins,
@@ -167,7 +263,9 @@ function ActiveSessionPage({
         return;
       }
 
-      setPredictionLoading(true);
+      setPredictionLoading(
+        true
+      );
 
       try {
         const data =
@@ -177,13 +275,17 @@ function ActiveSessionPage({
             10
           );
 
-        setPrediction(data);
+        setPrediction(
+          data
+        );
       } catch (requestError) {
         setError(
           requestError.message
         );
       } finally {
-        setPredictionLoading(false);
+        setPredictionLoading(
+          false
+        );
       }
     }, [session]);
 
@@ -194,57 +296,67 @@ function ActiveSessionPage({
         return;
       }
 
-      setPredictionLoading(true);
+      setPredictionLoading(
+        true
+      );
 
       try {
-        let latestPrediction = null;
+        let storedPrediction =
+          null;
 
         try {
-          latestPrediction =
+          storedPrediction =
             await getLatestPrediction(
               session.session_id
             );
         } catch {
-          latestPrediction = null;
+          storedPrediction =
+            null;
         }
 
-        const predictionRun =
-          latestPrediction
-            ?.prediction_run;
 
-        const targetSpinIndex =
-          predictionRun
-            ?.prediction_for_spin_index;
+        const normalized =
+          normalizeStoredPrediction(
+            storedPrediction
+          );
+
 
         const nextSpinIndex =
           spins.length + 1;
 
+
         if (
-          latestPrediction &&
-          targetSpinIndex ===
+          normalized &&
+          normalized
+            .prediction_for_spin_index ===
             nextSpinIndex
         ) {
           setPrediction(
-            latestPrediction
+            normalized
           );
 
           return;
         }
 
-        const data =
+
+        const generated =
           await generatePrediction(
             session.session_id,
             "v1",
             10
           );
 
-        setPrediction(data);
+        setPrediction(
+          generated
+        );
       } catch (requestError) {
         setError(
           requestError.message
         );
       } finally {
-        setPredictionLoading(false);
+        setPredictionLoading(
+          false
+        );
       }
     }, [
       session,
@@ -256,6 +368,7 @@ function ActiveSessionPage({
     if (!session) {
       return;
     }
+
 
     const loadSessionData =
       async () => {
@@ -269,16 +382,6 @@ function ActiveSessionPage({
             loadMLPerformance(),
           ]);
 
-          /*
-           * When the page is opened or an
-           * existing ACTIVE session is resumed,
-           * first check whether a prediction
-           * already exists for the next spin.
-           *
-           * This prevents us from creating
-           * another prediction run simply
-           * because the page was reopened.
-           */
           await loadOrCreatePrediction();
         } catch (requestError) {
           setError(
@@ -286,6 +389,7 @@ function ActiveSessionPage({
           );
         }
       };
+
 
     loadSessionData();
   }, [
@@ -296,6 +400,14 @@ function ActiveSessionPage({
     loadMLPerformance,
     loadOrCreatePrediction,
   ]);
+
+
+  const handleRefreshPrediction =
+    async () => {
+      setError("");
+
+      await loadOrCreatePrediction();
+    };
 
 
   const handleSpin =
@@ -310,6 +422,7 @@ function ActiveSessionPage({
       setSubmitting(true);
       setError("");
 
+
       try {
         const storedSpin =
           await addSessionSpin(
@@ -321,6 +434,7 @@ function ActiveSessionPage({
           storedSpin
         );
 
+
         await Promise.all([
           loadStatistics(),
           loadEvaluation(),
@@ -328,11 +442,12 @@ function ActiveSessionPage({
           loadMLPerformance(),
         ]);
 
+
         /*
-         * A real new spin has now been
-         * recorded, so intentionally create
-         * the prediction for the following
-         * spin.
+         * A new real spin has been
+         * stored. We now intentionally
+         * create the prediction for the
+         * following spin.
          */
         await createNextPrediction();
       } catch (requestError) {
@@ -356,6 +471,7 @@ function ActiveSessionPage({
 
       setEnding(true);
       setError("");
+
 
       try {
         const ended =
@@ -399,6 +515,7 @@ function ActiveSessionPage({
             </p>
           </div>
         </div>
+
 
         <div className="panel no-session-panel">
           <div className="no-session-icon">
@@ -446,6 +563,7 @@ function ActiveSessionPage({
             updated prediction.
           </p>
         </div>
+
 
         <div className="session-status-card">
           <span className="status-dot" />
@@ -505,12 +623,14 @@ function ActiveSessionPage({
 
       <div className="session-section">
         <PredictionPanel
-          prediction={prediction}
+          prediction={
+            prediction
+          }
           loading={
             predictionLoading
           }
           onRefresh={
-            createNextPrediction
+            handleRefreshPrediction
           }
         />
       </div>
@@ -518,21 +638,27 @@ function ActiveSessionPage({
 
       <div className="session-section">
         <EvaluationPanel
-          evaluation={evaluation}
+          evaluation={
+            evaluation
+          }
         />
       </div>
 
 
       <div className="session-section">
         <StatisticsPanel
-          statistics={statistics}
+          statistics={
+            statistics
+          }
         />
       </div>
 
 
       <div className="session-section">
         <StrategyComparisonPanel
-          comparison={comparison}
+          comparison={
+            comparison
+          }
         />
       </div>
 
@@ -548,8 +674,12 @@ function ActiveSessionPage({
 
       <div className="session-section">
         <SessionSummary
-          session={session}
-          spins={spins}
+          session={
+            session
+          }
+          spins={
+            spins
+          }
           evaluation={
             evaluation
           }
@@ -583,7 +713,9 @@ function ActiveSessionPage({
           "afterward."
         }
         confirmLabel="End Session"
-        loading={ending}
+        loading={
+          ending
+        }
         danger
         onCancel={() =>
           setEndConfirmationOpen(

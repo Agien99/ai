@@ -8,6 +8,7 @@ function formatGroup(
   return value;
 }
 
+
 function formatScore(
   score
 ) {
@@ -23,6 +24,7 @@ function formatScore(
   ).toFixed(2);
 }
 
+
 function PredictionGroup({
   title,
   items = [],
@@ -32,7 +34,9 @@ function PredictionGroup({
   return (
     <div className="prediction-group">
       <div className="prediction-group-header">
-        <h3>{title}</h3>
+        <h3>
+          {title}
+        </h3>
 
         <span>
           {items.length}
@@ -69,6 +73,7 @@ function PredictionGroup({
 
                   <div className="prediction-value">
                     {labelPrefix}
+
                     {formatGroup(
                       item[valueKey]
                     )}
@@ -95,20 +100,25 @@ function PredictionGroup({
   );
 }
 
+
 function PredictionPanel({
   prediction,
   loading = false,
   onRefresh,
 }) {
-  if (loading && !prediction) {
+  if (
+    loading &&
+    !prediction
+  ) {
     return (
       <div className="panel">
         <div className="panel-loading">
-          Generating prediction...
+          Loading prediction...
         </div>
       </div>
     );
   }
+
 
   if (!prediction) {
     return (
@@ -127,7 +137,7 @@ function PredictionPanel({
 
         <div className="prediction-no-data">
           <h3>
-            No prediction generated
+            No prediction available
           </h3>
 
           <p>
@@ -142,15 +152,19 @@ function PredictionPanel({
             disabled={loading}
             onClick={onRefresh}
           >
-            Generate Prediction
+            {loading
+              ? "Loading..."
+              : "Generate Prediction"}
           </button>
         </div>
       </div>
     );
   }
 
+
   const predictions =
     prediction.predictions || {};
+
 
   return (
     <div className="panel prediction-panel">
@@ -183,16 +197,18 @@ function PredictionPanel({
           onClick={onRefresh}
         >
           {loading
-            ? "Generating..."
-            : "Regenerate"}
+            ? "Refreshing..."
+            : "Refresh"}
         </button>
       </div>
+
 
       <div className="prediction-grid">
         <PredictionGroup
           title="Dozens"
           items={
-            predictions.dozens
+            predictions.dozens ||
+            []
           }
           valueKey="dozen"
           labelPrefix="Dozen "
@@ -201,7 +217,8 @@ function PredictionPanel({
         <PredictionGroup
           title="Columns"
           items={
-            predictions.columns
+            predictions.columns ||
+            []
           }
           valueKey="column"
           labelPrefix="Column "
@@ -210,7 +227,8 @@ function PredictionPanel({
         <PredictionGroup
           title="Streets"
           items={
-            predictions.streets
+            predictions.streets ||
+            []
           }
           valueKey="street"
         />
@@ -218,7 +236,8 @@ function PredictionPanel({
         <PredictionGroup
           title="Splits"
           items={
-            predictions.splits
+            predictions.splits ||
+            []
           }
           valueKey="split"
         />
@@ -226,7 +245,8 @@ function PredictionPanel({
         <PredictionGroup
           title="Corners"
           items={
-            predictions.corners
+            predictions.corners ||
+            []
           }
           valueKey="corner"
         />
@@ -234,5 +254,6 @@ function PredictionPanel({
     </div>
   );
 }
+
 
 export default PredictionPanel;

@@ -1,5 +1,4 @@
 import {
-  useCallback,
   useEffect,
   useState,
 } from "react";
@@ -11,8 +10,6 @@ import {
 
 
 function DashboardPage({
-  session,
-  spins,
   onNewSession,
   onOpenSession,
   onOpenHistory,
@@ -43,113 +40,126 @@ function DashboardPage({
   ] = useState("");
 
 
-  const loadDashboard =
-    useCallback(async () => {
-      setLoading(true);
-      setError("");
+  useEffect(() => {
+    let cancelled = false;
 
 
-      try {
-        const sessionData =
-          await getSessions();
+    const loadDashboard =
+      async () => {
+        try {
+          const sessionData =
+            await getSessions();
 
 
-        const allSessions =
-          Array.isArray(
-            sessionData
-          )
-            ? sessionData
-            : [];
+          if (cancelled) {
+            return;
+          }
 
 
-        setSessions(
-          allSessions
-        );
-
-
-        const activeSessions =
-          allSessions
-            .filter(
-              (item) =>
-                item.status ===
-                "ACTIVE"
+          const allSessions =
+            Array.isArray(
+              sessionData
             )
-            .sort(
-              (a, b) => {
-                const aTime =
-                  new Date(
-                    a.started_at ||
-                    a.created_at ||
-                    0
-                  ).getTime();
+              ? sessionData
+              : [];
 
-                const bTime =
-                  new Date(
-                    b.started_at ||
-                    b.created_at ||
-                    0
-                  ).getTime();
 
-                return (
-                  bTime -
-                  aTime
-                );
-              }
+          setSessions(
+            allSessions
+          );
+
+
+          const activeSessions =
+            allSessions
+              .filter(
+                (item) =>
+                  item.status ===
+                  "ACTIVE"
+              )
+              .sort(
+                (a, b) => {
+                  const aTime =
+                    new Date(
+                      a.started_at ||
+                      a.created_at ||
+                      0
+                    ).getTime();
+
+                  const bTime =
+                    new Date(
+                      b.started_at ||
+                      b.created_at ||
+                      0
+                    ).getTime();
+
+                  return (
+                    bTime -
+                    aTime
+                  );
+                }
+              );
+
+
+          if (
+            activeSessions.length === 0
+          ) {
+            setLatestActiveSession(
+              null
+            );
+
+            setLatestActiveSpins(
+              []
+            );
+
+            return;
+          }
+
+
+          const latest =
+            activeSessions[0];
+
+
+          const spinData =
+            await getSessionSpins(
+              latest.session_id
             );
 
 
-        if (
-          activeSessions.length === 0
-        ) {
+          if (cancelled) {
+            return;
+          }
+
+
           setLatestActiveSession(
-            null
+            latest
           );
 
           setLatestActiveSpins(
-            []
+            Array.isArray(spinData)
+              ? spinData
+              : []
           );
-
-          return;
+        } catch (requestError) {
+          if (!cancelled) {
+            setError(
+              requestError.message
+            );
+          }
+        } finally {
+          if (!cancelled) {
+            setLoading(false);
+          }
         }
+      };
 
 
-        const latest =
-          activeSessions[0];
-
-
-        setLatestActiveSession(
-          latest
-        );
-
-
-        const spinData =
-          await getSessionSpins(
-            latest.session_id
-          );
-
-
-        setLatestActiveSpins(
-          Array.isArray(spinData)
-            ? spinData
-            : []
-        );
-      } catch (requestError) {
-        setError(
-          requestError.message
-        );
-      } finally {
-        setLoading(false);
-      }
-    }, []);
-
-
-  useEffect(() => {
     loadDashboard();
-  }, [
-    loadDashboard,
-    session,
-    spins.length,
-  ]);
+
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
 
   const activeSessions =

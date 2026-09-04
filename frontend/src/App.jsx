@@ -443,12 +443,6 @@ function App() {
       default:
         return (
           <DashboardPage
-            session={
-              currentSession
-            }
-            spins={
-              spins
-            }
             onNewSession={() =>
               handleNavigation(
                 "new-session"

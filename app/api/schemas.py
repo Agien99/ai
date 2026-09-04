@@ -8,6 +8,7 @@ from pydantic import (
     Field,
 )
 
+
 RouletteNumber = Annotated[
     int,
     Field(
@@ -28,6 +29,12 @@ PredictionStrategy = Literal[
     "ml_gradient_boosting",
     "ml_xgboost",
 ]
+
+
+class StrictRequestModel(BaseModel):
+    model_config = ConfigDict(
+        extra="forbid"
+    )
 
 
 class HealthResponse(BaseModel):
@@ -102,17 +109,17 @@ class PredictionResponse(BaseModel):
 
 class StoredPredictionResponse(BaseModel):
     prediction_run: dict[str, Any]
-    prediction_items: list[dict[str, Any]]
+    prediction_items: list[
+        dict[str, Any]
+    ]
 
-class StrictRequestModel(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid"
-    )
 
 class EvaluationResponse(BaseModel):
     session_id: UUID
     evaluation_count: int
-    evaluations: list[dict[str, Any]]
+    evaluations: list[
+        dict[str, Any]
+    ]
 
 
 class ComparisonResponse(BaseModel):
@@ -124,9 +131,13 @@ class ComparisonResponse(BaseModel):
 class MLPerformanceResponse(BaseModel):
     session_id: UUID
     model_count: int
-    models: list[dict[str, Any]]
+    models: list[
+        dict[str, Any]
+    ]
 
 
 class ModelsResponse(BaseModel):
     model_version_count: int
-    models: list[dict[str, Any]]
+    models: list[
+        dict[str, Any]
+    ]

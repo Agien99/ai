@@ -28,18 +28,19 @@ import MLPerformancePanel
 import SessionSummary
   from "../components/sessions/SessionSummary";
 
+import ConfirmDialog
+  from "../components/common/ConfirmDialog";
+
 import {
   addSessionSpin,
   generatePrediction,
+  getLatestPrediction,
   getSessionEvaluation,
   getSessionStatistics,
   getStrategyComparison,
   getMLPerformance,
   endSession,
 } from "../services/sessionApi";
-
-import ConfirmDialog
-  from "../components/common/ConfirmDialog";
 
 
 function ActiveSessionPage({
@@ -49,7 +50,6 @@ function ActiveSessionPage({
   onNewSession,
   onSessionEnded,
 }) {
-
   const [
     endConfirmationOpen,
     setEndConfirmationOpen,
@@ -188,6 +188,70 @@ function ActiveSessionPage({
     }, [session]);
 
 
+  const loadOrCreatePrediction =
+    useCallback(async () => {
+      if (!session) {
+        return;
+      }
+
+      setPredictionLoading(true);
+
+      try {
+        let latestPrediction = null;
+
+        try {
+          latestPrediction =
+            await getLatestPrediction(
+              session.session_id
+            );
+        } catch {
+          latestPrediction = null;
+        }
+
+        const predictionRun =
+          latestPrediction
+            ?.prediction_run;
+
+        const targetSpinIndex =
+          predictionRun
+            ?.prediction_for_spin_index;
+
+        const nextSpinIndex =
+          spins.length + 1;
+
+        if (
+          latestPrediction &&
+          targetSpinIndex ===
+            nextSpinIndex
+        ) {
+          setPrediction(
+            latestPrediction
+          );
+
+          return;
+        }
+
+        const data =
+          await generatePrediction(
+            session.session_id,
+            "v1",
+            10
+          );
+
+        setPrediction(data);
+      } catch (requestError) {
+        setError(
+          requestError.message
+        );
+      } finally {
+        setPredictionLoading(false);
+      }
+    }, [
+      session,
+      spins.length,
+    ]);
+
+
   useEffect(() => {
     if (!session) {
       return;
@@ -205,7 +269,17 @@ function ActiveSessionPage({
             loadMLPerformance(),
           ]);
 
-          await createNextPrediction();
+          /*
+           * When the page is opened or an
+           * existing ACTIVE session is resumed,
+           * first check whether a prediction
+           * already exists for the next spin.
+           *
+           * This prevents us from creating
+           * another prediction run simply
+           * because the page was reopened.
+           */
+          await loadOrCreatePrediction();
         } catch (requestError) {
           setError(
             requestError.message
@@ -220,7 +294,7 @@ function ActiveSessionPage({
     loadEvaluation,
     loadComparison,
     loadMLPerformance,
-    createNextPrediction,
+    loadOrCreatePrediction,
   ]);
 
 
@@ -254,6 +328,12 @@ function ActiveSessionPage({
           loadMLPerformance(),
         ]);
 
+        /*
+         * A real new spin has now been
+         * recorded, so intentionally create
+         * the prediction for the following
+         * spin.
+         */
         await createNextPrediction();
       } catch (requestError) {
         setError(
@@ -331,8 +411,8 @@ function ActiveSessionPage({
 
           <p>
             Create a new session and
-            enter 10–15 initial spins
-            to begin.
+            enter at least 10 initial
+            spins to begin.
           </p>
 
           <button
@@ -396,10 +476,10 @@ function ActiveSessionPage({
           className="button button-danger-ghost"
           disabled={ending}
           onClick={() =>
-          setEndConfirmationOpen(
-            true
-          )
-        }
+            setEndConfirmationOpen(
+              true
+            )
+          }
         >
           {ending
             ? "Ending..."
@@ -490,7 +570,8 @@ function ActiveSessionPage({
           {spins.length} total spins
         </span>
       </div>
-      
+
+
       <ConfirmDialog
         open={
           endConfirmationOpen

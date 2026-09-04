@@ -18,7 +18,11 @@ import StrategyComparisonPanel
 import StatisticsPanel
   from "../components/statistics/StatisticsPanel";
 
+import ConfirmDialog
+  from "../components/common/ConfirmDialog";
+
 import {
+  endSession,
   getSession,
   getSessionSpins,
   getSessionStatistics,
@@ -26,9 +30,12 @@ import {
   getStrategyComparison,
 } from "../services/sessionApi";
 
+
 function SessionHistoryDetailPage({
   sessionId,
   onBack,
+  onContinueSession,
+  resumeLoading = false,
 }) {
   const [
     session,
@@ -61,9 +68,20 @@ function SessionHistoryDetailPage({
   ] = useState(true);
 
   const [
+    ending,
+    setEnding,
+  ] = useState(false);
+
+  const [
+    endConfirmationOpen,
+    setEndConfirmationOpen,
+  ] = useState(false);
+
+  const [
     error,
     setError,
   ] = useState("");
+
 
   useEffect(() => {
     const load = async () => {
@@ -127,6 +145,46 @@ function SessionHistoryDetailPage({
     load();
   }, [sessionId]);
 
+
+  const handleEndSession =
+    async () => {
+      if (
+        ending ||
+        !session
+      ) {
+        return;
+      }
+
+      setEnding(true);
+      setError("");
+
+      try {
+        const endedSession =
+          await endSession(
+            session.session_id
+          );
+
+        setSession(
+          endedSession
+        );
+
+        setEndConfirmationOpen(
+          false
+        );
+      } catch (requestError) {
+        setError(
+          requestError.message
+        );
+      } finally {
+        setEnding(false);
+      }
+    };
+
+
+  const isActive =
+    session?.status === "ACTIVE";
+
+
   if (loading) {
     return (
       <div className="panel panel-loading">
@@ -134,6 +192,7 @@ function SessionHistoryDetailPage({
       </div>
     );
   }
+
 
   return (
     <section className="page">
@@ -144,6 +203,7 @@ function SessionHistoryDetailPage({
       >
         ← Session History
       </button>
+
 
       <div className="page-heading">
         <div>
@@ -161,13 +221,56 @@ function SessionHistoryDetailPage({
             performance.
           </p>
         </div>
+
+
+        {isActive && (
+          <div className="history-detail-actions">
+            <button
+              type="button"
+              className="button button-primary"
+              disabled={
+                resumeLoading ||
+                ending
+              }
+              onClick={() =>
+                onContinueSession(
+                  session.session_id
+                )
+              }
+            >
+              {resumeLoading
+                ? "Opening..."
+                : "Continue Session"}
+            </button>
+
+            <button
+              type="button"
+              className="button button-danger-ghost"
+              disabled={
+                resumeLoading ||
+                ending
+              }
+              onClick={() =>
+                setEndConfirmationOpen(
+                  true
+                )
+              }
+            >
+              {ending
+                ? "Ending..."
+                : "End Session"}
+            </button>
+          </div>
+        )}
       </div>
+
 
       {error && (
         <div className="error-message">
           {error}
         </div>
       )}
+
 
       {session && (
         <>
@@ -179,11 +282,13 @@ function SessionHistoryDetailPage({
             }
           />
 
+
           <div className="session-section">
             <SpinHistory
               spins={spins}
             />
           </div>
+
 
           <div className="session-section">
             <EvaluationPanel
@@ -193,6 +298,7 @@ function SessionHistoryDetailPage({
             />
           </div>
 
+
           <div className="session-section">
             <StrategyComparisonPanel
               comparison={
@@ -200,6 +306,7 @@ function SessionHistoryDetailPage({
               }
             />
           </div>
+
 
           <div className="session-section">
             <StatisticsPanel
@@ -210,8 +317,33 @@ function SessionHistoryDetailPage({
           </div>
         </>
       )}
+
+
+      <ConfirmDialog
+        open={
+          endConfirmationOpen
+        }
+        title="End Session?"
+        message={
+          "This roulette session will be marked " +
+          "as ended. New spins cannot be added " +
+          "afterward."
+        }
+        confirmLabel="End Session"
+        loading={ending}
+        danger
+        onCancel={() =>
+          setEndConfirmationOpen(
+            false
+          )
+        }
+        onConfirm={
+          handleEndSession
+        }
+      />
     </section>
   );
 }
+
 
 export default SessionHistoryDetailPage;

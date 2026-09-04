@@ -2821,3 +2821,23 @@ button,
       );
   }
 }
+
+.history-detail-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+
+@media (max-width: 600px) {
+  .history-detail-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .history-detail-actions .button {
+    flex: 1;
+  }
+}

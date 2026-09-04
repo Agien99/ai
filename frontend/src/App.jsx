@@ -26,6 +26,11 @@ import SessionHistoryPage
 import SessionHistoryDetailPage
   from "./pages/SessionHistoryDetailPage";
 
+import {
+  getSession,
+  getSessionSpins,
+} from "./services/sessionApi";
+
 
 function App() {
   const [
@@ -125,6 +130,47 @@ function App() {
     );
   };
 
+  const [
+    resumeLoading,
+    setResumeLoading,
+  ] = useState(false);
+
+  const handleContinueSession =
+    async (sessionId) => {
+      if (resumeLoading) {
+        return;
+      }
+
+      setResumeLoading(true);
+
+      try {
+        const [
+          sessionData,
+          spinData,
+        ] = await Promise.all([
+          getSession(sessionId),
+          getSessionSpins(sessionId),
+        ]);
+
+        setCurrentSession(
+          sessionData
+        );
+
+        setSpins(
+          spinData
+        );
+
+        setSelectedHistorySessionId(
+          null
+        );
+
+        setActivePage(
+          "active-session"
+        );
+      } finally {
+        setResumeLoading(false);
+      }
+    };
 
   const renderPage = () => {
     switch (activePage) {
@@ -192,6 +238,12 @@ function App() {
               handleNavigation(
                 "history"
               )
+            }
+            onContinueSession={
+              handleContinueSession
+            }
+            resumeLoading={
+              resumeLoading
             }
           />
         );

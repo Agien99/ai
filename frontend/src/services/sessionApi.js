@@ -159,6 +159,14 @@ export async function generatePrediction(
   );
 }
 
+export async function getLatestPrediction(
+  sessionId
+) {
+  return apiRequest(
+    `/sessions/${sessionId}/predictions/latest`
+  );
+}
+
 export async function getSessionStatistics(
   sessionId
 ) {

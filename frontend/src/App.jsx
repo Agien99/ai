@@ -58,12 +58,20 @@ function App() {
     setSelectedHistorySessionId,
   ] = useState(null);
 
+  const [
+    resumeLoading,
+    setResumeLoading,
+  ] = useState(false);
+
 
   const handleNavigation = (
     page
   ) => {
     setActivePage(page);
-    setMobileMenuOpen(false);
+
+    setMobileMenuOpen(
+      false
+    );
   };
 
 
@@ -130,10 +138,6 @@ function App() {
     );
   };
 
-  const [
-    resumeLoading,
-    setResumeLoading,
-  ] = useState(false);
 
   const handleContinueSession =
     async (sessionId) => {
@@ -141,15 +145,22 @@ function App() {
         return;
       }
 
-      setResumeLoading(true);
+      setResumeLoading(
+        true
+      );
 
       try {
         const [
           sessionData,
           spinData,
         ] = await Promise.all([
-          getSession(sessionId),
-          getSessionSpins(sessionId),
+          getSession(
+            sessionId
+          ),
+
+          getSessionSpins(
+            sessionId
+          ),
         ]);
 
         setCurrentSession(
@@ -168,9 +179,12 @@ function App() {
           "active-session"
         );
       } finally {
-        setResumeLoading(false);
+        setResumeLoading(
+          false
+        );
       }
     };
+
 
   const renderPage = () => {
     switch (activePage) {
@@ -190,7 +204,9 @@ function App() {
             session={
               currentSession
             }
-            spins={spins}
+            spins={
+              spins
+            }
             onSpinAdded={
               handleSpinAdded
             }
@@ -264,7 +280,9 @@ function App() {
             session={
               currentSession
             }
-            spins={spins}
+            spins={
+              spins
+            }
             onNewSession={() =>
               handleNavigation(
                 "new-session"
@@ -303,14 +321,18 @@ function App() {
           handleNavigation
         }
         onClose={() =>
-          setMobileMenuOpen(false)
+          setMobileMenuOpen(
+            false
+          )
         }
       />
 
       <div className="app-main">
         <AppHeader
           onMenuClick={() =>
-            setMobileMenuOpen(true)
+            setMobileMenuOpen(
+              true
+            )
           }
         />
 

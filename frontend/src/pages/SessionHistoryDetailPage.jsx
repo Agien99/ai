@@ -84,65 +84,74 @@ function SessionHistoryDetailPage({
 
 
   useEffect(() => {
-    const load = async () => {
-      try {
+    const loadSessionDetail =
+      async () => {
+        if (!sessionId) {
+          setLoading(false);
+          return;
+        }
+
+        setLoading(true);
         setError("");
 
-        const [
-          sessionData,
-          spinData,
-          statsData,
-          evaluationData,
-          comparisonData,
-        ] = await Promise.all([
-          getSession(sessionId),
+        try {
+          const [
+            sessionData,
+            spinData,
+            statsData,
+            evaluationData,
+            comparisonData,
+          ] = await Promise.all([
+            getSession(
+              sessionId
+            ),
 
-          getSessionSpins(
-            sessionId
-          ),
+            getSessionSpins(
+              sessionId
+            ),
 
-          getSessionStatistics(
-            sessionId
-          ),
+            getSessionStatistics(
+              sessionId
+            ),
 
-          getSessionEvaluation(
-            sessionId
-          ),
+            getSessionEvaluation(
+              sessionId
+            ),
 
-          getStrategyComparison(
-            sessionId
-          ),
-        ]);
+            getStrategyComparison(
+              sessionId
+            ),
+          ]);
 
-        setSession(
-          sessionData
-        );
+          setSession(
+            sessionData
+          );
 
-        setSpins(
-          spinData
-        );
+          setSpins(
+            spinData
+          );
 
-        setStatistics(
-          statsData
-        );
+          setStatistics(
+            statsData
+          );
 
-        setEvaluation(
-          evaluationData
-        );
+          setEvaluation(
+            evaluationData
+          );
 
-        setComparison(
-          comparisonData
-        );
-      } catch (requestError) {
-        setError(
-          requestError.message
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
+          setComparison(
+            comparisonData
+          );
+        } catch (requestError) {
+          setError(
+            requestError.message
+          );
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    load();
+    loadSessionDetail();
   }, [sessionId]);
 
 
@@ -187,9 +196,11 @@ function SessionHistoryDetailPage({
 
   if (loading) {
     return (
-      <div className="panel panel-loading">
-        Loading session...
-      </div>
+      <section className="page">
+        <div className="panel panel-loading">
+          Loading session...
+        </div>
+      </section>
     );
   }
 
@@ -256,9 +267,7 @@ function SessionHistoryDetailPage({
                 )
               }
             >
-              {ending
-                ? "Ending..."
-                : "End Session"}
+              End Session
             </button>
           </div>
         )}
@@ -266,7 +275,7 @@ function SessionHistoryDetailPage({
 
 
       {error && (
-        <div className="error-message">
+        <div className="error-message page-error">
           {error}
         </div>
       )}

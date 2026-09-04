@@ -338,11 +338,11 @@ Planned steps:
 27. Store Evaluation Results after Each Spin — COMPLETED
 28. Connect ML Training Data to Historical Neon Data — COMPLETED
 29. Connect Retraining Flow to Stored Sessions — COMPLETED
-30. Add Database Validation and Error Handling
-31. Prevent Duplicate Records
-32. Add Neon PostgreSQL Integration Tests
-33. Test Full Session → Prediction → Evaluation → Database Flow
-34. Verify Historical Data Can Be Used for ML Benchmarking
+30. Add Database Validation and Error Handling — COMPLETED
+31. Prevent Duplicate Records — COMPLETED
+32. Add Neon PostgreSQL Integration Tests — COMPLETED
+33. Test Full Session → Prediction → Evaluation → Database Flow — COMPLETED
+34. Verify Historical Data Can Be Used for ML Benchmarking — COMPLETED
 35. Final Phase 8 Integration Test
 
 The database schema will be finalized only after the local Python system

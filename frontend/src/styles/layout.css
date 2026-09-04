@@ -3515,3 +3515,236 @@ small.valid-text {
     text-align: center;
   }
 }
+
+/* =========================
+   Phase 10 - Step 48
+   Live Session Horizontal History
+   ========================= */
+
+.live-session-history {
+  width: 100%;
+
+  margin-bottom: 18px;
+}
+
+
+.live-session-entry {
+  width: 100%;
+}
+
+
+.spin-history-panel {
+  width: 100%;
+
+  overflow: hidden;
+}
+
+
+.spin-history-header {
+  align-items: center;
+
+  margin-bottom: 16px;
+}
+
+
+.spin-history-header p {
+  margin-top: 5px !important;
+}
+
+
+.spin-history {
+  display: flex;
+  align-items: stretch;
+
+  gap: 10px;
+
+  width: 100%;
+
+  max-height: none;
+
+  padding:
+    4px 2px 12px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  scroll-behavior: smooth;
+
+  overscroll-behavior-x:
+    contain;
+
+  -webkit-overflow-scrolling:
+    touch;
+
+  scrollbar-width: thin;
+
+  scrollbar-color:
+    var(--border)
+    transparent;
+}
+
+
+.spin-history::-webkit-scrollbar {
+  height: 7px;
+}
+
+
+.spin-history::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+.spin-history::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+
+  background:
+    var(--border);
+}
+
+
+.history-row {
+  display: flex;
+  align-items: center;
+
+  grid-template-columns: none;
+
+  flex:
+    0 0 auto;
+
+  gap: 8px;
+
+  min-width: max-content;
+
+  padding:
+    9px 10px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.055
+    );
+
+  border-radius: 10px;
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.12
+    );
+}
+
+
+.history-row:last-child {
+  border-color:
+    rgba(
+      0,
+      200,
+      107,
+      0.28
+    );
+
+  background:
+    rgba(
+      0,
+      200,
+      107,
+      0.055
+    );
+}
+
+
+.history-index {
+  flex:
+    0 0 auto;
+}
+
+
+.history-row
+.roulette-number {
+  flex:
+    0 0 34px;
+}
+
+
+.history-row
+.spin-type {
+  justify-self: auto;
+
+  flex:
+    0 0 auto;
+}
+
+
+@media (
+  max-width: 768px
+) {
+  .spin-history-panel {
+    padding:
+      16px 12px;
+  }
+
+
+  .spin-history-header {
+    align-items:
+      flex-start;
+
+    gap: 12px;
+  }
+
+
+  .spin-history {
+    gap: 8px;
+
+    margin-right:
+      -12px;
+
+    padding-right:
+      12px;
+  }
+
+
+  .history-row {
+    gap: 6px;
+
+    padding:
+      8px 9px;
+  }
+
+
+  .history-row
+  .roulette-number {
+    width: 32px;
+    height: 32px;
+
+    flex-basis: 32px;
+  }
+
+
+  .spin-type {
+    padding:
+      4px 6px;
+
+    font-size: 7px;
+  }
+}
+
+
+@media (
+  max-width: 390px
+) {
+  .spin-history-header {
+    flex-direction:
+      column;
+  }
+
+
+  .panel-count {
+    align-self:
+      flex-start;
+  }
+}

@@ -57,14 +57,16 @@ function normalizeStoredPrediction(
 ) {
   if (
     !storedPrediction
-    ?.prediction_run
+      ?.prediction_run
   ) {
     return null;
   }
 
+
   const run =
     storedPrediction
       .prediction_run;
+
 
   const predictions = {
     dozens: [],
@@ -73,6 +75,7 @@ function normalizeStoredPrediction(
     splits: [],
     corners: [],
   };
+
 
   let numberProbabilities =
     null;
@@ -93,14 +96,17 @@ function normalizeStoredPrediction(
       continue;
     }
 
+
     const predictionKey =
       predictionCategoryMap[
         item.category
       ];
 
+
     if (!predictionKey) {
       continue;
     }
+
 
     predictions[
       predictionKey
@@ -443,12 +449,6 @@ function ActiveSessionPage({
         ]);
 
 
-        /*
-         * A new real spin has been
-         * stored. We now intentionally
-         * create the prediction for the
-         * following spin.
-         */
         await createNextPrediction();
       } catch (requestError) {
         setError(
@@ -606,17 +606,20 @@ function ActiveSessionPage({
       </div>
 
 
-      <div className="live-session-top">
+      <div className="live-session-history">
+        <SpinHistory
+          spins={spins}
+        />
+      </div>
+
+
+      <div className="live-session-entry">
         <RouletteNumberInput
           onSubmit={handleSpin}
           disabled={
             submitting ||
             ending
           }
-        />
-
-        <SpinHistory
-          spins={spins}
         />
       </div>
 

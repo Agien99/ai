@@ -17,41 +17,47 @@
     1px solid var(--border);
 }
 
+/* =========================
+   RouletteIQ Branding
+   ========================= */
+
 .brand {
   display: flex;
-  align-items: center;
 
-  gap: 12px;
+  width: 100%;
+
+  align-items: center;
 }
 
-.brand-mark,
-.mobile-brand-mark {
-  width: 38px;
+
+.brand-logo {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  max-width: 185px;
+
+  object-fit: contain;
+
+  object-position: left center;
+}
+
+
+/* Compact version used
+   on smaller layouts */
+
+.brand-compact {
+  width: auto;
+}
+
+
+.brand-compact
+.brand-logo {
+  width: auto;
   height: 38px;
 
-  display: grid;
-  place-items: center;
-
-  border-radius: 50%;
-
-  background: #711818;
-  border: 1px solid var(--red);
-}
-
-.brand-wheel {
-  color: var(--green);
-}
-
-.brand-title {
-  font-weight: 700;
-}
-
-.brand-tagline {
-  margin-top: 3px;
-
-  color: var(--text-muted);
-
-  font-size: 9px;
+  max-width: 150px;
 }
 
 .sidebar-nav {
@@ -253,25 +259,30 @@
 
   .mobile-brand {
     display: flex;
-    align-items: center;
 
-    gap: 8px;
+    min-width: 0;
+
+    align-items: center;
 
     margin-right: auto;
     margin-left: 10px;
   }
 
-  .mobile-brand-mark {
-    width: 30px;
-    height: 30px;
+
+  .mobile-brand
+  .brand {
+    width: auto;
+
+    min-width: 0;
   }
 
-  .mobile-brand small {
-    display: block;
 
-    color: var(--text-muted);
+  .mobile-brand
+  .brand-logo {
+    width: auto;
+    height: 34px;
 
-    font-size: 7px;
+    max-width: 150px;
   }
 
   .app-content {
@@ -5282,5 +5293,56 @@ small.valid-text {
   .table-prediction-list {
     grid-template-columns:
       1fr;
+  }
+}
+
+/* =========================
+   RouletteIQ Branding
+   Phone Adjustments
+   ========================= */
+
+@media (
+  max-width: 480px
+) {
+  .app-header {
+    padding:
+      0 12px;
+  }
+
+
+  .mobile-brand {
+    margin-left: 8px;
+  }
+
+
+  .mobile-brand
+  .brand-logo {
+    height: 30px;
+
+    max-width: 125px;
+  }
+
+
+  .header-status {
+    gap: 5px;
+
+    font-size: 10px;
+  }
+}
+
+
+@media (
+  max-width: 360px
+) {
+  .mobile-brand
+  .brand-logo {
+    height: 27px;
+
+    max-width: 110px;
+  }
+
+
+  .header-status {
+    font-size: 9px;
   }
 }

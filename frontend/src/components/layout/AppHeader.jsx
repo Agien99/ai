@@ -1,3 +1,6 @@
+import Brand from "./Brand";
+
+
 function AppHeader({
   onMenuClick,
 }) {
@@ -13,25 +16,19 @@ function AppHeader({
       </button>
 
       <div className="mobile-brand">
-        <div className="mobile-brand-mark">
-          ●
-        </div>
-
-        <div>
-          <strong>Roulette AI</strong>
-
-          <small>
-            Predict · Analyze · Improve
-          </small>
-        </div>
+        <Brand compact />
       </div>
 
       <div className="header-status">
         <span className="status-dot" />
-        <span>API</span>
+
+        <span>
+          API
+        </span>
       </div>
     </header>
   );
 }
+
 
 export default AppHeader;

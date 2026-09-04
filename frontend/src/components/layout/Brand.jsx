@@ -1,23 +1,25 @@
-function Brand() {
+function Brand({
+  compact = false,
+}) {
   return (
-    <div className="brand">
-      <div className="brand-mark">
-        <span className="brand-wheel">
-          ●
-        </span>
-      </div>
-
-      <div>
-        <div className="brand-title">
-          Roulette AI
-        </div>
-
-        <div className="brand-tagline">
-          Predict · Analyze · Improve
-        </div>
-      </div>
+    <div
+      className={
+        compact
+          ? "brand brand-compact"
+          : "brand"
+      }
+    >
+      <img
+        src={
+          `${import.meta.env.BASE_URL}` +
+          "logo_main.png"
+        }
+        alt="RouletteIQ"
+        className="brand-logo"
+      />
     </div>
   );
 }
+
 
 export default Brand;

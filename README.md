@@ -354,27 +354,44 @@ is understood properly.
 
 Goal:
 
-Expose the completed Python engines, Supabase persistence layer,
-statistics, predictions, evaluation, and machine-learning functionality
-through a REST API.
+Expose the completed Python engines, Neon PostgreSQL persistence layer, statistics, predictions, evaluation, and machine-learning functionality through a REST API.
 
 Planned framework:
 
-``` text
 FastAPI
-```
+
+Planned architecture:
+
+React Frontend
+      │
+      │ REST API / JSON
+      ▼
+FastAPI
+      │
+      ├── Session Engine
+      ├── Statistics Engine
+      ├── Prediction Engine V1
+      ├── Baseline Engines
+      ├── Evaluation Engine
+      ├── Machine Learning Engine
+      │
+      ▼
+Persistence / Repository Layer
+      │
+      ▼
+Neon PostgreSQL
 
 Planned steps:
 
-1.  Create FastAPI Module Structure
-2.  Create Application Entry Point
-3.  Configure Environment Variables
-4.  Configure Supabase Dependency
-5.  Define API Request / Response Schemas
-6.  Create API Error Handling
-7.  Create Health Check Endpoint
-8.  Implement Create Session Endpoint
-9.  Implement Get Session Endpoint
+1. Create FastAPI Module Structure
+2. Create Application Entry Point
+3. Configure Environment Variables
+4. Configure Neon PostgreSQL Database Dependency
+5. Define API Request / Response Schemas
+6. Create API Error Handling
+7. Create Health Check Endpoint
+8. Implement Create Session Endpoint
+9. Implement Get Session Endpoint
 10. Implement Add Initial Spins Endpoint
 11. Implement Add New Spin Endpoint
 12. Implement Get Session Spins Endpoint
@@ -404,16 +421,19 @@ Planned steps:
 
 Expected API flow:
 
-``` text
 React / API Client
        ↓
 POST /sessions
        ↓
 Create Session
        ↓
-Enter Initial Spins
+POST Initial Spins
+       ↓
+Persist Session + Spins
        ↓
 Generate Prediction
+       ↓
+Store Prediction
        ↓
 Enter Next Spin
        ↓
@@ -421,21 +441,22 @@ Evaluate Previous Prediction
        ↓
 Store Actual Spin
        ↓
+Store HIT / MISS Evaluation
+       ↓
 Update Statistics
        ↓
 Generate New Prediction
        ↓
-Return Results
-```
+Return Updated Results
 
 Possible endpoint structure:
 
-``` text
 GET    /health
 
 POST   /sessions
 GET    /sessions
 GET    /sessions/{id}
+
 POST   /sessions/{id}/initial-spins
 POST   /sessions/{id}/spins
 GET    /sessions/{id}/spins
@@ -452,7 +473,37 @@ GET    /sessions/{id}/ml-performance
 POST   /sessions/{id}/end
 
 GET    /models
-```
+
+Phase 9 responsibility:
+
+Phase 1–7
+Python Business Logic / AI / ML
+          │
+          ▼
+Phase 8
+Neon PostgreSQL Persistence
+          │
+          ▼
+Phase 9
+FastAPI REST Interface
+          │
+          ▼
+Phase 10
+React Frontend
+
+The FastAPI layer should not duplicate the existing roulette, statistics, prediction, evaluation, ML, or persistence logic.
+
+Its main responsibility is to:
+
+Receive Request
+      ↓
+Validate Input
+      ↓
+Call Existing Python Service / Engine
+      ↓
+Read / Write Neon PostgreSQL
+      ↓
+Return Standard JSON Response
 
 Status: PLANNED
 

@@ -4,11 +4,11 @@ import {
   useState,
 } from "react";
 
-import RouletteNumberInput
-  from "../components/roulette/RouletteNumberInput";
-
 import SpinHistory
   from "../components/roulette/SpinHistory";
+
+import SpinEntryModal
+  from "../components/roulette/SpinEntryModal";
 
 import PredictionPanel
   from "../components/predictions/PredictionPanel";
@@ -155,6 +155,11 @@ function ActiveSessionPage({
   const [
     endConfirmationOpen,
     setEndConfirmationOpen,
+  ] = useState(false);
+
+  const [
+    spinModalOpen,
+    setSpinModalOpen,
   ] = useState(false);
 
   const [
@@ -441,6 +446,11 @@ function ActiveSessionPage({
         );
 
 
+        setSpinModalOpen(
+          false
+        );
+
+
         await Promise.all([
           loadStatistics(),
           loadEvaluation(),
@@ -480,6 +490,10 @@ function ActiveSessionPage({
           );
 
         setEndConfirmationOpen(
+          false
+        );
+
+        setSpinModalOpen(
           false
         );
 
@@ -558,9 +572,9 @@ function ActiveSessionPage({
           </h1>
 
           <p>
-            Enter each roulette
-            result and review the
-            updated prediction.
+            Review the current prediction
+            and record each new roulette
+            result as it appears.
           </p>
         </div>
 
@@ -588,7 +602,31 @@ function ActiveSessionPage({
       )}
 
 
-      <div className="active-session-actions">
+      <div className="live-session-history">
+        <SpinHistory
+          spins={spins}
+        />
+      </div>
+
+
+      <div className="live-session-actions">
+        <button
+          type="button"
+          className="button button-primary"
+          disabled={
+            submitting ||
+            ending
+          }
+          onClick={() =>
+            setSpinModalOpen(
+              true
+            )
+          }
+        >
+          + Record Spin Result
+        </button>
+
+
         <button
           type="button"
           className="button button-danger-ghost"
@@ -606,25 +644,7 @@ function ActiveSessionPage({
       </div>
 
 
-      <div className="live-session-history">
-        <SpinHistory
-          spins={spins}
-        />
-      </div>
-
-
-      <div className="live-session-entry">
-        <RouletteNumberInput
-          onSubmit={handleSpin}
-          disabled={
-            submitting ||
-            ending
-          }
-        />
-      </div>
-
-
-      <div className="session-section">
+      <div className="session-section live-prediction-section">
         <PredictionPanel
           prediction={
             prediction
@@ -703,6 +723,25 @@ function ActiveSessionPage({
           {spins.length} total spins
         </span>
       </div>
+
+
+      <SpinEntryModal
+        open={
+          spinModalOpen
+        }
+        onClose={() =>
+          setSpinModalOpen(
+            false
+          )
+        }
+        onSubmit={
+          handleSpin
+        }
+        disabled={
+          submitting ||
+          ending
+        }
+      />
 
 
       <ConfirmDialog

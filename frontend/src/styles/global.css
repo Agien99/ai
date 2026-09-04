@@ -1,0 +1,45 @@
+:root {
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif;
+
+  color: #f4f7f9;
+  background: #071118;
+
+  --bg-primary: #071118;
+  --bg-secondary: #0a1720;
+  --bg-card: #0d1d27;
+
+  --border: #1d3442;
+
+  --text-primary: #f4f7f9;
+  --text-secondary: #9eb0bc;
+  --text-muted: #6f8491;
+
+  --green: #00c86b;
+  --red: #ef4242;
+
+  --sidebar-width: 244px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+
+  background:
+    var(--bg-primary);
+}
+
+button {
+  font: inherit;
+}
+
+#root {
+  min-height: 100vh;
+}

@@ -1,3 +1,5 @@
 pytest==8.3.5
 scikit-learn==1.7.2
 xgboost==3.0.5
+psycopg[binary]
+python-dotenv

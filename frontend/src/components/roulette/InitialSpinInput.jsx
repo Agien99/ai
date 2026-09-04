@@ -6,10 +6,28 @@ import {
 } from "../../utils/roulette";
 
 
-const rouletteNumbers =
+const rouletteRows = [
+  [
+    3, 6, 9, 12,
+    15, 18, 21, 24,
+    27, 30, 33, 36,
+  ],
+  [
+    2, 5, 8, 11,
+    14, 17, 20, 23,
+    26, 29, 32, 35,
+  ],
+  [
+    1, 4, 7, 10,
+    13, 16, 19, 22,
+    25, 28, 31, 34,
+  ],
+];
+
+const mobileRouletteNumbers =
   Array.from(
-    { length: 37 },
-    (_, index) => index
+    { length: 36 },
+    (_, index) => index + 1
   );
 
 
@@ -58,8 +76,36 @@ function InitialSpinInput({
   };
 
 
+  const renderNumber = (
+    number
+  ) => {
+    const type =
+      getNumberType(number);
+
+    return (
+      <button
+        type="button"
+        key={number}
+        className={
+          "roulette-table-number " +
+          `roulette-table-${type}`
+        }
+        disabled={disabled}
+        onClick={() =>
+          addNumber(number)
+        }
+        aria-label={
+          `Add roulette number ${number}`
+        }
+      >
+        {number}
+      </button>
+    );
+  };
+
+
   return (
-    <div className="panel">
+    <div className="panel initial-spin-panel">
       <div className="panel-header">
         <div>
           <span className="panel-eyebrow">
@@ -71,10 +117,10 @@ function InitialSpinInput({
           </h2>
 
           <p>
-            Click the recent roulette
-            results in chronological
-            order. A minimum of 10
-            spins is required.
+            Click the numbers below in
+            chronological order from
+            oldest to newest. A minimum
+            of 10 spins is required.
           </p>
         </div>
 
@@ -85,38 +131,69 @@ function InitialSpinInput({
               : "spin-counter"
           }
         >
-          {spins.length} spins
+          {spins.length}{" "}
+          {spins.length === 1
+            ? "spin"
+            : "spins"}{" "}
+          selected
         </div>
       </div>
 
 
-      <div className="initial-number-grid">
-        {rouletteNumbers.map(
-          (number) => {
-            const type =
-              getNumberType(number);
+      <div className="roulette-table-shell">
+        <div className="roulette-table roulette-table-desktop">
+          <button
+            type="button"
+            className={
+              "roulette-table-number " +
+              "roulette-table-zero"
+            }
+            disabled={disabled}
+            onClick={() =>
+              addNumber(0)
+            }
+          >
+            0
+          </button>
 
-            return (
-              <button
-                type="button"
-                key={number}
-                className={
-                  `roulette-grid-number ` +
-                  `roulette-grid-${type}`
-                }
-                disabled={disabled}
-                onClick={() =>
-                  addNumber(number)
-                }
-                aria-label={
-                  `Add roulette number ${number}`
-                }
-              >
-                {number}
-              </button>
-            );
-          }
-        )}
+          <div className="roulette-table-main">
+            {rouletteRows.map(
+              (row, rowIndex) => (
+                <div
+                  className="roulette-table-row"
+                  key={rowIndex}
+                >
+                  {row.map(
+                    renderNumber
+                  )}
+                </div>
+              )
+            )}
+          </div>
+        </div>
+
+
+        <div className="roulette-table-mobile">
+          <button
+            type="button"
+            className={
+              "roulette-table-number " +
+              "roulette-table-zero"
+            }
+            disabled={disabled}
+            onClick={() =>
+              addNumber(0)
+            }
+          >
+            0
+          </button>
+
+          <div className="roulette-mobile-numbers">
+            {mobileRouletteNumbers.map(
+              renderNumber
+            )}
+          </div>
+        </div>
       </div>
 
 
@@ -181,7 +258,14 @@ function InitialSpinInput({
       <div className="initial-spin-list">
         {spins.length === 0 ? (
           <div className="empty-inline">
-            No spins selected yet.
+            <strong>
+              No spins selected yet.
+            </strong>
+
+            <span>
+              Click numbers on the
+              roulette table above.
+            </span>
           </div>
         ) : (
           spins.map(

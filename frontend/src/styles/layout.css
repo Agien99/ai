@@ -2838,22 +2838,608 @@ button,
   }
 }
 
-.history-detail-actions {
+/* =========================
+   Phase 10 - Step 48
+   Roulette Table Session UI
+   ========================= */
+
+
+/* New Session Layout */
+
+.new-session-layout {
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-direction: column;
+
+  gap: 18px;
 }
 
 
-@media (max-width: 600px) {
-  .history-detail-actions {
-    width: 100%;
-    justify-content: stretch;
+/* Roulette Table */
+
+.roulette-table-shell {
+  width: 100%;
+
+  margin-top: 22px;
+
+  padding: 10px;
+
+  overflow-x: auto;
+
+  border:
+    1px solid
+    rgba(0, 200, 107, 0.25);
+
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(0, 92, 52, 0.42),
+      rgba(0, 55, 35, 0.22)
+    );
+
+  box-shadow:
+    inset 0 0 30px
+    rgba(0, 200, 107, 0.035);
+}
+
+
+.roulette-table {
+  display: grid;
+
+  grid-template-columns:
+    64px minmax(720px, 1fr);
+
+  width: 100%;
+  min-width: 790px;
+
+  overflow: hidden;
+
+  border:
+    2px solid
+    rgba(230, 238, 233, 0.72);
+
+  border-radius: 18px;
+}
+
+
+.roulette-table-zero {
+  grid-row: 1;
+
+  min-height: 168px;
+
+  border-radius: 0 !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      #087743,
+      #075f38
+    ) !important;
+
+  font-size: 22px !important;
+}
+
+
+.roulette-table-main {
+  display: grid;
+
+  grid-template-rows:
+    repeat(3, 56px);
+}
+
+
+.roulette-table-row {
+  display: grid;
+
+  grid-template-columns:
+    repeat(12, minmax(52px, 1fr));
+}
+
+
+.roulette-table-number {
+  min-width: 0;
+  min-height: 56px;
+
+  padding: 0;
+
+  border: 0;
+
+  border-left:
+    1px solid
+    rgba(255, 255, 255, 0.62);
+
+  border-bottom:
+    1px solid
+    rgba(255, 255, 255, 0.62);
+
+  border-radius: 0;
+
+  color: #ffffff;
+
+  font-size: 15px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    filter 120ms ease,
+    transform 120ms ease,
+    box-shadow 120ms ease;
+}
+
+
+.roulette-table-row:last-child
+.roulette-table-number {
+  border-bottom: 0;
+}
+
+
+.roulette-table-number:hover:not(:disabled) {
+  position: relative;
+
+  z-index: 2;
+
+  filter: brightness(1.22);
+
+  box-shadow:
+    inset 0 0 0 2px
+    var(--green);
+}
+
+
+.roulette-table-number:active:not(:disabled) {
+  transform:
+    scale(0.94);
+}
+
+
+.roulette-table-number:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.45;
+}
+
+
+.roulette-table-red {
+  background:
+    linear-gradient(
+      145deg,
+      #bd2930,
+      #9e1f25
+    );
+}
+
+
+.roulette-table-black {
+  background:
+    linear-gradient(
+      145deg,
+      #101b22,
+      #091218
+    );
+}
+
+
+.roulette-table-green {
+  background:
+    linear-gradient(
+      145deg,
+      #087743,
+      #075f38
+    );
+}
+
+
+/* Mobile roulette layout hidden by default */
+
+.roulette-table-mobile {
+  display: none;
+}
+
+
+/* Selected History */
+
+.initial-history-header {
+  margin-top: 26px;
+}
+
+
+.initial-spin-list {
+  min-height: 78px;
+
+  padding: 14px;
+
+  align-items: center;
+
+  border:
+    1px dashed
+    var(--border);
+
+  border-radius: 10px;
+
+  background:
+    rgba(0, 0, 0, 0.08);
+}
+
+
+.initial-spin-list
+.empty-inline {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+
+  padding: 10px;
+
+  border: 0;
+}
+
+
+.initial-spin-list
+.empty-inline strong {
+  color:
+    var(--text-secondary);
+
+  font-size: 11px;
+}
+
+
+.initial-spin-list
+.empty-inline span {
+  color:
+    var(--text-muted);
+
+  font-size: 10px;
+}
+
+
+/* How It Works */
+
+.session-guide {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(220px, 280px);
+
+  align-items: center;
+
+  gap: 28px;
+}
+
+
+.session-guide-heading {
+  margin-bottom: 20px;
+}
+
+
+.session-guide-heading h2 {
+  margin:
+    5px 0 4px;
+}
+
+
+.session-guide-heading p {
+  margin: 0;
+
+  color:
+    var(--text-muted);
+
+  font-size: 10px;
+}
+
+
+.session-guide
+.setup-steps {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 20px;
+
+  margin: 0;
+}
+
+
+.session-guide
+.setup-step {
+  min-width: 0;
+}
+
+
+.session-start-area {
+  padding-left: 24px;
+
+  border-left:
+    1px solid
+    var(--border);
+}
+
+
+.session-start-area small {
+  display: block;
+
+  margin-top: 9px;
+
+  color:
+    var(--text-muted);
+
+  font-size: 9px;
+
+  text-align: center;
+}
+
+
+.session-start-area
+small.valid-text {
+  color:
+    var(--green);
+}
+
+
+/* =========================
+   Tablet
+   ========================= */
+
+@media (
+  max-width: 1024px
+) {
+  .roulette-table-shell {
+    padding: 8px;
+
+    border-radius: 18px;
   }
 
-  .history-detail-actions .button {
+
+  .roulette-table {
+    grid-template-columns:
+      50px minmax(600px, 1fr);
+
+    min-width: 650px;
+
+    border-radius: 14px;
+  }
+
+
+  .roulette-table-main {
+    grid-template-rows:
+      repeat(3, 50px);
+  }
+
+
+  .roulette-table-zero {
+    min-height: 150px;
+
+    font-size: 19px !important;
+  }
+
+
+  .roulette-table-number {
+    min-height: 50px;
+
+    font-size: 13px;
+  }
+
+
+  .session-guide {
+    grid-template-columns: 1fr;
+  }
+
+
+  .session-guide
+  .setup-steps {
+    grid-template-columns: 1fr;
+
+    gap: 15px;
+  }
+
+
+  .session-start-area {
+    padding:
+      18px 0 0;
+
+    border-top:
+      1px solid
+      var(--border);
+
+    border-left: 0;
+  }
+}
+
+
+/* =========================
+   Phone
+   ========================= */
+
+@media (
+  max-width: 600px
+) {
+  .initial-spin-panel {
+    padding:
+      16px 12px;
+  }
+
+
+  .initial-spin-panel
+  .panel-header {
+    gap: 12px;
+
+    margin-bottom: 16px;
+  }
+
+
+  .initial-spin-panel
+  .panel-header h2 {
+    font-size: 17px;
+  }
+
+
+  .initial-spin-panel
+  .panel-header p {
+    font-size: 11px;
+  }
+
+
+  .spin-counter {
+    padding: 6px 8px;
+
+    font-size: 9px;
+  }
+
+
+  .roulette-table-shell {
+    width:
+      min(100%, 300px);
+
+    margin:
+      18px auto 0;
+
+    padding: 7px;
+
+    overflow: visible;
+
+    border-radius: 18px;
+  }
+
+
+  .roulette-table-desktop {
+    display: none;
+  }
+
+
+  .roulette-table-mobile {
+    display: block;
+
+    overflow: hidden;
+
+    border:
+      2px solid
+      rgba(
+        230,
+        238,
+        233,
+        0.72
+      );
+
+    border-radius: 12px;
+  }
+
+
+  .roulette-table-mobile
+  .roulette-table-zero {
+    display: grid;
+    place-items: center;
+
+    width: 100%;
+    min-height: 44px;
+
+    border-left: 0;
+
+    border-bottom:
+      1px solid
+      rgba(
+        255,
+        255,
+        255,
+        0.6
+      );
+
+    font-size: 16px !important;
+  }
+
+
+  .roulette-mobile-numbers {
+    display: grid;
+
+    grid-template-columns:
+      repeat(
+        3,
+        minmax(0, 1fr)
+      );
+  }
+
+
+  .roulette-table-mobile
+  .roulette-table-number {
+    min-height: 42px;
+
+    border-left:
+      1px solid
+      rgba(
+        255,
+        255,
+        255,
+        0.55
+      );
+
+    border-bottom:
+      1px solid
+      rgba(
+        255,
+        255,
+        255,
+        0.55
+      );
+
+    font-size: 13px;
+  }
+
+
+  .roulette-mobile-numbers
+  .roulette-table-number:nth-child(3n + 1) {
+    border-left: 0;
+  }
+
+
+  .initial-history-header {
+    align-items: stretch;
+
+    flex-direction: column;
+  }
+
+
+  .initial-actions {
+    width: 100%;
+
+    margin-top: 0;
+  }
+
+
+  .initial-actions
+  .button {
     flex: 1;
   }
+
+
+  .initial-spin-list {
+    max-height: 190px;
+
+    overflow-y: auto;
+  }
+
+
+  .session-guide {
+    padding: 16px;
+  }
+
+
+  .session-guide-heading p {
+    line-height: 1.5;
+  }
+
+
+  .session-guide
+  .setup-steps {
+    gap: 16px;
+  }
+
+
+  .session-start-area
+  .button {
+    width: 100%;
+  }
 }
+

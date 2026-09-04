@@ -8,7 +8,7 @@ function formatGroup(
   return value;
 }
 
-function scorePercentage(
+function formatScore(
   score
 ) {
   if (
@@ -18,9 +18,9 @@ function scorePercentage(
     return null;
   }
 
-  return Math.round(
-    score * 100
-  );
+  return Number(
+    score
+  ).toFixed(2);
 }
 
 function PredictionGroup({
@@ -48,7 +48,7 @@ function PredictionGroup({
           {items.map(
             (item, index) => {
               const score =
-                scorePercentage(
+                formatScore(
                   item.prediction_score
                 );
 
@@ -76,7 +76,13 @@ function PredictionGroup({
 
                   {score !== null && (
                     <div className="prediction-score">
-                      {score}
+                      <span>
+                        Score
+                      </span>
+
+                      <strong>
+                        {score}
+                      </strong>
                     </div>
                   )}
                 </div>

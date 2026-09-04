@@ -1335,10 +1335,6 @@
   font-weight: 800;
 }
 
-.prediction-score::after {
-  content: "%";
-}
-
 .prediction-empty {
   color: var(--text-muted);
 

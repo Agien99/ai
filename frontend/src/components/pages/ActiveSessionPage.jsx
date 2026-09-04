@@ -19,18 +19,32 @@ import EvaluationPanel
 import StatisticsPanel
   from "../components/statistics/StatisticsPanel";
 
+import StrategyComparisonPanel
+  from "../components/comparison/StrategyComparisonPanel";
+
+import MLPerformancePanel
+  from "../components/ml/MLPerformancePanel";
+
+import SessionSummary
+  from "../components/sessions/SessionSummary";
+
 import {
   addSessionSpin,
   generatePrediction,
   getSessionEvaluation,
   getSessionStatistics,
+  getStrategyComparison,
+  getMLPerformance,
+  endSession,
 } from "../services/sessionApi";
+
 
 function ActiveSessionPage({
   session,
   spins,
   onSpinAdded,
   onNewSession,
+  onSessionEnded,
 }) {
   const [
     submitting,
@@ -58,9 +72,25 @@ function ActiveSessionPage({
   ] = useState(null);
 
   const [
+    comparison,
+    setComparison,
+  ] = useState(null);
+
+  const [
+    mlPerformance,
+    setMLPerformance,
+  ] = useState(null);
+
+  const [
+    ending,
+    setEnding,
+  ] = useState(false);
+
+  const [
     error,
     setError,
   ] = useState("");
+
 
   const loadStatistics =
     useCallback(async () => {
@@ -76,6 +106,7 @@ function ActiveSessionPage({
       setStatistics(data);
     }, [session]);
 
+
   const loadEvaluation =
     useCallback(async () => {
       if (!session) {
@@ -89,6 +120,37 @@ function ActiveSessionPage({
 
       setEvaluation(data);
     }, [session]);
+
+
+  const loadComparison =
+    useCallback(async () => {
+      if (!session) {
+        return;
+      }
+
+      const data =
+        await getStrategyComparison(
+          session.session_id
+        );
+
+      setComparison(data);
+    }, [session]);
+
+
+  const loadMLPerformance =
+    useCallback(async () => {
+      if (!session) {
+        return;
+      }
+
+      const data =
+        await getMLPerformance(
+          session.session_id
+        );
+
+      setMLPerformance(data);
+    }, [session]);
+
 
   const createNextPrediction =
     useCallback(async () => {
@@ -116,6 +178,7 @@ function ActiveSessionPage({
       }
     }, [session]);
 
+
   useEffect(() => {
     if (!session) {
       return;
@@ -129,6 +192,8 @@ function ActiveSessionPage({
           await Promise.all([
             loadStatistics(),
             loadEvaluation(),
+            loadComparison(),
+            loadMLPerformance(),
           ]);
 
           await createNextPrediction();
@@ -144,8 +209,94 @@ function ActiveSessionPage({
     session,
     loadStatistics,
     loadEvaluation,
+    loadComparison,
+    loadMLPerformance,
     createNextPrediction,
   ]);
+
+
+  const handleSpin =
+    async (number) => {
+      if (
+        submitting ||
+        !session
+      ) {
+        return;
+      }
+
+      setSubmitting(true);
+      setError("");
+
+      try {
+        const storedSpin =
+          await addSessionSpin(
+            session.session_id,
+            number
+          );
+
+        onSpinAdded(
+          storedSpin
+        );
+
+        await Promise.all([
+          loadStatistics(),
+          loadEvaluation(),
+          loadComparison(),
+          loadMLPerformance(),
+        ]);
+
+        await createNextPrediction();
+      } catch (requestError) {
+        setError(
+          requestError.message
+        );
+      } finally {
+        setSubmitting(false);
+      }
+    };
+
+
+  const handleEndSession =
+    async () => {
+      if (
+        ending ||
+        !session
+      ) {
+        return;
+      }
+
+      const confirmed =
+        window.confirm(
+          "End this roulette session? " +
+          "You will not be able to add " +
+          "new spins afterward."
+        );
+
+      if (!confirmed) {
+        return;
+      }
+
+      setEnding(true);
+      setError("");
+
+      try {
+        const ended =
+          await endSession(
+            session.session_id
+          );
+
+        onSessionEnded(
+          ended
+        );
+      } catch (requestError) {
+        setError(
+          requestError.message
+        );
+      } finally {
+        setEnding(false);
+      }
+    };
+
 
   if (!session) {
     return (
@@ -194,39 +345,6 @@ function ActiveSessionPage({
     );
   }
 
-  const handleSpin = async (
-    number
-  ) => {
-    if (submitting) {
-      return;
-    }
-
-    setSubmitting(true);
-    setError("");
-
-    try {
-      const storedSpin =
-        await addSessionSpin(
-          session.session_id,
-          number
-        );
-
-      onSpinAdded(storedSpin);
-
-      await Promise.all([
-        loadStatistics(),
-        loadEvaluation(),
-      ]);
-
-      await createNextPrediction();
-    } catch (requestError) {
-      setError(
-        requestError.message
-      );
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   return (
     <section className="page">
@@ -262,22 +380,42 @@ function ActiveSessionPage({
         </div>
       </div>
 
+
       {error && (
         <div className="error-message page-error">
           {error}
         </div>
       )}
 
+
+      <div className="active-session-actions">
+        <button
+          type="button"
+          className="button button-danger-ghost"
+          disabled={ending}
+          onClick={handleEndSession}
+        >
+          {ending
+            ? "Ending..."
+            : "End Session"}
+        </button>
+      </div>
+
+
       <div className="live-session-top">
         <RouletteNumberInput
           onSubmit={handleSpin}
-          disabled={submitting}
+          disabled={
+            submitting ||
+            ending
+          }
         />
 
         <SpinHistory
           spins={spins}
         />
       </div>
+
 
       <div className="session-section">
         <PredictionPanel
@@ -291,17 +429,47 @@ function ActiveSessionPage({
         />
       </div>
 
+
       <div className="session-section">
         <EvaluationPanel
           evaluation={evaluation}
         />
       </div>
 
+
       <div className="session-section">
         <StatisticsPanel
           statistics={statistics}
         />
       </div>
+
+
+      <div className="session-section">
+        <StrategyComparisonPanel
+          comparison={comparison}
+        />
+      </div>
+
+
+      <div className="session-section">
+        <MLPerformancePanel
+          performance={
+            mlPerformance
+          }
+        />
+      </div>
+
+
+      <div className="session-section">
+        <SessionSummary
+          session={session}
+          spins={spins}
+          evaluation={
+            evaluation
+          }
+        />
+      </div>
+
 
       <div className="session-meta">
         <span>
@@ -319,5 +487,6 @@ function ActiveSessionPage({
     </section>
   );
 }
+
 
 export default ActiveSessionPage;

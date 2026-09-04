@@ -1,4 +1,6 @@
-import { useState } from "react";
+import {
+  useState,
+} from "react";
 
 import AppHeader
   from "./components/layout/AppHeader";
@@ -17,6 +19,13 @@ import NewSessionPage
 
 import ActiveSessionPage
   from "./pages/ActiveSessionPage";
+
+import SessionHistoryPage
+  from "./pages/SessionHistoryPage";
+
+import SessionHistoryDetailPage
+  from "./pages/SessionHistoryDetailPage";
+
 
 function App() {
   const [
@@ -39,6 +48,12 @@ function App() {
     setSpins,
   ] = useState([]);
 
+  const [
+    selectedHistorySessionId,
+    setSelectedHistorySessionId,
+  ] = useState(null);
+
+
   const handleNavigation = (
     page
   ) => {
@@ -46,17 +61,28 @@ function App() {
     setMobileMenuOpen(false);
   };
 
+
   const handleSessionStarted = (
     session,
     initialSpins
   ) => {
-    setCurrentSession(session);
-    setSpins(initialSpins);
+    setCurrentSession(
+      session
+    );
+
+    setSpins(
+      initialSpins
+    );
+
+    setSelectedHistorySessionId(
+      null
+    );
 
     setActivePage(
       "active-session"
     );
   };
+
 
   const handleSpinAdded = (
     spin
@@ -69,6 +95,37 @@ function App() {
     );
   };
 
+
+  const handleSessionEnded = (
+    endedSession
+  ) => {
+    setCurrentSession(
+      endedSession
+    );
+
+    setSelectedHistorySessionId(
+      endedSession.session_id
+    );
+
+    setActivePage(
+      "history-detail"
+    );
+  };
+
+
+  const handleOpenHistorySession = (
+    sessionId
+  ) => {
+    setSelectedHistorySessionId(
+      sessionId
+    );
+
+    setActivePage(
+      "history-detail"
+    );
+  };
+
+
   const renderPage = () => {
     switch (activePage) {
       case "new-session":
@@ -79,6 +136,7 @@ function App() {
             }
           />
         );
+
 
       case "active-session":
         return (
@@ -95,16 +153,49 @@ function App() {
                 "new-session"
               )
             }
+            onSessionEnded={
+              handleSessionEnded
+            }
           />
         );
 
+
       case "history":
         return (
-          <ComingSoonPage
-            eyebrow="Historical Data"
-            title="Session History"
+          <SessionHistoryPage
+            onOpenSession={
+              handleOpenHistorySession
+            }
           />
         );
+
+
+      case "history-detail":
+        if (
+          !selectedHistorySessionId
+        ) {
+          return (
+            <SessionHistoryPage
+              onOpenSession={
+                handleOpenHistorySession
+              }
+            />
+          );
+        }
+
+        return (
+          <SessionHistoryDetailPage
+            sessionId={
+              selectedHistorySessionId
+            }
+            onBack={() =>
+              handleNavigation(
+                "history"
+              )
+            }
+          />
+        );
+
 
       case "models":
         return (
@@ -113,6 +204,7 @@ function App() {
             title="Models"
           />
         );
+
 
       default:
         return (
@@ -135,6 +227,7 @@ function App() {
         );
     }
   };
+
 
   return (
     <div className="app">
@@ -177,6 +270,7 @@ function App() {
   );
 }
 
+
 function ComingSoonPage({
   eyebrow,
   title,
@@ -215,5 +309,6 @@ function ComingSoonPage({
     </section>
   );
 }
+
 
 export default App;

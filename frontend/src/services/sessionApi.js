@@ -115,3 +115,44 @@ export async function getSessionEvaluation(
     `/sessions/${sessionId}/evaluation`
   );
 }
+
+export async function getStrategyComparison(
+  sessionId
+) {
+  return apiRequest(
+    `/sessions/${sessionId}/comparison`
+  );
+}
+
+export async function getMLPerformance(
+  sessionId
+) {
+  return apiRequest(
+    `/sessions/${sessionId}/ml-performance`
+  );
+}
+
+export async function endSession(
+  sessionId
+) {
+  return apiRequest(
+    `/sessions/${sessionId}/end`,
+    {
+      method: "POST",
+    }
+  );
+}
+
+export async function getSessions() {
+  return apiRequest(
+    "/sessions"
+  );
+}
+
+export async function getSession(
+  sessionId
+) {
+  return apiRequest(
+    `/sessions/${sessionId}`
+  );
+}

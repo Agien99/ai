@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from "react";
 
@@ -208,6 +209,21 @@ function ActiveSessionPage({
   ] = useState("");
 
 
+  /*
+   * Keep the latest spin count available
+   * without making session initialization
+   * depend on every spins.length change.
+   */
+  const spinCountRef =
+    useRef(spins.length);
+
+
+  useEffect(() => {
+    spinCountRef.current =
+      spins.length;
+  }, [spins.length]);
+
+
   const loadStatistics =
     useCallback(async () => {
       if (!session) {
@@ -333,7 +349,7 @@ function ActiveSessionPage({
 
 
         const nextSpinIndex =
-          spins.length + 1;
+          spinCountRef.current + 1;
 
 
         if (
@@ -369,10 +385,7 @@ function ActiveSessionPage({
           false
         );
       }
-    }, [
-      session,
-      spins.length,
-    ]);
+    }, [session]);
 
 
   useEffect(() => {
@@ -441,6 +454,15 @@ function ActiveSessionPage({
             number
           );
 
+
+        /*
+         * Update the ref immediately.
+         * We do not need to wait for the
+         * parent React state update.
+         */
+        spinCountRef.current += 1;
+
+
         onSpinAdded(
           storedSpin
         );
@@ -459,6 +481,11 @@ function ActiveSessionPage({
         ]);
 
 
+        /*
+         * This is now the ONLY automatic
+         * prediction creation path after
+         * recording a new observed spin.
+         */
         await createNextPrediction();
       } catch (requestError) {
         setError(

@@ -333,11 +333,11 @@ Planned steps:
 22. Implement Prediction Item Persistence — COMPLETED
 23. Implement Model Version Persistence — COMPLETED
 24. Implement Model Metrics Persistence — COMPLETED
-25. Load Existing Session Data from Neon
-26. Reconstruct Roulette Sessions from Stored Spins
-27. Store Evaluation Results after Each Spin
-28. Connect ML Training Data to Historical Neon Data
-29. Connect Retraining Flow to Stored Sessions
+25. Load Existing Session Data from Neon — COMPLETED
+26. Reconstruct Roulette Sessions from Stored Spins — COMPLETED
+27. Store Evaluation Results after Each Spin — COMPLETED
+28. Connect ML Training Data to Historical Neon Data — COMPLETED
+29. Connect Retraining Flow to Stored Sessions — COMPLETED
 30. Add Database Validation and Error Handling
 31. Prevent Duplicate Records
 32. Add Neon PostgreSQL Integration Tests

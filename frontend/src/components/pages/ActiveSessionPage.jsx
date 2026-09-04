@@ -1,4 +1,8 @@
-import { useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import RouletteNumberInput
   from "../components/roulette/RouletteNumberInput";
@@ -6,8 +10,20 @@ import RouletteNumberInput
 import SpinHistory
   from "../components/roulette/SpinHistory";
 
+import PredictionPanel
+  from "../components/predictions/PredictionPanel";
+
+import EvaluationPanel
+  from "../components/predictions/EvaluationPanel";
+
+import StatisticsPanel
+  from "../components/statistics/StatisticsPanel";
+
 import {
   addSessionSpin,
+  generatePrediction,
+  getSessionEvaluation,
+  getSessionStatistics,
 } from "../services/sessionApi";
 
 function ActiveSessionPage({
@@ -16,11 +32,120 @@ function ActiveSessionPage({
   onSpinAdded,
   onNewSession,
 }) {
-  const [submitting, setSubmitting] =
-    useState(false);
+  const [
+    submitting,
+    setSubmitting,
+  ] = useState(false);
 
-  const [error, setError] =
-    useState("");
+  const [
+    predictionLoading,
+    setPredictionLoading,
+  ] = useState(false);
+
+  const [
+    prediction,
+    setPrediction,
+  ] = useState(null);
+
+  const [
+    statistics,
+    setStatistics,
+  ] = useState(null);
+
+  const [
+    evaluation,
+    setEvaluation,
+  ] = useState(null);
+
+  const [
+    error,
+    setError,
+  ] = useState("");
+
+  const loadStatistics =
+    useCallback(async () => {
+      if (!session) {
+        return;
+      }
+
+      const data =
+        await getSessionStatistics(
+          session.session_id
+        );
+
+      setStatistics(data);
+    }, [session]);
+
+  const loadEvaluation =
+    useCallback(async () => {
+      if (!session) {
+        return;
+      }
+
+      const data =
+        await getSessionEvaluation(
+          session.session_id
+        );
+
+      setEvaluation(data);
+    }, [session]);
+
+  const createNextPrediction =
+    useCallback(async () => {
+      if (!session) {
+        return;
+      }
+
+      setPredictionLoading(true);
+
+      try {
+        const data =
+          await generatePrediction(
+            session.session_id,
+            "v1",
+            10
+          );
+
+        setPrediction(data);
+      } catch (requestError) {
+        setError(
+          requestError.message
+        );
+      } finally {
+        setPredictionLoading(false);
+      }
+    }, [session]);
+
+  useEffect(() => {
+    if (!session) {
+      return;
+    }
+
+    const loadSessionData =
+      async () => {
+        try {
+          setError("");
+
+          await Promise.all([
+            loadStatistics(),
+            loadEvaluation(),
+          ]);
+
+          await createNextPrediction();
+        } catch (requestError) {
+          setError(
+            requestError.message
+          );
+        }
+      };
+
+    loadSessionData();
+  }, [
+    session,
+    loadStatistics,
+    loadEvaluation,
+    createNextPrediction,
+  ]);
 
   if (!session) {
     return (
@@ -87,6 +212,13 @@ function ActiveSessionPage({
         );
 
       onSpinAdded(storedSpin);
+
+      await Promise.all([
+        loadStatistics(),
+        loadEvaluation(),
+      ]);
+
+      await createNextPrediction();
     } catch (requestError) {
       setError(
         requestError.message
@@ -109,8 +241,9 @@ function ActiveSessionPage({
           </h1>
 
           <p>
-            Enter each new roulette
-            result as it occurs.
+            Enter each roulette
+            result and review the
+            updated prediction.
           </p>
         </div>
 
@@ -135,7 +268,7 @@ function ActiveSessionPage({
         </div>
       )}
 
-      <div className="active-session-grid">
+      <div className="live-session-top">
         <RouletteNumberInput
           onSubmit={handleSpin}
           disabled={submitting}
@@ -143,6 +276,30 @@ function ActiveSessionPage({
 
         <SpinHistory
           spins={spins}
+        />
+      </div>
+
+      <div className="session-section">
+        <PredictionPanel
+          prediction={prediction}
+          loading={
+            predictionLoading
+          }
+          onRefresh={
+            createNextPrediction
+          }
+        />
+      </div>
+
+      <div className="session-section">
+        <EvaluationPanel
+          evaluation={evaluation}
+        />
+      </div>
+
+      <div className="session-section">
+        <StatisticsPanel
+          statistics={statistics}
         />
       </div>
 

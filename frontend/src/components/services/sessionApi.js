@@ -15,7 +15,13 @@ async function apiRequest(
     }
   );
 
-  const data = await response.json();
+  let data = null;
+
+  try {
+    data = await response.json();
+  } catch {
+    data = null;
+  }
 
   if (!response.ok) {
     const message =
@@ -34,12 +40,9 @@ async function apiRequest(
 }
 
 export async function createSession() {
-  return apiRequest(
-    "/sessions",
-    {
-      method: "POST",
-    }
-  );
+  return apiRequest("/sessions", {
+    method: "POST",
+  });
 }
 
 export async function submitInitialSpins(
@@ -77,5 +80,38 @@ export async function getSessionSpins(
 ) {
   return apiRequest(
     `/sessions/${sessionId}/spins`
+  );
+}
+
+export async function generatePrediction(
+  sessionId,
+  strategy = "v1",
+  recentWindow = 10
+) {
+  return apiRequest(
+    `/sessions/${sessionId}/predictions`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        strategy,
+        recent_window: recentWindow,
+      }),
+    }
+  );
+}
+
+export async function getSessionStatistics(
+  sessionId
+) {
+  return apiRequest(
+    `/sessions/${sessionId}/stats`
+  );
+}
+
+export async function getSessionEvaluation(
+  sessionId
+) {
+  return apiRequest(
+    `/sessions/${sessionId}/evaluation`
   );
 }

@@ -1112,3 +1112,499 @@
     align-items: flex-start;
   }
 }
+
+/* =========================
+   Phase 10 - Batch C
+   ========================= */
+
+.live-session-top {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.6fr)
+    minmax(270px, 0.65fr);
+
+  gap: 18px;
+}
+
+.session-section {
+  margin-top: 18px;
+}
+
+.panel-loading {
+  padding: 50px 20px;
+
+  color: var(--text-secondary);
+
+  text-align: center;
+}
+
+.prediction-no-data {
+  padding: 42px 20px;
+
+  text-align: center;
+}
+
+.prediction-no-data h3 {
+  margin: 0 0 6px;
+}
+
+.prediction-no-data p {
+  margin:
+    0 0 18px;
+
+  color: var(--text-secondary);
+}
+
+.prediction-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap: 14px;
+}
+
+.prediction-group {
+  padding: 15px;
+
+  border:
+    1px solid var(--border);
+
+  border-radius: 10px;
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.12
+    );
+}
+
+.prediction-group:nth-child(3),
+.prediction-group:nth-child(4),
+.prediction-group:nth-child(5) {
+  grid-column: span 2;
+}
+
+.prediction-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 12px;
+}
+
+.prediction-group-header h3 {
+  margin: 0;
+
+  font-size: 12px;
+}
+
+.prediction-group-header span {
+  color: var(--text-muted);
+
+  font-size: 9px;
+}
+
+.prediction-items {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 7px;
+}
+
+.prediction-item {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  min-height: 36px;
+
+  padding: 6px 9px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.07
+    );
+
+  border-radius: 7px;
+
+  background:
+    #08151d;
+}
+
+.prediction-rank {
+  color: var(--text-muted);
+
+  font-size: 8px;
+}
+
+.prediction-value {
+  color: var(--text-primary);
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.prediction-score {
+  color: var(--green);
+
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.prediction-score::after {
+  content: "%";
+}
+
+.prediction-empty {
+  color: var(--text-muted);
+
+  font-size: 10px;
+}
+
+.evaluation-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      5,
+      minmax(0, 1fr)
+    );
+
+  gap: 10px;
+}
+
+.evaluation-card {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+
+  padding: 14px;
+
+  border-radius: 10px;
+
+  border:
+    1px solid var(--border);
+}
+
+.evaluation-card span {
+  color: var(--text-muted);
+
+  font-size: 9px;
+
+  text-transform: uppercase;
+}
+
+.evaluation-card strong {
+  font-size: 18px;
+}
+
+.evaluation-card.hit {
+  border-color:
+    rgba(
+      0,
+      200,
+      107,
+      0.32
+    );
+
+  background:
+    rgba(
+      0,
+      200,
+      107,
+      0.07
+    );
+}
+
+.evaluation-card.hit strong {
+  color: var(--green);
+}
+
+.evaluation-card.miss {
+  border-color:
+    rgba(
+      239,
+      66,
+      66,
+      0.32
+    );
+
+  background:
+    rgba(
+      239,
+      66,
+      66,
+      0.06
+    );
+}
+
+.evaluation-card.miss strong {
+  color: var(--red);
+}
+
+.statistics-layout {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap: 18px;
+}
+
+.stats-frequency-panel {
+  grid-column:
+    1 / -1;
+}
+
+.hot-cold-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap: 18px;
+}
+
+.stats-number-section h3,
+.group-frequency-grid h3 {
+  margin:
+    0 0 12px;
+
+  color: var(--text-secondary);
+
+  font-size: 11px;
+}
+
+.stats-number-list {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 10px;
+}
+
+.stats-number-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 5px;
+}
+
+.stats-number-item > span {
+  color: var(--text-muted);
+
+  font-size: 8px;
+}
+
+.group-frequency-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap: 20px;
+}
+
+.frequency-bars {
+  display: flex;
+  flex-direction: column;
+
+  gap: 11px;
+}
+
+.frequency-row {
+  display: grid;
+
+  grid-template-columns:
+    62px
+    minmax(60px, 1fr)
+    24px;
+
+  align-items: center;
+
+  gap: 8px;
+
+  font-size: 9px;
+}
+
+.frequency-row > span {
+  color: var(--text-secondary);
+}
+
+.frequency-row strong {
+  color: var(--text-primary);
+
+  text-align: right;
+}
+
+.frequency-track,
+.number-frequency-track {
+  height: 6px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.06
+    );
+}
+
+.frequency-fill,
+.number-frequency-fill {
+  height: 100%;
+
+  border-radius: inherit;
+
+  background: var(--green);
+}
+
+.number-frequency {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
+
+  gap: 9px 18px;
+}
+
+.number-frequency-row {
+  display: grid;
+
+  grid-template-columns:
+    34px
+    minmax(30px, 1fr)
+    22px;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+.number-frequency-row strong {
+  color: var(--text-secondary);
+
+  font-size: 9px;
+
+  text-align: right;
+}
+
+.stats-empty {
+  color: var(--text-muted);
+
+  font-size: 10px;
+}
+
+
+/* Tablet */
+
+@media (
+  max-width: 1024px
+) {
+  .live-session-top {
+    grid-template-columns:
+      1fr;
+  }
+
+  .statistics-layout {
+    grid-template-columns:
+      1fr;
+  }
+
+  .stats-frequency-panel {
+    grid-column: auto;
+  }
+
+  .number-frequency {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+  .evaluation-grid {
+    grid-template-columns:
+      repeat(
+        3,
+        minmax(0, 1fr)
+      );
+  }
+}
+
+
+/* Mobile */
+
+@media (
+  max-width: 600px
+) {
+  .prediction-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+  .prediction-group:nth-child(3),
+  .prediction-group:nth-child(4),
+  .prediction-group:nth-child(5) {
+    grid-column: auto;
+  }
+
+  .evaluation-grid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+  .hot-cold-grid,
+  .group-frequency-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+  .number-frequency {
+    grid-template-columns:
+      1fr;
+  }
+
+  .prediction-panel
+  .panel-header {
+    flex-direction: column;
+  }
+
+  .prediction-panel
+  .panel-header
+  .button {
+    width: 100%;
+  }
+}

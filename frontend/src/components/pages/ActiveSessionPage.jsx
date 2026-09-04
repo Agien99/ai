@@ -38,6 +38,9 @@ import {
   endSession,
 } from "../services/sessionApi";
 
+import ConfirmDialog
+  from "../components/common/ConfirmDialog";
+
 
 function ActiveSessionPage({
   session,
@@ -46,6 +49,12 @@ function ActiveSessionPage({
   onNewSession,
   onSessionEnded,
 }) {
+
+  const [
+    endConfirmationOpen,
+    setEndConfirmationOpen,
+  ] = useState(false);
+
   const [
     submitting,
     setSubmitting,
@@ -265,17 +274,6 @@ function ActiveSessionPage({
         return;
       }
 
-      const confirmed =
-        window.confirm(
-          "End this roulette session? " +
-          "You will not be able to add " +
-          "new spins afterward."
-        );
-
-      if (!confirmed) {
-        return;
-      }
-
       setEnding(true);
       setError("");
 
@@ -284,6 +282,10 @@ function ActiveSessionPage({
           await endSession(
             session.session_id
           );
+
+        setEndConfirmationOpen(
+          false
+        );
 
         onSessionEnded(
           ended
@@ -393,7 +395,11 @@ function ActiveSessionPage({
           type="button"
           className="button button-danger-ghost"
           disabled={ending}
-          onClick={handleEndSession}
+          onClick={() =>
+          setEndConfirmationOpen(
+            true
+          )
+        }
         >
           {ending
             ? "Ending..."
@@ -484,6 +490,29 @@ function ActiveSessionPage({
           {spins.length} total spins
         </span>
       </div>
+      
+      <ConfirmDialog
+        open={
+          endConfirmationOpen
+        }
+        title="End Session?"
+        message={
+          "This roulette session will be marked " +
+          "as ended. New spins cannot be added " +
+          "afterward."
+        }
+        confirmLabel="End Session"
+        loading={ending}
+        danger
+        onCancel={() =>
+          setEndConfirmationOpen(
+            false
+          )
+        }
+        onConfirm={
+          handleEndSession
+        }
+      />
     </section>
   );
 }

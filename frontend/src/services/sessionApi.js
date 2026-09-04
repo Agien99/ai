@@ -4,35 +4,94 @@ async function apiRequest(
   path,
   options = {}
 ) {
-  const response = await fetch(
-    `${apiConfig.baseUrl}${path}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-      ...options,
-    }
-  );
+  if (!apiConfig.baseUrl) {
+    throw new Error(
+      "FastAPI backend URL has " +
+      "not been configured."
+    );
+  }
+
+  let response;
+
+  try {
+    response = await fetch(
+      `${apiConfig.baseUrl}${path}`,
+      {
+        headers: {
+          "Content-Type":
+            "application/json",
+
+          ...options.headers,
+        },
+
+        ...options,
+      }
+    );
+  } catch {
+    throw new Error(
+      "Unable to connect to the " +
+      "FastAPI server."
+    );
+  }
 
   let data = null;
 
   try {
-    data = await response.json();
+    data =
+      await response.json();
   } catch {
     data = null;
   }
 
   if (!response.ok) {
-    const message =
-      data?.message ||
-      data?.detail ||
+    let message =
       "API request failed.";
 
+    if (
+      typeof data?.message ===
+      "string"
+    ) {
+      message =
+        data.message;
+    } else if (
+      typeof data?.detail ===
+      "string"
+    ) {
+      message =
+        data.detail;
+    } else if (
+      Array.isArray(
+        data?.detail
+      )
+    ) {
+      message =
+        data.detail
+          .map(
+            (item) =>
+              item.msg
+          )
+          .filter(Boolean)
+          .join(", ");
+    }
+
+    if (
+      response.status === 404
+    ) {
+      message =
+        message ||
+        "Requested data was not found.";
+    }
+
+    if (
+      response.status >= 500
+    ) {
+      message =
+        "The backend server encountered " +
+        "an unexpected error.";
+    }
+
     throw new Error(
-      typeof message === "string"
-        ? message
-        : "API request failed."
+      message
     );
   }
 

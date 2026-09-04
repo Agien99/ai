@@ -4038,3 +4038,359 @@ small.valid-text {
     padding: 0;
   }
 }
+
+/* =========================
+   Phase 10 - Step 48
+   Dashboard Final Review
+   ========================= */
+
+.dashboard-hero-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  flex-wrap: wrap;
+}
+
+
+.dashboard-panel-heading {
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 18px;
+
+  margin-bottom: 8px;
+}
+
+
+.dashboard-panel-heading h2 {
+  margin:
+    5px 0 0;
+}
+
+
+.dashboard-session-description {
+  margin-top: 0 !important;
+
+  color:
+    var(--text-secondary);
+
+  font-size: 12px;
+
+  line-height: 1.6;
+}
+
+
+.dashboard-session-metrics {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
+
+  gap: 10px;
+
+  margin-top: 22px;
+}
+
+
+.dashboard-session-metrics > div {
+  padding: 15px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.055
+    );
+
+  border-radius: 10px;
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.12
+    );
+}
+
+
+.dashboard-session-metrics span,
+.dashboard-session-metrics strong {
+  display: block;
+}
+
+
+.dashboard-session-metrics span {
+  color:
+    var(--text-muted);
+
+  font-size: 8px;
+
+  letter-spacing:
+    0.07em;
+
+  text-transform:
+    uppercase;
+}
+
+
+.dashboard-session-metrics strong {
+  margin-top: 7px;
+
+  font-size: 20px;
+}
+
+
+.dashboard-session-info {
+  display: grid;
+
+  grid-template-columns:
+    minmax(180px, 0.7fr)
+    minmax(0, 1.3fr);
+
+  gap: 10px;
+
+  margin-top: 10px;
+}
+
+
+.dashboard-session-info > div {
+  min-width: 0;
+
+  padding: 12px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.045
+    );
+
+  border-radius: 9px;
+}
+
+
+.dashboard-session-info span,
+.dashboard-session-info strong,
+.dashboard-session-info code {
+  display: block;
+}
+
+
+.dashboard-session-info span {
+  margin-bottom: 5px;
+
+  color:
+    var(--text-muted);
+
+  font-size: 8px;
+
+  text-transform:
+    uppercase;
+}
+
+
+.dashboard-session-info strong {
+  color:
+    var(--text-secondary);
+
+  font-size: 10px;
+}
+
+
+.dashboard-session-info code {
+  overflow: hidden;
+
+  color:
+    var(--text-secondary);
+
+  font-size: 9px;
+
+  text-overflow:
+    ellipsis;
+
+  white-space: nowrap;
+}
+
+
+.dashboard-continue-button {
+  margin-top: 18px;
+}
+
+
+.dashboard-overview-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+
+  margin-top: 22px;
+}
+
+
+.dashboard-overview-list > div {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  padding: 12px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.05
+    );
+
+  border-radius: 8px;
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.1
+    );
+}
+
+
+.dashboard-overview-list span {
+  color:
+    var(--text-secondary);
+
+  font-size: 10px;
+}
+
+
+.dashboard-overview-list strong {
+  font-size: 13px;
+}
+
+
+.dashboard-history-button {
+  width: 100%;
+
+  margin-top: 18px;
+}
+
+
+.dashboard-empty-session {
+  display: flex;
+
+  min-height: 250px;
+
+  align-items: center;
+  justify-content: center;
+
+  flex-direction: column;
+
+  text-align: center;
+}
+
+
+.dashboard-empty-session h3 {
+  margin:
+    3px 0 6px;
+}
+
+
+.dashboard-empty-session p {
+  max-width: 360px;
+
+  margin:
+    0 0 18px;
+
+  color:
+    var(--text-secondary);
+
+  font-size: 11px;
+
+  line-height: 1.6;
+}
+
+
+.dashboard-loading {
+  display: grid;
+
+  min-height: 250px;
+
+  place-items: center;
+
+  color:
+    var(--text-muted);
+
+  font-size: 11px;
+}
+
+
+/* Dashboard Tablet */
+
+@media (
+  max-width: 1024px
+) {
+  .dashboard-hero {
+    align-items:
+      flex-start;
+  }
+}
+
+
+/* Dashboard Mobile */
+
+@media (
+  max-width: 600px
+) {
+  .dashboard-hero-actions {
+    width: 100%;
+
+    flex-direction:
+      column;
+  }
+
+
+  .dashboard-hero-actions
+  .button {
+    width: 100%;
+  }
+
+
+  .dashboard-session-metrics {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .dashboard-session-info {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .dashboard-session-info code {
+    white-space: normal;
+
+    overflow-wrap:
+      anywhere;
+  }
+
+
+  .dashboard-continue-button {
+    width: 100%;
+  }
+}

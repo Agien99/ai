@@ -1,23 +1,211 @@
+import {
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+
+import {
+  getSessionSpins,
+  getSessions,
+} from "../services/sessionApi";
+
+
 function DashboardPage({
   session,
   spins,
   onNewSession,
   onOpenSession,
+  onOpenHistory,
 }) {
-  const hasSession =
-    session?.status === "ACTIVE";
+  const [
+    sessions,
+    setSessions,
+  ] = useState([]);
+
+  const [
+    latestActiveSession,
+    setLatestActiveSession,
+  ] = useState(null);
+
+  const [
+    latestActiveSpins,
+    setLatestActiveSpins,
+  ] = useState([]);
+
+  const [
+    loading,
+    setLoading,
+  ] = useState(true);
+
+  const [
+    error,
+    setError,
+  ] = useState("");
+
+
+  const loadDashboard =
+    useCallback(async () => {
+      setLoading(true);
+      setError("");
+
+
+      try {
+        const sessionData =
+          await getSessions();
+
+
+        const allSessions =
+          Array.isArray(
+            sessionData
+          )
+            ? sessionData
+            : [];
+
+
+        setSessions(
+          allSessions
+        );
+
+
+        const activeSessions =
+          allSessions
+            .filter(
+              (item) =>
+                item.status ===
+                "ACTIVE"
+            )
+            .sort(
+              (a, b) => {
+                const aTime =
+                  new Date(
+                    a.started_at ||
+                    a.created_at ||
+                    0
+                  ).getTime();
+
+                const bTime =
+                  new Date(
+                    b.started_at ||
+                    b.created_at ||
+                    0
+                  ).getTime();
+
+                return (
+                  bTime -
+                  aTime
+                );
+              }
+            );
+
+
+        if (
+          activeSessions.length === 0
+        ) {
+          setLatestActiveSession(
+            null
+          );
+
+          setLatestActiveSpins(
+            []
+          );
+
+          return;
+        }
+
+
+        const latest =
+          activeSessions[0];
+
+
+        setLatestActiveSession(
+          latest
+        );
+
+
+        const spinData =
+          await getSessionSpins(
+            latest.session_id
+          );
+
+
+        setLatestActiveSpins(
+          Array.isArray(spinData)
+            ? spinData
+            : []
+        );
+      } catch (requestError) {
+        setError(
+          requestError.message
+        );
+      } finally {
+        setLoading(false);
+      }
+    }, []);
+
+
+  useEffect(() => {
+    loadDashboard();
+  }, [
+    loadDashboard,
+    session,
+    spins.length,
+  ]);
+
+
+  const activeSessions =
+    sessions.filter(
+      (item) =>
+        item.status === "ACTIVE"
+    );
+
+
+  const endedSessions =
+    sessions.filter(
+      (item) =>
+        item.status === "ENDED"
+    );
+
 
   const initialCount =
-    spins.filter(
+    latestActiveSpins.filter(
       (spin) =>
-        spin.spin_type === "INITIAL"
+        spin.spin_type ===
+        "INITIAL"
     ).length;
 
+
   const observedCount =
-    spins.filter(
+    latestActiveSpins.filter(
       (spin) =>
-        spin.spin_type === "OBSERVED"
+        spin.spin_type ===
+        "OBSERVED"
     ).length;
+
+
+  const formatDate = (
+    value
+  ) => {
+    if (!value) {
+      return "Not available";
+    }
+
+
+    const date =
+      new Date(value);
+
+
+    if (
+      Number.isNaN(
+        date.getTime()
+      )
+    ) {
+      return "Not available";
+    }
+
+
+    return date.toLocaleString();
+  };
+
 
   return (
     <section className="page">
@@ -32,169 +220,344 @@ function DashboardPage({
           </h1>
 
           <p>
-            Analyze session patterns,
-            generate ranked predictions
-            and evaluate performance
-            over time.
+            Monitor roulette sessions,
+            continue unfinished analysis
+            and review prediction activity
+            across your recorded data.
           </p>
         </div>
 
-        <button
-          type="button"
-          className="button button-primary"
-          onClick={
-            hasSession
-              ? onOpenSession
-              : onNewSession
-          }
-        >
-          {hasSession
-            ? "Open Active Session"
-            : "Start New Session"}
-        </button>
+
+        <div className="dashboard-hero-actions">
+          {latestActiveSession && (
+            <button
+              type="button"
+              className="button button-secondary"
+              onClick={
+                onOpenSession
+              }
+            >
+              Open Latest Active
+            </button>
+          )}
+
+
+          <button
+            type="button"
+            className="button button-primary"
+            onClick={
+              onNewSession
+            }
+          >
+            + Start New Session
+          </button>
+        </div>
       </div>
+
+
+      {error && (
+        <div className="error-message">
+          {error}
+        </div>
+      )}
+
 
       <div className="dashboard-metrics">
         <article className="metric-card">
           <span>
-            Session
+            Active Sessions
           </span>
 
           <strong
             className={
-              hasSession
+              activeSessions.length > 0
                 ? "metric-green"
                 : ""
             }
           >
-            {hasSession
-              ? "ACTIVE"
-              : "NONE"}
+            {loading
+              ? "..."
+              : activeSessions.length}
           </strong>
 
           <small>
-            Current state
+            Unfinished sessions
           </small>
         </article>
 
+
         <article className="metric-card">
           <span>
-            Initial Spins
+            Total Sessions
           </span>
 
           <strong>
-            {initialCount}
+            {loading
+              ? "..."
+              : sessions.length}
           </strong>
 
           <small>
-            Starting history
+            Recorded sessions
           </small>
         </article>
 
+
         <article className="metric-card">
           <span>
-            Live Spins
+            Ended Sessions
           </span>
 
           <strong>
-            {observedCount}
+            {loading
+              ? "..."
+              : endedSessions.length}
           </strong>
 
           <small>
-            Observed results
+            Completed sessions
           </small>
         </article>
 
+
         <article className="metric-card">
           <span>
-            Total Spins
+            Latest Spins
           </span>
 
           <strong>
-            {spins.length}
+            {loading
+              ? "..."
+              : latestActiveSpins.length}
           </strong>
 
           <small>
-            Current session
+            Latest active session
           </small>
         </article>
       </div>
 
+
       <div className="dashboard-sections">
         <div className="panel dashboard-main-panel">
-          <span className="panel-eyebrow">
-            Prediction Engine
-          </span>
+          <div className="dashboard-panel-heading">
+            <div>
+              <span className="panel-eyebrow">
+                Latest Active Session
+              </span>
 
-          <h2>
-            AI Predictions
-          </h2>
+              <h2>
+                Session Activity
+              </h2>
+            </div>
 
-          <p>
-            Ranked dozens, columns,
-            streets, splits and corners
-            will appear here in the
-            next batch.
-          </p>
 
-          <div className="coming-soon-grid">
-            <span>Dozens</span>
-            <span>Columns</span>
-            <span>Streets</span>
-            <span>Splits</span>
-            <span>Corners</span>
+            {latestActiveSession && (
+              <span className="summary-status active">
+                ACTIVE
+              </span>
+            )}
           </div>
-        </div>
 
-        <div className="panel dashboard-side-panel">
-          <span className="panel-eyebrow">
-            Current Session
-          </span>
 
-          <h2>
-            Session Status
-          </h2>
-
-          {hasSession ? (
+          {loading ? (
+            <div className="dashboard-loading">
+              Loading session data...
+            </div>
+          ) : latestActiveSession ? (
             <>
-              <div className="dashboard-session-status">
-                <span className="status-dot" />
-                Active
+              <p className="dashboard-session-description">
+                The most recently started
+                active session is ready to
+                continue.
+              </p>
+
+
+              <div className="dashboard-session-metrics">
+                <div>
+                  <span>
+                    Initial Spins
+                  </span>
+
+                  <strong>
+                    {initialCount}
+                  </strong>
+                </div>
+
+
+                <div>
+                  <span>
+                    Observed Spins
+                  </span>
+
+                  <strong>
+                    {observedCount}
+                  </strong>
+                </div>
+
+
+                <div>
+                  <span>
+                    Total Spins
+                  </span>
+
+                  <strong>
+                    {
+                      latestActiveSpins
+                        .length
+                    }
+                  </strong>
+                </div>
               </div>
 
-              <p>
-                Continue entering live
-                roulette results.
-              </p>
+
+              <div className="dashboard-session-info">
+                <div>
+                  <span>
+                    Started
+                  </span>
+
+                  <strong>
+                    {formatDate(
+                      latestActiveSession
+                        .started_at
+                    )}
+                  </strong>
+                </div>
+
+
+                <div>
+                  <span>
+                    Session ID
+                  </span>
+
+                  <code>
+                    {
+                      latestActiveSession
+                        .session_id
+                    }
+                  </code>
+                </div>
+              </div>
+
 
               <button
                 type="button"
-                className="button button-secondary"
-                onClick={onOpenSession}
+                className="button button-primary dashboard-continue-button"
+                onClick={
+                  onOpenSession
+                }
               >
-                View Session
+                Continue Latest Session
               </button>
             </>
           ) : (
-            <>
+            <div className="dashboard-empty-session">
+              <div className="no-session-icon">
+                +
+              </div>
+
+              <h3>
+                No Active Sessions
+              </h3>
+
               <p>
-                Start a session to begin
-                collecting roulette data.
+                There are currently no
+                unfinished roulette
+                sessions.
               </p>
 
               <button
                 type="button"
-                className="button button-secondary"
-                onClick={onNewSession}
+                className="button button-primary"
+                onClick={
+                  onNewSession
+                }
               >
-                New Session
+                Start New Session
               </button>
-            </>
+            </div>
           )}
+        </div>
+
+
+        <div className="panel dashboard-side-panel">
+          <span className="panel-eyebrow">
+            Session Overview
+          </span>
+
+          <h2>
+            Stored Sessions
+          </h2>
+
+          <p>
+            Overview of the sessions
+            currently stored by the
+            backend.
+          </p>
+
+
+          <div className="dashboard-overview-list">
+            <div>
+              <span>
+                Active
+              </span>
+
+              <strong
+                className={
+                  activeSessions.length > 0
+                    ? "metric-green"
+                    : ""
+                }
+              >
+                {loading
+                  ? "..."
+                  : activeSessions.length}
+              </strong>
+            </div>
+
+
+            <div>
+              <span>
+                Ended
+              </span>
+
+              <strong>
+                {loading
+                  ? "..."
+                  : endedSessions.length}
+              </strong>
+            </div>
+
+
+            <div>
+              <span>
+                Total
+              </span>
+
+              <strong>
+                {loading
+                  ? "..."
+                  : sessions.length}
+              </strong>
+            </div>
+          </div>
+
+
+          <button
+            type="button"
+            className="button button-secondary dashboard-history-button"
+            onClick={
+              onOpenHistory
+            }
+          >
+            View Session History
+          </button>
         </div>
       </div>
     </section>
   );
 }
+
 
 export default DashboardPage;

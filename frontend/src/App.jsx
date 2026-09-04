@@ -459,6 +459,11 @@ function App() {
                 "active-session"
               )
             }
+            onOpenHistory={() =>
+              handleNavigation(
+                "history"
+              )
+            }
           />
         );
     }

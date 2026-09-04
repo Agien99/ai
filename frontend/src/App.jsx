@@ -29,6 +29,7 @@ import SessionHistoryDetailPage
 import {
   getSession,
   getSessionSpins,
+  getSessions,
 } from "./services/sessionApi";
 
 
@@ -64,15 +65,174 @@ function App() {
   ] = useState(false);
 
 
-  const handleNavigation = (
-    page
-  ) => {
-    setActivePage(page);
+  const recoverLatestActiveSession =
+    async () => {
+      const sessions =
+        await getSessions();
 
-    setMobileMenuOpen(
-      false
-    );
-  };
+
+      const activeSessions =
+        (sessions || [])
+          .filter(
+            (session) =>
+              session.status ===
+              "ACTIVE"
+          );
+
+
+      if (
+        activeSessions.length === 0
+      ) {
+        setCurrentSession(
+          null
+        );
+
+        setSpins([]);
+
+        return false;
+      }
+
+
+      /*
+       * getSessions() should normally
+       * return sessions in the backend's
+       * normal ordering.
+       *
+       * We still explicitly sort the
+       * ACTIVE sessions so the most
+       * recently started session wins.
+       */
+      const sortedActiveSessions =
+        [...activeSessions].sort(
+          (a, b) => {
+            const aTime =
+              new Date(
+                a.started_at ||
+                a.created_at ||
+                0
+              ).getTime();
+
+            const bTime =
+              new Date(
+                b.started_at ||
+                b.created_at ||
+                0
+              ).getTime();
+
+            return bTime - aTime;
+          }
+        );
+
+
+      const latestActiveSession =
+        sortedActiveSessions[0];
+
+
+      const [
+        sessionData,
+        spinData,
+      ] = await Promise.all([
+        getSession(
+          latestActiveSession
+            .session_id
+        ),
+
+        getSessionSpins(
+          latestActiveSession
+            .session_id
+        ),
+      ]);
+
+
+      setCurrentSession(
+        sessionData
+      );
+
+      setSpins(
+        spinData
+      );
+
+      setSelectedHistorySessionId(
+        null
+      );
+
+
+      return true;
+    };
+
+
+  const handleNavigation =
+    async (page) => {
+      setMobileMenuOpen(
+        false
+      );
+
+
+      /*
+       * Active Session is special:
+       *
+       * If React already knows about an
+       * ACTIVE session, simply open it.
+       *
+       * Otherwise ask the backend for
+       * the latest ACTIVE session.
+       */
+      if (
+        page ===
+        "active-session"
+      ) {
+        if (
+          currentSession?.status ===
+          "ACTIVE"
+        ) {
+          setActivePage(
+            "active-session"
+          );
+
+          return;
+        }
+
+
+        if (resumeLoading) {
+          return;
+        }
+
+
+        setResumeLoading(
+          true
+        );
+
+
+        try {
+          await recoverLatestActiveSession();
+        } catch (requestError) {
+          console.error(
+            "Unable to recover active session:",
+            requestError
+          );
+
+          setCurrentSession(
+            null
+          );
+
+          setSpins([]);
+        } finally {
+          setResumeLoading(
+            false
+          );
+        }
+
+
+        setActivePage(
+          "active-session"
+        );
+
+        return;
+      }
+
+
+      setActivePage(page);
+    };
 
 
   const handleSessionStarted = (
@@ -202,10 +362,16 @@ function App() {
         return (
           <ActiveSessionPage
             session={
-              currentSession
+              currentSession?.status ===
+              "ACTIVE"
+                ? currentSession
+                : null
             }
             spins={
-              spins
+              currentSession?.status ===
+              "ACTIVE"
+                ? spins
+                : []
             }
             onSpinAdded={
               handleSpinAdded

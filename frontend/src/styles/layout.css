@@ -3251,11 +3251,11 @@ small.valid-text {
 
 
 /* =========================
-   Phone
+   Phone / Narrow Landscape
    ========================= */
 
 @media (
-  max-width: 600px
+  max-width: 768px
 ) {
   .initial-spin-panel {
     padding:
@@ -3442,4 +3442,3 @@ small.valid-text {
     width: 100%;
   }
 }
-

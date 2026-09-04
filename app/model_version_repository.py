@@ -7,6 +7,21 @@ from app.database_service import DatabaseService
 
 class ModelVersionRepository:
     @staticmethod
+    def get_all_model_versions(
+    ) -> list[dict]:
+        query = """
+            select *
+            from public.model_versions
+            order by
+                model_name asc,
+                version_number desc
+        """
+
+        return DatabaseService.fetch_all(
+            query
+        )
+
+    @staticmethod
     def create_model_version(
         model_name: str,
         version_number: int,

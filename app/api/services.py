@@ -542,3 +542,41 @@ class APIEvaluationService:
         )
 
         return evaluation
+
+    @staticmethod
+    def evaluate_pending_for_spin(
+        session_id: str,
+        actual_spin_id: str,
+        spin_index: int,
+        actual_number: int,
+    ) -> list[PredictionEvaluationRecord]:
+        pending_runs = (
+            PredictionRunRepository
+            .get_pending_prediction_runs(
+                session_id,
+                spin_index,
+            )
+        )
+
+        evaluations = []
+
+        for run in pending_runs:
+            evaluation = (
+                APIEvaluationService.evaluate(
+                    prediction_run_id=str(
+                        run[
+                            "prediction_run_id"
+                        ]
+                    ),
+                    actual_spin_id=(
+                        actual_spin_id
+                    ),
+                    actual_number=actual_number,
+                )
+            )
+
+            evaluations.append(
+                evaluation
+            )
+
+        return evaluations

@@ -23,5 +23,20 @@ class APISettings:
             "development",
         )
 
+        cors_origins = os.getenv(
+            "CORS_ORIGINS",
+            (
+                "http://localhost:5173,"
+                "https://agien99.github.io"
+            ),
+        )
+
+        self.cors_origins = [
+            origin.strip()
+            for origin
+            in cors_origins.split(",")
+            if origin.strip()
+        ]
+
 
 settings = APISettings()

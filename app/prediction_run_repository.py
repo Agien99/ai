@@ -3,6 +3,28 @@ from app.database_service import DatabaseService
 
 class PredictionRunRepository:
     @staticmethod
+    def get_pending_prediction_runs(
+        session_id: str,
+        prediction_for_spin_index: int,
+    ) -> list[dict]:
+        query = """
+            select *
+            from public.prediction_runs
+            where session_id = %s
+              and prediction_for_spin_index = %s
+              and evaluated_at is null
+            order by generated_at asc
+        """
+
+        return DatabaseService.fetch_all(
+            query,
+            (
+                session_id,
+                prediction_for_spin_index,
+            ),
+        )
+
+    @staticmethod
     def get_latest_prediction_run(
         session_id: str,
     ) -> dict | None:

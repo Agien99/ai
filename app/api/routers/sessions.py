@@ -14,9 +14,13 @@ from app.api.schemas import (
     SessionResponse,
     SessionStatisticsResponse,
     SpinResponse,
-    StoredPredictionResponse,
+    StoredPredictionResponse,    
+    ComparisonResponse,
+    EvaluationResponse,
+    MLPerformanceResponse,
 )
 from app.api.services import (
+    APIEvaluationService,
     APIPredictionService,
     APIStatisticsService,
 )
@@ -31,6 +35,9 @@ from app.spin_repository import (
     SpinRepository,
 )
 
+from app.api.reporting import (
+    APIReportingService,
+)
 
 router = APIRouter(
     prefix="/sessions",
@@ -204,6 +211,20 @@ def add_spin(
         session
     )
 
+    APIEvaluationService\
+        .evaluate_pending_for_spin(
+            session_id=(
+                session.session_id
+            ),
+            actual_spin_id=str(
+                stored_spin[
+                    "spin_id"
+                ]
+            ),
+            spin_index=spin_index,
+            actual_number=request.number,
+        )
+
     return stored_spin
 
 
@@ -309,3 +330,112 @@ def get_latest_prediction(
         )
 
     return prediction
+
+@router.get(
+    "/{session_id}/evaluation",
+    response_model=EvaluationResponse,
+)
+def get_session_evaluation(
+    session_id: UUID,
+):
+    load_required_session(
+        session_id
+    )
+
+    return (
+        APIReportingService
+        .get_session_evaluations(
+            str(session_id)
+        )
+    )
+
+@router.get(
+    "/{session_id}/comparison",
+    response_model=ComparisonResponse,
+)
+def get_strategy_comparison(
+    session_id: UUID,
+):
+    load_required_session(
+        session_id
+    )
+
+    return (
+        APIReportingService
+        .get_strategy_comparison(
+            str(session_id)
+        )
+    )
+
+@router.get(
+    "/{session_id}/ml-performance",
+    response_model=MLPerformanceResponse,
+)
+def get_ml_performance(
+    session_id: UUID,
+):
+    load_required_session(
+        session_id
+    )
+
+    performance = (
+        APIReportingService
+        .get_ml_performance()
+    )
+
+    return {
+        "session_id":
+            session_id,
+        **performance,
+    }
+
+@router.post(
+    "/{session_id}/end",
+    response_model=SessionResponse,
+)
+def end_session(
+    session_id: UUID,
+):
+    session = load_required_session(
+        session_id
+    )
+
+    try:
+        session.end()
+
+    except ValueError as error:
+        raise APIError(
+            status_code=409,
+            message=str(error),
+        ) from error
+
+    SessionRepository.update_session(
+        session
+    )
+
+    stored_session = (
+        SessionRepository.get_session(
+            session.session_id
+        )
+    )
+
+    if stored_session is None:
+        raise APIError(
+            status_code=500,
+            message=(
+                "Session could not be "
+                "reloaded after ending."
+            ),
+        )
+
+    return stored_session
+
+@router.get(
+    "",
+    response_model=list[SessionResponse],
+)
+def get_historical_sessions():
+    return (
+        SessionRepository
+        .get_all_sessions()
+    )

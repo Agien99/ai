@@ -2,8 +2,11 @@ from datetime import datetime
 from typing import Annotated, Any, Literal
 from uuid import UUID
 
-from pydantic import BaseModel, Field
-
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+)
 
 RouletteNumber = Annotated[
     int,
@@ -43,14 +46,18 @@ class SessionResponse(BaseModel):
     updated_at: datetime | None = None
 
 
-class InitialSpinsRequest(BaseModel):
+class InitialSpinsRequest(
+    StrictRequestModel
+):
     spins: list[RouletteNumber] = Field(
         min_length=10,
         max_length=15,
     )
 
 
-class AddSpinRequest(BaseModel):
+class AddSpinRequest(
+    StrictRequestModel
+):
     number: RouletteNumber
 
 
@@ -70,7 +77,9 @@ class SessionStatisticsResponse(BaseModel):
     statistics: dict[str, Any]
 
 
-class PredictionRequest(BaseModel):
+class PredictionRequest(
+    StrictRequestModel
+):
     strategy: PredictionStrategy = "v1"
 
     recent_window: int = Field(
@@ -94,3 +103,30 @@ class PredictionResponse(BaseModel):
 class StoredPredictionResponse(BaseModel):
     prediction_run: dict[str, Any]
     prediction_items: list[dict[str, Any]]
+
+class StrictRequestModel(BaseModel):
+    model_config = ConfigDict(
+        extra="forbid"
+    )
+
+class EvaluationResponse(BaseModel):
+    session_id: UUID
+    evaluation_count: int
+    evaluations: list[dict[str, Any]]
+
+
+class ComparisonResponse(BaseModel):
+    session_id: UUID
+    strategy_count: int
+    strategies: dict[str, Any]
+
+
+class MLPerformanceResponse(BaseModel):
+    session_id: UUID
+    model_count: int
+    models: list[dict[str, Any]]
+
+
+class ModelsResponse(BaseModel):
+    model_version_count: int
+    models: list[dict[str, Any]]

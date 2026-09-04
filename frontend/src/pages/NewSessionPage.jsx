@@ -21,8 +21,7 @@ function NewSessionPage({
     useState("");
 
   const isValid =
-    spins.length >= 10 &&
-    spins.length <= 15;
+  spins.length >= 10;
 
   const startSession = async () => {
     if (!isValid || loading) {
@@ -89,7 +88,7 @@ function NewSessionPage({
         </div>
 
         <span className="development-badge">
-          10–15 Spins
+          Minimum 10 Spins
         </span>
       </div>
 
@@ -119,8 +118,8 @@ function NewSessionPage({
                 </strong>
 
                 <p>
-                  Add the latest
-                  10–15 results.
+                  Add at least 10
+                  recent results.
                 </p>
               </div>
             </div>

@@ -1,26 +1,27 @@
-import { useState } from "react";
-
 import RouletteNumber
   from "../common/RouletteNumber";
+
+import {
+  getNumberType,
+} from "../../utils/roulette";
+
+
+const rouletteNumbers =
+  Array.from(
+    { length: 37 },
+    (_, index) => index
+  );
+
 
 function InitialSpinInput({
   spins,
   onChange,
   disabled = false,
 }) {
-  const [value, setValue] =
-    useState("");
-
-  const addNumber = () => {
-    const number = Number(value);
-
-    if (
-      value === "" ||
-      !Number.isInteger(number) ||
-      number < 0 ||
-      number > 36 ||
-      spins.length >= 15
-    ) {
+  const addNumber = (
+    number
+  ) => {
+    if (disabled) {
       return;
     }
 
@@ -28,26 +29,34 @@ function InitialSpinInput({
       ...spins,
       number,
     ]);
-
-    setValue("");
   };
 
+
   const removeLast = () => {
+    if (
+      disabled ||
+      spins.length === 0
+    ) {
+      return;
+    }
+
     onChange(
       spins.slice(0, -1)
     );
   };
 
+
   const clearAll = () => {
+    if (
+      disabled ||
+      spins.length === 0
+    ) {
+      return;
+    }
+
     onChange([]);
   };
 
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      addNumber();
-    }
-  };
 
   return (
     <div className="panel">
@@ -62,9 +71,10 @@ function InitialSpinInput({
           </h2>
 
           <p>
-            Enter 10–15 recent
-            roulette results in
-            chronological order.
+            Click the recent roulette
+            results in chronological
+            order. A minimum of 10
+            spins is required.
           </p>
         </div>
 
@@ -75,39 +85,40 @@ function InitialSpinInput({
               : "spin-counter"
           }
         >
-          {spins.length} / 15
+          {spins.length} spins
         </div>
       </div>
 
-      <div className="initial-entry-row">
-        <input
-          className="number-input"
-          type="number"
-          min="0"
-          max="36"
-          value={value}
-          disabled={disabled}
-          placeholder="0 - 36"
-          onChange={(event) =>
-            setValue(
-              event.target.value
-            )
-          }
-          onKeyDown={handleKeyDown}
-        />
 
-        <button
-          type="button"
-          className="button button-primary"
-          disabled={
-            disabled ||
-            spins.length >= 15
+      <div className="initial-number-grid">
+        {rouletteNumbers.map(
+          (number) => {
+            const type =
+              getNumberType(number);
+
+            return (
+              <button
+                type="button"
+                key={number}
+                className={
+                  `roulette-grid-number ` +
+                  `roulette-grid-${type}`
+                }
+                disabled={disabled}
+                onClick={() =>
+                  addNumber(number)
+                }
+                aria-label={
+                  `Add roulette number ${number}`
+                }
+              >
+                {number}
+              </button>
+            );
           }
-          onClick={addNumber}
-        >
-          Add Spin
-        </button>
+        )}
       </div>
+
 
       <div className="initial-help">
         {spins.length < 10 ? (
@@ -125,16 +136,52 @@ function InitialSpinInput({
         ) : (
           <span className="valid-text">
             Ready to start session.
-            You may add up to{" "}
-            {15 - spins.length} more.
+            You may continue adding
+            more history if available.
           </span>
         )}
       </div>
 
+
+      <div className="initial-history-header">
+        <div>
+          <span className="stats-card-label">
+            Selected History
+          </span>
+
+          <p>
+            Oldest to newest
+          </p>
+        </div>
+
+        {spins.length > 0 && (
+          <div className="initial-actions">
+            <button
+              type="button"
+              className="button button-secondary"
+              disabled={disabled}
+              onClick={removeLast}
+            >
+              Undo Last
+            </button>
+
+            <button
+              type="button"
+              className="button button-danger-ghost"
+              disabled={disabled}
+              onClick={clearAll}
+            >
+              Clear All
+            </button>
+          </div>
+        )}
+      </div>
+
+
       <div className="initial-spin-list">
         {spins.length === 0 ? (
           <div className="empty-inline">
-            No spins entered yet.
+            No spins selected yet.
           </div>
         ) : (
           spins.map(
@@ -155,30 +202,9 @@ function InitialSpinInput({
           )
         )}
       </div>
-
-      {spins.length > 0 && (
-        <div className="initial-actions">
-          <button
-            type="button"
-            className="button button-secondary"
-            disabled={disabled}
-            onClick={removeLast}
-          >
-            Remove Last
-          </button>
-
-          <button
-            type="button"
-            className="button button-danger-ghost"
-            disabled={disabled}
-            onClick={clearAll}
-          >
-            Clear All
-          </button>
-        </div>
-      )}
     </div>
   );
 }
+
 
 export default InitialSpinInput;

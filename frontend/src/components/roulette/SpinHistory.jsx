@@ -1,8 +1,3 @@
-import {
-  useEffect,
-  useRef,
-} from "react";
-
 import RouletteNumber
   from "../common/RouletteNumber";
 
@@ -10,24 +5,8 @@ import RouletteNumber
 function SpinHistory({
   spins = [],
 }) {
-  const historyRef =
-    useRef(null);
-
-
-  useEffect(() => {
-    const history =
-      historyRef.current;
-
-    if (!history) {
-      return;
-    }
-
-    history.scrollTo({
-      left:
-        history.scrollWidth,
-      behavior: "smooth",
-    });
-  }, [spins.length]);
+  const descendingSpins =
+    [...spins].reverse();
 
 
   return (
@@ -43,8 +22,9 @@ function SpinHistory({
           </h2>
 
           <p>
-            Swipe or scroll horizontally
-            to review the session sequence.
+            Latest spin first. Swipe or
+            scroll horizontally to review
+            earlier results.
           </p>
         </div>
 
@@ -63,38 +43,37 @@ function SpinHistory({
           No spin data available.
         </div>
       ) : (
-        <div
-          className="spin-history"
-          ref={historyRef}
-        >
-          {spins.map((spin) => (
-            <div
-              className="history-row"
-              key={
-                spin.spin_id ||
-                `${spin.spin_index}-${spin.number}`
-              }
-            >
-              <span className="history-index">
-                #{spin.spin_index}
-              </span>
-
-              <RouletteNumber
-                number={spin.number}
-              />
-
-              <span
-                className={
-                  spin.spin_type ===
-                  "INITIAL"
-                    ? "spin-type initial"
-                    : "spin-type observed"
+        <div className="spin-history">
+          {descendingSpins.map(
+            (spin) => (
+              <div
+                className="history-row"
+                key={
+                  spin.spin_id ||
+                  `${spin.spin_index}-${spin.number}`
                 }
               >
-                {spin.spin_type}
-              </span>
-            </div>
-          ))}
+                <span className="history-index">
+                  #{spin.spin_index}
+                </span>
+
+                <RouletteNumber
+                  number={spin.number}
+                />
+
+                <span
+                  className={
+                    spin.spin_type ===
+                    "INITIAL"
+                      ? "spin-type initial"
+                      : "spin-type observed"
+                  }
+                >
+                  {spin.spin_type}
+                </span>
+              </div>
+            )
+          )}
         </div>
       )}
     </div>

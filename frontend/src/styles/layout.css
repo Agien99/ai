@@ -3639,7 +3639,7 @@ small.valid-text {
 }
 
 
-.history-row:last-child {
+.history-row:first-child {
   border-color:
     rgba(
       0,

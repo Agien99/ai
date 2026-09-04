@@ -6,6 +6,23 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+def env_bool(
+    name: str,
+    default: bool,
+) -> bool:
+    value = os.getenv(name)
+
+    if value is None:
+        return default
+
+    return value.strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+
+
 class APISettings:
     def __init__(self):
         self.api_title = os.getenv(
@@ -21,6 +38,17 @@ class APISettings:
         self.api_environment = os.getenv(
             "API_ENV",
             "development",
+        )
+
+        self.log_level = os.getenv(
+            "LOG_LEVEL",
+            "INFO",
+        ).upper()
+
+        self.docs_enabled = env_bool(
+            "API_DOCS_ENABLED",
+            self.api_environment
+            != "production",
         )
 
         cors_origins = os.getenv(

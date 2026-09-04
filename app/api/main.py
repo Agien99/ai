@@ -7,6 +7,10 @@ from app.api.config import settings
 from app.api.errors import (
     register_exception_handlers,
 )
+from app.api.logging import (
+    configure_logging,
+    request_logging_middleware,
+)
 from app.api.routers.health import (
     router as health_router,
 )
@@ -18,9 +22,34 @@ from app.api.routers.sessions import (
 )
 
 
+configure_logging(
+    settings.log_level
+)
+
+
 app = FastAPI(
     title=settings.api_title,
     version=settings.api_version,
+    docs_url=(
+        "/docs"
+        if settings.docs_enabled
+        else None
+    ),
+    redoc_url=(
+        "/redoc"
+        if settings.docs_enabled
+        else None
+    ),
+    openapi_url=(
+        "/openapi.json"
+        if settings.docs_enabled
+        else None
+    ),
+)
+
+
+app.middleware("http")(
+    request_logging_middleware
 )
 
 

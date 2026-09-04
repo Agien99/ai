@@ -1,456 +1,252 @@
-# Roulette AI Experiment
-
-A learning project focused on building a session-based AI/ML system for
-analyzing European Roulette results and generating ranked betting
-predictions.
-
-The main goal of this project is not to guarantee roulette outcomes, but
-to learn and experiment with:
-
--   Python
--   Data processing
--   Statistical analysis
--   Feature engineering
--   Machine learning
--   Model evaluation
--   API development
--   Supabase integration
--   React frontend integration
-
-## Roulette Type
-
-This project currently targets:
-
--   European Roulette
--   Numbers: `0-36`
--   Single zero
-
-## Prediction Targets
-
-For every next spin, the system is planned to generate:
-
--   2 possible Dozens
--   2 possible Columns
--   5 possible Corner bets
--   12 possible Split bets
--   6 possible Street bets
-
-Predictions can be ranked using the statistical Prediction Engine V1 and
-the implemented machine-learning models.
-
-## Session-Based Design
-
-Roulette observations are handled as separate sessions.
-
-Example:
-
-``` text
-Session A
-5:00 PM - 9:00 PM
-
-Session B
-11:00 PM - 1:00 AM
-```
-
-A new session is started when there is a gap where roulette spins were
-not observed.
-
-Each session begins with approximately 10-15 recent roulette results.
-
-The system will then:
-
-``` text
-Initial spin history
-        ↓
-Analyze current session
-        ↓
-Generate prediction
-        ↓
-Next actual spin entered
-        ↓
-Evaluate previous prediction
-        ↓
-Update session statistics
-        ↓
-Generate next prediction
-```
-
-Previous sessions are planned to remain stored in Supabase for
-evaluation and long-term ML experimentation, while each new session
-keeps its own short-term state.
-
-## Planned Architecture
-
-``` text
-React Frontend
-agien99.github.io/rouletteiq/
-        │
-        │ REST API
-        ▼
-Python Backend
-FastAPI
-        │
-        ├── Roulette Engine
-        ├── Session Engine
-        ├── Statistics
-        ├── Feature Engineering
-        ├── Prediction Engine
-        └── Machine Learning
-        │
-        ▼
-Supabase
-        ├── Sessions
-        ├── Spins
-        ├── Predictions
-        └── Model Evaluation
-```
-
-The project will be developed locally first before deployment is
-considered.
-
-## Development Phases
-
-### Phase 1 - Roulette Domain Engine
-
-Goal:
-
-Make Python understand the European Roulette table and its betting
-structures.
-
-Planned steps:
-
-1.  Create Python repository and project structure (COMPLETED)
-2.  Define valid roulette numbers (COMPLETED)
-3.  Implement Dozens (COMPLETED)
-4.  Implement Columns (COMPLETED)
-5.  Implement Streets (COMPLETED)
-6.  Implement Splits (COMPLETED)
-7.  Implement Corners (COMPLETED)
-8.  Add validation (COMPLETED)
-9.  Add basic tests (COMPLETED)
-
-------------------------------------------------------------------------
-
-### Phase 2 - Session Engine
-
-Goal: Create isolated roulette observation sessions.
-
-Steps:
-
-1.  Define RouletteSession model (COMPLETED)
-2.  Start session with 10-15 initial spins (COMPLETED)
-3.  Add new spins sequentially (COMPLETED)
-4.  Maintain spin sequence/order (COMPLETED)
-5.  Track session state and metadata (COMPLETED)
-6.  End/close session (COMPLETED)
-7.  Start fresh independent session (COMPLETED)
-8.  Session validation and edge cases (COMPLETED)
-9.  Automated session tests (COMPLETED)
-
-------------------------------------------------------------------------
-
-### Phase 3 - Statistical Analysis
-
-Goal:
-
-Extract useful features from the current roulette session.
-
-1.  Create Statistics Engine (COMPLETED)
-2.  Number Frequency (COMPLETED)
-3.  Recent-Window Frequency (COMPLETED)
-4.  Spins Since Last Appearance (COMPLETED)
-5.  Hot & Cold Numbers (COMPLETED)
-6.  Dozen Frequency (COMPLETED)
-7.  Column Frequency (COMPLETED)
-8.  Street Activity (COMPLETED)
-9.  Split Activity (COMPLETED)
-10. Corner Activity (COMPLETED)
-11. Combined Session Statistics (COMPLETED)
-12. Validation & Edge Cases (COMPLETED)
-13. Automated Statistical Tests (COMPLETED)
-
-------------------------------------------------------------------------
-
-### Phase 4 - Prediction Engine V1
-
-Goal:
-
-Generate ranked predictions without machine learning first.
-
-1.  Create Prediction Engine (COMPLETED)
-2.  Define Scoring Components (COMPLETED)
-3.  Score Dozens (COMPLETED)
-4.  Score Columns (COMPLETED)
-5.  Score Streets (COMPLETED)
-6.  Score Splits (COMPLETED)
-7.  Score Corners (COMPLETED)
-8.  Rank Predictions (COMPLETED)
-9.  Generate Final Prediction Set (COMPLETED)
-10. Prediction Output Structure (COMPLETED)
-11. Validation & Edge Cases (COMPLETED)
-12. Automated Prediction Tests (COMPLETED)
-13. Baseline Evaluation Preparation (COMPLETED)
-
-Expected output:
-
-``` text
-2 Dozens
-2 Columns
-5 Corners
-12 Splits
-6 Streets
-```
-
-This phase will create the baseline prediction engine.
-
-------------------------------------------------------------------------
-
-### Phase 5 - Prediction Evaluation
-
-Goal:
-
-Measure whether previous predictions hit the next roulette result.
-
-1.  Create Evaluation Engine (COMPLETED)
-2.  Define Prediction Evaluation Record (COMPLETED)
-3.  Evaluate Dozen Predictions (COMPLETED)
-4.  Evaluate Column Predictions (COMPLETED)
-5.  Evaluate Street Predictions (COMPLETED)
-6.  Evaluate Split Predictions (COMPLETED)
-7.  Evaluate Corner Predictions (COMPLETED)
-8.  Evaluate Complete Prediction Set (COMPLETED)
-9.  Track HIT / MISS Counts (COMPLETED)
-10. Calculate Hit Rates (COMPLETED)
-11. Session Evaluation Summary (COMPLETED)
-12. Validation & Edge Cases (COMPLETED)
-13. Automated Evaluation Tests (COMPLETED)
-
-Performance will be tracked separately for:
-
--   Dozens
--   Columns
--   Corners
--   Splits
--   Streets
-
-------------------------------------------------------------------------
-
-### Phase 6 - Baseline Comparison
-
-Goal:
-
-Determine whether the prediction engine performs differently from simple
-strategies.
-
-1.  Create Baseline Engine (COMPLETED)
-2.  Implement Random Baseline (COMPLETED)
-3.  Implement Frequency-Only Baseline (COMPLETED)
-4.  Implement Hot Baseline (COMPLETED)
-5.  Implement Cold Baseline (COMPLETED)
-6.  Standardize Baseline Prediction Output (COMPLETED)
-7.  Add Strategy Labels (COMPLETED)
-8.  Evaluate All Strategies on the Same Next Spin (COMPLETED)
-9.  Track HIT / MISS Counts per Strategy (COMPLETED)
-10. Calculate Hit Rates per Strategy (COMPLETED)
-11. Create Baseline Comparison Summary (COMPLETED)
-12. Calculate V1 Improvement vs Baselines (COMPLETED)
-13. Validation & Edge Cases (COMPLETED)
-14. Automated Baseline Tests (COMPLETED)
-
-This is important for determining whether improvements are meaningful or
-only random variation.
-
-------------------------------------------------------------------------
-
-### Phase 7 - Machine Learning
-
-Goal:
-
-Introduce actual ML models after sufficient data and evaluation
-infrastructure exist.
-
-1.  Create ML Module Structure (COMPLETED)
-2.  Define ML Prediction Target (COMPLETED)
-3.  Build ML Training Dataset (COMPLETED)
-4.  Feature Engineering (COMPLETED)
-5.  Create Chronological Training / Testing Split (COMPLETED)
-6.  Implement Logistic Regression (COMPLETED)
-7.  Implement Random Forest (COMPLETED)
-8.  Implement Gradient Boosting (COMPLETED)
-9.  Implement XGBoost (COMPLETED)
-10. Standardize ML Prediction Output (COMPLETED)
-11. Convert Number Probabilities to Bet Rankings (COMPLETED)
-12. Evaluate ML Predictions (COMPLETED)
-13. Compare ML vs V1 vs Baselines (COMPLETED)
-14. Add ML Performance Metrics (COMPLETED)
-15. Select Best ML Model (COMPLETED)
-16. Create Training & Retraining Flow (COMPLETED)
-17. Add Model Persistence (COMPLETED)
-18. Validation & Edge Cases (COMPLETED)
-19. Automated ML Tests (COMPLETED)
-20. Final ML Benchmark (COMPLETED)
-
-The ML model may rank individual roulette numbers or betting
-combinations.
-
-------------------------------------------------------------------------
-
-### Phase 8 - Neon PostgreSQL Integration
-
-Goal:
-
-Persist roulette sessions, spins, prediction results, evaluation results, model versions, and model performance using Neon PostgreSQL.
-
-Database configuration:
-
-Platform: Neon
-Database: roulette_ai
-Schema: public
-
-Planned steps:
-
-1. Define Persistence Requirements — COMPLETED
-2. Finalize Database Entity Responsibilities — COMPLETED
-3. Design sessions Table — COMPLETED
-4. Design spins Table — COMPLETED
-5. Design prediction_runs Table — COMPLETED
-6. Design prediction_items Table — COMPLETED
-7. Design model_versions Table — COMPLETED
-8. Design model_metrics Table — COMPLETED
-9. Define Table Relationships and Foreign Keys — COMPLETED
-10. Define Status Fields and Constraints — COMPLETED
-11. Define Timestamps and Audit Fields — COMPLETED
-12. Define PostgreSQL Schema and Naming Convention — COMPLETED
-13. Create Tables in Neon — COMPLETED
-14. Configure Primary Keys and UUID Strategy — COMPLETED
-15. Configure Indexes for Common Queries — COMPLETED
-16. Configure Database Security Strategy — COMPLETED
-17. Create Python Neon Database Configuration — COMPLETED
-18. Create PostgreSQL Database Service Module — COMPLETED
-19. Implement Session Persistence — COMPLETED
-20. Implement Spin Persistence — COMPLETED
-21. Implement Prediction Run Persistence — COMPLETED
-22. Implement Prediction Item Persistence — COMPLETED
-23. Implement Model Version Persistence — COMPLETED
-24. Implement Model Metrics Persistence — COMPLETED
-25. Load Existing Session Data from Neon — COMPLETED
-26. Reconstruct Roulette Sessions from Stored Spins — COMPLETED
-27. Store Evaluation Results after Each Spin — COMPLETED
-28. Connect ML Training Data to Historical Neon Data — COMPLETED
-29. Connect Retraining Flow to Stored Sessions — COMPLETED
-30. Add Database Validation and Error Handling — COMPLETED
-31. Prevent Duplicate Records — COMPLETED
-32. Add Neon PostgreSQL Integration Tests — COMPLETED
-33. Test Full Session → Prediction → Evaluation → Database Flow — COMPLETED
-34. Verify Historical Data Can Be Used for ML Benchmarking — COMPLETED
-35. Final Phase 8 Integration Test — COMPLETED
-
-The database schema will be finalized only after the local Python system
-is understood properly.
-
-------------------------------------------------------------------------
-
-### Phase 9 - Python API
-
-Goal:
-
-Expose the completed Python engines, Neon PostgreSQL persistence layer, statistics, predictions, evaluation, and machine-learning functionality through a REST API.
-
-Planned framework:
-
-FastAPI
-
-Planned architecture:
-
-React Frontend
-      │
-      │ REST API / JSON
-      ▼
-FastAPI
-      │
-      ├── Session Engine
-      ├── Statistics Engine
-      ├── Prediction Engine V1
-      ├── Baseline Engines
-      ├── Evaluation Engine
-      ├── Machine Learning Engine
-      │
-      ▼
+# RouletteIQ
+
+**Session-Based Roulette Analytics & Prediction Engine**
+
+RouletteIQ is a full-stack software engineering and AI/ML experimentation project for analyzing **European Roulette** sessions, generating ranked predictions, evaluating prediction performance, and preserving historical session data for statistical and machine-learning research.
+
+The project is designed as an analytical and educational system. It does **not** claim to predict random roulette outcomes with certainty or guarantee gambling results.
+
+## Live Application
+
+- **Frontend:** https://agien99.github.io/rouletteiq/
+- **Source Repository:** https://github.com/Agien99/rouletteiq
+- **Backend:** FastAPI deployed on Render
+- **Database:** Neon PostgreSQL
+
+> The backend is hosted on Render's free service tier and may require a short warm-up period after inactivity.
+
+## Technology Stack
+
+### Frontend
+
+- React
+- Vite
+- JavaScript
+- Responsive CSS
+- GitHub Pages
+- GitHub Actions
+
+### Backend
+
+- Python
+- FastAPI
+- Pydantic
+- Uvicorn
+
+### Data & Analytics
+
+- Statistical analysis
+- Feature engineering
+- Prediction Engine V1
+- Prediction evaluation
+- Baseline strategy comparison
+- Machine-learning infrastructure
+
+### Persistence & Deployment
+
+- Neon PostgreSQL
+- Render
+- GitHub Pages
+- GitHub Actions
+
+## System Architecture
+
+```text
+User
+ │
+ ▼
+RouletteIQ Frontend
+React + Vite
+GitHub Pages
+ │
+ │ REST API / JSON
+ ▼
+FastAPI Backend
+Render
+ │
+ ├── Session Engine
+ ├── Roulette Domain Engine
+ ├── Statistics Engine
+ ├── Prediction Engine V1
+ ├── Evaluation Engine
+ ├── Baseline Comparison
+ └── Machine Learning
+ │
+ ▼
 Persistence / Repository Layer
-      │
-      ▼
+ │
+ ▼
 Neon PostgreSQL
+```
 
-Planned steps:
+The frontend, API, and database are deployed independently. The frontend communicates with the FastAPI service over HTTP, while the backend is responsible for domain logic and persistence.
 
-1. Create FastAPI Module Structure — COMPLETED
-2. Create Application Entry Point — COMPLETED
-3. Configure Environment Variables — COMPLETED
-4. Configure Neon PostgreSQL Database Dependency — COMPLETED
-5. Define API Request / Response Schemas — COMPLETED
-6. Create API Error Handling — COMPLETED
-7. Create Health Check Endpoint — COMPLETED
-8. Implement Create Session Endpoint — COMPLETED
-9. Implement Get Session Endpoint — COMPLETED
-10. Implement Add Initial Spins Endpoint — COMPLETED
-11. Implement Add New Spin Endpoint — COMPLETED
-12. Implement Get Session Spins Endpoint — COMPLETED
-13. Connect Session Statistics Engine — COMPLETED
-14. Implement Get Session Statistics Endpoint — COMPLETED
-15. Connect Prediction Engine V1 — COMPLETED
-16. Connect Baseline Prediction Engines — COMPLETED
-17. Connect Machine Learning Prediction Engine — COMPLETED
-18. Implement Generate Prediction Endpoint — COMPLETED
-19. Implement Get Latest Prediction Endpoint — COMPLETED
-20. Connect Prediction Evaluation Flow — COMPLETED
-21. Automatically Evaluate Previous Prediction on New Spin — COMPLETED
-22. Implement Get Session Evaluation Endpoint — COMPLETED
-23. Implement Get Strategy Comparison Endpoint — COMPLETED
-24. Implement Get ML Performance Endpoint — COMPLETED
-25. Implement End Session Endpoint — COMPLETED
-26. Implement Historical Sessions Endpoint — COMPLETED
-27. Implement Model Information Endpoint — COMPLETED
-28. Add API Input Validation — COMPLETED
-29. Add API Response Standardization — COMPLETED
-30. Configure CORS for React Frontend — COMPLETED
-31. Add API Logging — COMPLETED
-32. Add API Integration Tests — COMPLETED
-33. Test Complete Session API Flow — COMPLETED
-34. Prepare Production Configuration — COMPLETED
-35. Final Phase 9 API Test — COMPLETED
+## Roulette Model
 
-Expected API flow:
+RouletteIQ currently targets **European Roulette**:
 
-React / API Client
-       ↓
-POST /sessions
-       ↓
-Create Session
-       ↓
-POST Initial Spins
-       ↓
-Persist Session + Spins
-       ↓
+- Single-zero wheel
+- Valid numbers: `0-36`
+- Dozens
+- Columns
+- Streets
+- Splits
+- Corners
+
+The roulette domain layer validates numbers and maps results to the supported betting structures.
+
+## Session-Based Analysis
+
+RouletteIQ treats observations as independent sessions rather than one continuous global sequence.
+
+A session begins with a historical sample of **at least 10 spins**. There is currently no application-defined maximum for the initial history.
+
+After initialization, the normal workflow is:
+
+```text
+Initial Spin History
+        │
+        ▼
+Analyze Session
+        │
+        ▼
 Generate Prediction
-       ↓
-Store Prediction
-       ↓
-Enter Next Spin
-       ↓
+        │
+        ▼
+Record Next Observed Spin
+        │
+        ▼
 Evaluate Previous Prediction
-       ↓
-Store Actual Spin
-       ↓
-Store HIT / MISS Evaluation
-       ↓
+        │
+        ▼
+Persist Result
+        │
+        ▼
 Update Statistics
-       ↓
-Generate New Prediction
-       ↓
-Return Updated Results
+        │
+        ▼
+Generate Prediction for Next Spin
+```
 
-Possible endpoint structure:
+Sessions remain persisted in PostgreSQL so they can later be reviewed, evaluated, compared, and used as historical data.
 
+A browser refresh or closing the application does not automatically end an active session. Active sessions can be recovered from persisted data and continued later.
+
+## Prediction Engine V1
+
+Prediction Engine V1 is the primary statistical ranking engine.
+
+For each target spin it ranks:
+
+| Category | Predictions |
+| --- | ---: |
+| Dozens | 2 |
+| Columns | 2 |
+| Streets | 6 |
+| Splits | 12 |
+| Corners | 5 |
+
+The engine combines statistical signals such as frequency, recency, and roulette-structure activity.
+
+### Prediction Scores
+
+Prediction scores are **ranking scores, not probabilities**.
+
+A higher score means that a candidate ranked more strongly according to the engine's scoring components. A displayed score must not be interpreted as a percentage chance that the prediction will win.
+
+## Prediction Evaluation
+
+When a new observed spin is recorded, RouletteIQ evaluates the prediction that targeted that spin.
+
+Performance is tracked separately for:
+
+- Dozens
+- Columns
+- Streets
+- Splits
+- Corners
+
+Each category can therefore produce its own `HIT` or `MISS` result.
+
+This makes it possible to evaluate the prediction engine using actual subsequent observations instead of judging predictions only by their ranking score.
+
+## Statistics
+
+The application provides current-session statistical analysis including:
+
+- Number frequency
+- Recent-window frequency
+- Spins since last appearance
+- Hot numbers
+- Cold numbers
+- Dozen frequency
+- Column frequency
+- Street activity
+- Split activity
+- Corner activity
+
+Statistics are recalculated as new observations are added to the session.
+
+## Baseline Comparison
+
+RouletteIQ includes baseline strategy infrastructure for comparing Prediction Engine V1 against simpler approaches such as:
+
+- Random selection
+- Frequency-based selection
+- Hot-number strategies
+- Cold-number strategies
+
+The purpose of baseline comparison is to determine whether an analytical strategy performs differently from simpler alternatives rather than assuming that a prediction method is meaningful by itself.
+
+The frontend only displays comparison data that is actually available from persisted/evaluated strategy runs; it does not fabricate missing baseline results.
+
+## Machine Learning
+
+The project also contains machine-learning infrastructure for experimentation with historical roulette-session data.
+
+Implemented work includes:
+
+- Feature engineering
+- Training dataset construction
+- Chronological train/test separation
+- Logistic Regression
+- Random Forest
+- Gradient Boosting
+- XGBoost
+- Number-probability ranking
+- Model evaluation
+- Model comparison
+- Model persistence
+- Training and retraining flow
+- Performance metrics
+
+ML information is displayed only when trained model versions and performance data are available. An absence of trained models is treated as a valid application state.
+
+The statistical Prediction Engine V1 remains usable independently of ML model availability.
+
+## Session Persistence
+
+Production data is stored in **Neon PostgreSQL**.
+
+Persistence covers data such as:
+
+- Sessions
+- Spins
+- Prediction runs
+- Prediction items
+- Evaluation information
+- Model versions
+- Model metrics
+
+The persistence layer allows RouletteIQ to reconstruct sessions from stored spins and maintain history independently of frontend browser state.
+
+## Main API Flow
+
+The FastAPI backend exposes the application engines through REST endpoints.
+
+Representative session endpoints include:
+
+```text
 GET    /health
 
 POST   /sessions
@@ -473,205 +269,205 @@ GET    /sessions/{id}/ml-performance
 POST   /sessions/{id}/end
 
 GET    /models
-
-Phase 9 responsibility:
-
-Phase 1–7
-Python Business Logic / AI / ML
-          │
-          ▼
-Phase 8
-Neon PostgreSQL Persistence
-          │
-          ▼
-Phase 9
-FastAPI REST Interface
-          │
-          ▼
-Phase 10
-React Frontend
-
-The FastAPI layer should not duplicate the existing roulette, statistics, prediction, evaluation, ML, or persistence logic.
-
-Its main responsibility is to:
-
-Receive Request
-      ↓
-Validate Input
-      ↓
-Call Existing Python Service / Engine
-      ↓
-Read / Write Neon PostgreSQL
-      ↓
-Return Standard JSON Response
-
-Status: PLANNED
-
-------------------------------------------------------------------------
-
-### Phase 10 - React Frontend
-
-Goal:
-
-Create the user interface for interacting with the roulette system
-through the FastAPI backend.
-
-Planned URL:
-
-``` text
-https://agien99.github.io/rouletteiq/
 ```
 
-Planned steps:
+The API layer is intentionally kept separate from the underlying domain and analytical engines.
 
-1.  Create React + Vite Frontend — COMPLETED
-2.  Define Frontend Folder Structure — COMPLETED
-3.  Configure GitHub Pages Base Path — COMPLETED
-4.  Configure API Base URL — COMPLETED
-5.  Create Application Layout — COMPLETED
-6.  Create Navigation / Header — COMPLETED
-7.  Create Dashboard Page
- — COMPLETED8.  Create New Session Interface — COMPLETED
-9.  Create Initial Spin Input Component — COMPLETED
-10. Validate 10-15 Initial Spins — COMPLETED
-11. Connect Session Creation API — COMPLETED
-12. Create Active Session Interface — COMPLETED
-13. Create Roulette Number Input Component — COMPLETED
-14. Implement Quick Number Entry 0-36 — COMPLETED
-15. Connect Add Spin API
-16. Display Current Spin History — COMPLETED
-17. Create Prediction Panel — COMPLETED
-18. Display Dozen Predictions — COMPLETED
-19. Display Column Predictions — COMPLETED
-20. Display Street Predictions — COMPLETED
-21. Display Split Predictions — COMPLETED
-22. Display Corner Predictions — COMPLETED
-23. Display Prediction HIT / MISS Results — COMPLETED
-24. Create Session Statistics Panel — COMPLETED
-25. Display Number Frequency — COMPLETED
-26. Display Hot / Cold Numbers — COMPLETED
-27. Display Dozen / Column Statistics — COMPLETED
-28. Create Strategy Comparison Panel — COMPLETED
-29. Display V1 vs Baseline Performance — COMPLETED
-30. Create Machine Learning Performance Panel — COMPLETED
-31. Display ML Model Comparison — COMPLETED
-32. Display Current Best ML Model — COMPLETED
-33. Create Session Summary View — COMPLETED
-34. Implement End Session Action — COMPLETED
-35. Create Historical Sessions View — COMPLETED
-36. Create Session History Detail View — COMPLETED
-37. Add Loading States
-38. Add API Error Handling — COMPLETED
-39. Add Empty States
-40. Add Responsive Mobile Layout — COMPLETED
-41. Add Desktop Layout Optimization — COMPLETED
-42. Add User Confirmation for Destructive Actions — COMPLETED
-43. Configure Production API Connection — COMPLETED
-44. Configure GitHub Actions Deployment — COMPLETED
-45. Deploy React Frontend to GitHub Pages — COMPLETED
-46. Test Frontend ↔ FastAPI ↔ Supabase Integration
-47. Test Complete User Workflow
-48. Final UI / UX Review
-49. Production Smoke Test
-50. Final Phase 10 Integration Test
+Conceptually:
 
-The completed frontend is planned to allow the user to:
+```text
+Request
+   │
+   ▼
+Validate Input
+   │
+   ▼
+Application / Domain Service
+   │
+   ├── Analyze
+   ├── Predict
+   ├── Evaluate
+   └── Persist
+   │
+   ▼
+JSON Response
+```
 
--   Start a roulette session
--   Enter 10-15 initial historical spins
--   Enter new spin results
--   View ranked predictions
--   View HIT / MISS results
--   View current-session statistics
--   Compare prediction strategies
--   View machine-learning model performance
--   End the current session
--   Review historical sessions
+## Frontend Features
 
-Status: PLANNED
+The production React frontend provides:
 
-## Current Project Structure
+- Dashboard overview
+- New-session creation
+- Interactive European Roulette number table
+- Initial-spin history entry
+- Active-session recovery
+- Observed-spin recording
+- Horizontal spin history
+- Ranked Prediction Engine V1 results
+- Prediction HIT/MISS evaluation
+- Session statistics
+- Strategy comparison
+- ML performance display
+- Session summary
+- Historical-session browser
+- Continue-active-session workflow
+- End-session workflow
+- Loading, empty, error, and confirmation states
+- Responsive desktop, tablet, and phone layouts
 
-``` text
-ai/
+## Repository Structure
+
+The project is organized broadly as:
+
+```text
+rouletteiq/
 ├── .github/
 │   └── workflows/
-│       └── python-tests.yml
 ├── app/
-│   ├── __init__.py
+│   ├── api/
+│   ├── ml/
 │   ├── roulette.py
 │   ├── session.py
 │   ├── statistics.py
 │   ├── prediction.py
 │   ├── evaluation.py
 │   ├── baseline.py
-│   ├── comparison.py
-│   └── ml/
-│       ├── __init__.py
-│       ├── features.py
-│       ├── dataset.py
-│       ├── models.py
-│       ├── engine.py
-│       ├── ranking.py
-│       ├── metrics.py
-│       ├── training.py
-│       ├── persistence.py
-│       └── benchmark.py
+│   └── comparison.py
+├── frontend/
+│   ├── public/
+│   └── src/
+│       ├── components/
+│       ├── config/
+│       ├── pages/
+│       ├── services/
+│       ├── styles/
+│       └── utils/
 ├── tests/
-│   ├── test_roulette.py
-│   ├── test_session.py
-│   ├── test_statistics.py
-│   ├── test_prediction.py
-│   ├── test_evaluation.py
-│   ├── test_baseline.py
-│   ├── test_comparison.py
-│   ├── test_ml_features.py
-│   ├── test_ml_dataset.py
-│   ├── test_ml_models.py
-│   ├── test_ml_ranking.py
-│   ├── test_ml_metrics.py
-│   ├── test_ml_training.py
-│   └── test_ml_benchmark.py
+├── .env.example
 ├── main.py
 ├── requirements.txt
-├── .gitignore
 └── README.md
 ```
 
-## Current Progress
+The exact contents may evolve as the project is refactored. This section documents the high-level organization rather than every individual file.
 
-``` text
-Phase 1 - Roulette Domain Engine       COMPLETED
-Phase 2 - Session Engine               COMPLETED
-Phase 3 - Statistical Analysis         COMPLETED
-Phase 4 - Prediction Engine V1         COMPLETED
-Phase 5 - Prediction Evaluation        COMPLETED
-Phase 6 - Baseline Comparison          COMPLETED
-Phase 7 - Machine Learning             COMPLETED
+## Production Deployment
 
-Phase 8 - Supabase Integration         NEXT
-Phase 9 - Python API                   PLANNED
-Phase 10 - React Frontend              PLANNED
+### Frontend
+
+The React/Vite frontend is deployed through GitHub Pages:
+
+```text
+https://agien99.github.io/rouletteiq/
 ```
 
-Current milestone:
+The Vite base path must remain consistent with the GitHub Pages repository path:
 
-``` text
-Core Python Engine          ✅
-Statistical Prediction      ✅
-Prediction Evaluation       ✅
-Baseline Comparison         ✅
-Machine Learning            ✅
-Database Persistence        ⏭ NEXT
-REST API                    ○
-React Frontend              ○
+```text
+/rouletteiq/
 ```
+
+Frontend production builds obtain the backend address through:
+
+```text
+VITE_API_BASE_URL
+```
+
+### Backend
+
+The FastAPI application is deployed on Render.
+
+Production startup uses the API application under:
+
+```text
+app.api.main:app
+```
+
+The backend requires environment configuration including the PostgreSQL connection and allowed frontend origin.
+
+Important production variables include:
+
+```text
+DATABASE_URL
+API_ENV
+LOG_LEVEL
+CORS_ORIGINS
+API_DOCS_ENABLED
+```
+
+Do not commit production secrets or database credentials to the repository.
+
+### Database
+
+The production persistence layer uses Neon PostgreSQL.
+
+The backend accesses Neon through `DATABASE_URL`. Database credentials belong in deployment environment variables and must not be hardcoded in frontend or source files.
+
+## Development Notes
+
+### Frontend
+
+From the `frontend` directory:
+
+```bash
+npm install
+npm run dev
+```
+
+Before committing frontend changes:
+
+```bash
+npm run lint
+npm run build
+```
+
+### Backend
+
+Install Python dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the FastAPI development server from the repository root:
+
+```bash
+uvicorn app.api.main:app --reload
+```
+
+Run automated Python tests:
+
+```bash
+pytest
+```
+
+### Environment Configuration
+
+Use `.env.example` as the reference for local configuration where applicable.
+
+Never commit `.env` files containing real credentials.
+
+## Important Maintenance Notes
+
+For future development, keep these architectural rules in mind:
+
+1. **Do not place database credentials in the React application.** The frontend communicates with FastAPI; FastAPI communicates with PostgreSQL.
+2. **Keep domain logic out of API route handlers where possible.** API routes should validate requests, call application/domain services, and return responses.
+3. **Treat prediction scores as ranking scores.** They are not probabilities or guaranteed win percentages.
+4. **Preserve session isolation.** Statistics and predictions for one roulette session should not accidentally use another active session's short-term state.
+5. **Evaluate a prediction against the spin it targeted.** Avoid creating duplicate pending prediction runs for the same session/target spin.
+6. **Persist before relying on frontend state.** Browser state is temporary; Neon is the source of persistent session history.
+7. **Keep the GitHub Pages base path synchronized with the repository name.** The production path is `/rouletteiq/`.
+8. **Keep CORS configured by origin.** The production frontend origin is `https://agien99.github.io`; `/rouletteiq/` is a path, not a separate origin.
+9. **Run tests before deployment.** Frontend lint/build and backend automated tests are the minimum regression checks.
+10. **Do not assume ML data exists.** The application must remain functional when no trained model versions are available.
 
 ## Development Principle
 
-This project will be developed incrementally.
+RouletteIQ was built incrementally using the following development principle:
 
-``` text
+```text
 Build
   ↓
 Test
@@ -683,13 +479,28 @@ Verify
 Proceed
 ```
 
-Each phase should work properly before moving to the next phase.
+New features should continue to follow the same principle: make one coherent change, test it, understand its impact, verify the complete flow, and only then continue.
+
+## Future Development
+
+Possible future work includes:
+
+- Stronger database-level idempotency for prediction generation
+- Additional prediction strategies
+- Larger historical datasets for ML experimentation
+- Automated or controlled model retraining
+- Deeper model-vs-baseline benchmarking
+- Improved analytical visualizations
+- Exportable session/evaluation reports
+- Authentication or user-specific sessions if the application becomes multi-user
+- Additional monitoring and production observability
+
+Future features should be driven by measured usefulness and evaluation results rather than an assumption that increased model complexity will improve roulette prediction.
 
 ## Disclaimer
 
-Roulette outcomes on a fair wheel are designed to be independent and
-random.
+European Roulette outcomes on a fair wheel are designed to be random and independent.
 
-This project is intended primarily as an AI/ML, statistics, software
-engineering, and experimentation project. Historical hot/cold patterns
-should not be assumed to guarantee future outcomes.
+RouletteIQ is an educational, statistical-analysis, AI/ML, and software-engineering project. Historical patterns, hot/cold numbers, statistical rankings, prediction scores, baseline strategies, and machine-learning outputs do not guarantee future outcomes.
+
+The application should not be interpreted as providing guaranteed betting advice.

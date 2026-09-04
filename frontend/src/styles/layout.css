@@ -335,6 +335,7 @@
   }
 }
 
+
 /* =========================
    Phase 10 - Batch B
    ========================= */
@@ -1113,6 +1114,7 @@
   }
 }
 
+
 /* =========================
    Phase 10 - Batch C
    ========================= */
@@ -1355,177 +1357,8 @@
   color: var(--red);
 }
 
-.statistics-layout {
-  display: grid;
 
-  grid-template-columns:
-    repeat(
-      2,
-      minmax(0, 1fr)
-    );
-
-  gap: 18px;
-}
-
-.stats-frequency-panel {
-  grid-column:
-    1 / -1;
-}
-
-.hot-cold-grid {
-  display: grid;
-
-  grid-template-columns:
-    repeat(
-      2,
-      minmax(0, 1fr)
-    );
-
-  gap: 18px;
-}
-
-.stats-number-section h3,
-.group-frequency-grid h3 {
-  margin:
-    0 0 12px;
-
-  color: var(--text-secondary);
-
-  font-size: 11px;
-}
-
-.stats-number-list {
-  display: flex;
-  flex-wrap: wrap;
-
-  gap: 10px;
-}
-
-.stats-number-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  gap: 5px;
-}
-
-.stats-number-item > span {
-  color: var(--text-muted);
-
-  font-size: 8px;
-}
-
-.group-frequency-grid {
-  display: grid;
-
-  grid-template-columns:
-    repeat(
-      2,
-      minmax(0, 1fr)
-    );
-
-  gap: 20px;
-}
-
-.frequency-bars {
-  display: flex;
-  flex-direction: column;
-
-  gap: 11px;
-}
-
-.frequency-row {
-  display: grid;
-
-  grid-template-columns:
-    62px
-    minmax(60px, 1fr)
-    24px;
-
-  align-items: center;
-
-  gap: 8px;
-
-  font-size: 9px;
-}
-
-.frequency-row > span {
-  color: var(--text-secondary);
-}
-
-.frequency-row strong {
-  color: var(--text-primary);
-
-  text-align: right;
-}
-
-.frequency-track,
-.number-frequency-track {
-  height: 6px;
-
-  overflow: hidden;
-
-  border-radius: 999px;
-
-  background:
-    rgba(
-      255,
-      255,
-      255,
-      0.06
-    );
-}
-
-.frequency-fill,
-.number-frequency-fill {
-  height: 100%;
-
-  border-radius: inherit;
-
-  background: var(--green);
-}
-
-.number-frequency {
-  display: grid;
-
-  grid-template-columns:
-    repeat(
-      3,
-      minmax(0, 1fr)
-    );
-
-  gap: 9px 18px;
-}
-
-.number-frequency-row {
-  display: grid;
-
-  grid-template-columns:
-    34px
-    minmax(30px, 1fr)
-    22px;
-
-  align-items: center;
-
-  gap: 8px;
-}
-
-.number-frequency-row strong {
-  color: var(--text-secondary);
-
-  font-size: 9px;
-
-  text-align: right;
-}
-
-.stats-empty {
-  color: var(--text-muted);
-
-  font-size: 10px;
-}
-
-
-/* Tablet */
+/* Batch C Responsive */
 
 @media (
   max-width: 1024px
@@ -1533,23 +1366,6 @@
   .live-session-top {
     grid-template-columns:
       1fr;
-  }
-
-  .statistics-layout {
-    grid-template-columns:
-      1fr;
-  }
-
-  .stats-frequency-panel {
-    grid-column: auto;
-  }
-
-  .number-frequency {
-    grid-template-columns:
-      repeat(
-        2,
-        minmax(0, 1fr)
-      );
   }
 
   .evaluation-grid {
@@ -1560,9 +1376,6 @@
       );
   }
 }
-
-
-/* Mobile */
 
 @media (
   max-width: 600px
@@ -1586,17 +1399,6 @@
       );
   }
 
-  .hot-cold-grid,
-  .group-frequency-grid {
-    grid-template-columns:
-      1fr;
-  }
-
-  .number-frequency {
-    grid-template-columns:
-      1fr;
-  }
-
   .prediction-panel
   .panel-header {
     flex-direction: column;
@@ -1608,6 +1410,7 @@
     width: 100%;
   }
 }
+
 
 /* =========================
    Phase 10 - Batch D
@@ -2201,6 +2004,7 @@
   }
 }
 
+
 /* =========================
    Phase 10 - Batch E
    ========================= */
@@ -2644,5 +2448,306 @@ button,
   .evaluation-grid {
     grid-template-columns:
       1fr;
+  }
+}
+
+
+/* =========================
+   Phase 10 - Step 48
+   Statistics UI Review
+   ========================= */
+
+.stats-grid {
+  display: grid;
+
+  gap: 1rem;
+
+  margin-top: 1rem;
+}
+
+.stats-grid-two {
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+}
+
+.stats-card {
+  min-width: 0;
+
+  padding: 1rem;
+
+  border:
+    1px solid
+    rgba(
+      148,
+      163,
+      184,
+      0.14
+    );
+
+  border-radius: 14px;
+
+  background:
+    rgba(
+      8,
+      22,
+      31,
+      0.4
+    );
+}
+
+.stats-card-label {
+  display: block;
+
+  margin-bottom: 0.9rem;
+
+  color: #dbeafe;
+
+  font-size: 0.82rem;
+  font-weight: 700;
+
+  letter-spacing: 0.06em;
+
+  text-transform: uppercase;
+}
+
+.stats-number-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(
+        72px,
+        1fr
+      )
+    );
+
+  gap: 0.7rem;
+}
+
+.stats-number-chip {
+  display: flex;
+
+  align-items: center;
+  justify-content:
+    space-between;
+
+  gap: 0.6rem;
+
+  padding:
+    0.55rem
+    0.65rem;
+
+  border:
+    1px solid
+    rgba(
+      148,
+      163,
+      184,
+      0.12
+    );
+
+  border-radius: 10px;
+
+  background:
+    rgba(
+      15,
+      23,
+      42,
+      0.45
+    );
+}
+
+.stats-number-count {
+  color: #94a3b8;
+
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.stats-frequency-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.8rem;
+}
+
+.stats-frequency-row {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.35rem;
+}
+
+.stats-frequency-header {
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  gap: 0.75rem;
+
+  color: #cbd5e1;
+
+  font-size: 0.8rem;
+}
+
+.stats-frequency-header strong {
+  color: #f8fafc;
+}
+
+.stats-frequency-track {
+  width: 100%;
+  height: 7px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background:
+    rgba(
+      148,
+      163,
+      184,
+      0.12
+    );
+}
+
+.stats-frequency-fill {
+  height: 100%;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #10b981,
+      #34d399
+    );
+}
+
+.stats-number-frequency-card {
+  margin-top: 1rem;
+}
+
+.stats-frequency-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(
+        64px,
+        1fr
+      )
+    );
+
+  gap: 0.65rem;
+}
+
+.stats-frequency-number {
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.35rem;
+
+  min-height: 72px;
+
+  padding: 0.55rem;
+
+  border:
+    1px solid
+    rgba(
+      148,
+      163,
+      184,
+      0.12
+    );
+
+  border-radius: 10px;
+
+  background:
+    rgba(
+      15,
+      23,
+      42,
+      0.45
+    );
+}
+
+.stats-frequency-number strong {
+  color: #cbd5e1;
+
+  font-size: 0.78rem;
+}
+
+.stats-empty,
+.stats-empty-panel {
+  color: #64748b;
+}
+
+.stats-empty-panel {
+  padding: 1.5rem 0;
+
+  text-align: center;
+}
+
+
+/* Statistics Tablet */
+
+@media (
+  max-width: 900px
+) {
+  .stats-grid-two {
+    grid-template-columns:
+      1fr;
+  }
+}
+
+
+/* Statistics Mobile */
+
+@media (
+  max-width: 600px
+) {
+  .stats-card {
+    padding: 0.85rem;
+  }
+
+  .stats-number-grid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+  .stats-frequency-grid {
+    grid-template-columns:
+      repeat(
+        4,
+        minmax(0, 1fr)
+      );
+  }
+}
+
+
+/* Statistics Very Small Phones */
+
+@media (
+  max-width: 390px
+) {
+  .stats-frequency-grid {
+    grid-template-columns:
+      repeat(
+        3,
+        minmax(0, 1fr)
+      );
   }
 }

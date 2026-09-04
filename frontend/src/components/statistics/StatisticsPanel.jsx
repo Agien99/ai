@@ -1,37 +1,36 @@
 import RouletteNumber
   from "../common/RouletteNumber";
 
-function NumberList({
+
+function NumberGroup({
   title,
   numbers = [],
 }) {
   return (
-    <div className="statistics-list-card">
-      <span className="statistics-label">
+    <div className="stats-card">
+      <span className="stats-card-label">
         {title}
       </span>
 
       {numbers.length === 0 ? (
-        <span className="stats-empty">
+        <div className="stats-empty">
           No data
-        </span>
+        </div>
       ) : (
-        <div className="statistics-number-list">
+        <div className="stats-number-grid">
           {numbers.map(
             (item) => (
               <div
-                className="statistics-number-item"
+                className="stats-number-chip"
                 key={item.number}
               >
                 <RouletteNumber
-                  number={
-                    item.number
-                  }
+                  number={item.number}
                   size="small"
                 />
 
-                <span>
-                  {item.frequency}
+                <span className="stats-number-count">
+                  {item.frequency}x
                 </span>
               </div>
             )
@@ -43,7 +42,7 @@ function NumberList({
 }
 
 
-function FrequencyBars({
+function FrequencyCard({
   title,
   data = {},
 }) {
@@ -60,17 +59,17 @@ function FrequencyBars({
     );
 
   return (
-    <div className="statistics-list-card">
-      <span className="statistics-label">
+    <div className="stats-card">
+      <span className="stats-card-label">
         {title}
       </span>
 
       {entries.length === 0 ? (
-        <span className="stats-empty">
+        <div className="stats-empty">
           No data
-        </span>
+        </div>
       ) : (
-        <div className="frequency-bars">
+        <div className="stats-frequency-list">
           {entries.map(
             ([key, value]) => {
               const numericValue =
@@ -87,10 +86,10 @@ function FrequencyBars({
 
               return (
                 <div
-                  className="frequency-row"
+                  className="stats-frequency-row"
                   key={key}
                 >
-                  <div className="frequency-row-header">
+                  <div className="stats-frequency-header">
                     <span>
                       {key}
                     </span>
@@ -100,9 +99,9 @@ function FrequencyBars({
                     </strong>
                   </div>
 
-                  <div className="frequency-track">
+                  <div className="stats-frequency-track">
                     <div
-                      className="frequency-fill"
+                      className="stats-frequency-fill"
                       style={{
                         width:
                           `${width}%`,
@@ -136,32 +135,30 @@ function NumberFrequency({
       )
       .sort(
         (a, b) =>
-          b.count -
-          a.count
+          a.number -
+          b.number
       );
 
   return (
-    <div className="statistics-list-card">
-      <span className="statistics-label">
+    <div className="stats-card stats-number-frequency-card">
+      <span className="stats-card-label">
         Number Frequency
       </span>
 
       {entries.length === 0 ? (
-        <span className="stats-empty">
+        <div className="stats-empty">
           No data
-        </span>
+        </div>
       ) : (
-        <div className="number-frequency-grid">
+        <div className="stats-frequency-grid">
           {entries.map(
             (item) => (
               <div
-                className="number-frequency-item"
+                className="stats-frequency-number"
                 key={item.number}
               >
                 <RouletteNumber
-                  number={
-                    item.number
-                  }
+                  number={item.number}
                   size="small"
                 />
 
@@ -185,13 +182,18 @@ function StatisticsPanel({
     statistics?.statistics ||
     {};
 
+  const spinCount =
+    statistics?.spin_count ??
+    data.spin_count ??
+    0;
+
   if (!statistics) {
     return (
       <div className="panel">
         <div className="panel-header">
           <div>
             <span className="panel-eyebrow">
-              Session Analysis
+              SESSION ANALYSIS
             </span>
 
             <h2>
@@ -200,7 +202,7 @@ function StatisticsPanel({
           </div>
         </div>
 
-        <div className="empty-state-small">
+        <div className="stats-empty-panel">
           No statistics available.
         </div>
       </div>
@@ -212,7 +214,7 @@ function StatisticsPanel({
       <div className="panel-header">
         <div>
           <span className="panel-eyebrow">
-            Session Analysis
+            SESSION ANALYSIS
           </span>
 
           <h2>
@@ -227,19 +229,13 @@ function StatisticsPanel({
         </div>
 
         <span className="panel-count">
-          {
-            data.spin_count ??
-            statistics.spin_count ??
-            0
-          }
-          {" "}
-          spins
+          {spinCount} spins
         </span>
       </div>
 
 
-      <div className="statistics-top-grid">
-        <NumberList
+      <div className="stats-grid stats-grid-two">
+        <NumberGroup
           title="Hot Numbers"
           numbers={
             data.hot_numbers ||
@@ -247,7 +243,7 @@ function StatisticsPanel({
           }
         />
 
-        <NumberList
+        <NumberGroup
           title="Cold Numbers"
           numbers={
             data.cold_numbers ||
@@ -257,8 +253,8 @@ function StatisticsPanel({
       </div>
 
 
-      <div className="statistics-group-grid">
-        <FrequencyBars
+      <div className="stats-grid stats-grid-two">
+        <FrequencyCard
           title="Dozen Frequency"
           data={
             data.dozen_frequency ||
@@ -266,7 +262,7 @@ function StatisticsPanel({
           }
         />
 
-        <FrequencyBars
+        <FrequencyCard
           title="Column Frequency"
           data={
             data.column_frequency ||
@@ -276,14 +272,12 @@ function StatisticsPanel({
       </div>
 
 
-      <div className="statistics-number-section">
-        <NumberFrequency
-          frequency={
-            data.number_frequency ||
-            {}
-          }
-        />
-      </div>
+      <NumberFrequency
+        frequency={
+          data.number_frequency ||
+          {}
+        }
+      />
     </div>
   );
 }

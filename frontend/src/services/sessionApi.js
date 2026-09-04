@@ -40,7 +40,7 @@ async function apiRequest(
     data =
       await response.json();
   } catch {
-    data = null;
+    // Response has no JSON body.
   }
 
   if (!response.ok) {

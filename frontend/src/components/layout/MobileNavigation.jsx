@@ -1,7 +1,9 @@
+import Brand
+  from "./Brand";
+
 import {
-  Brand,
   navigationItems,
-} from "./Sidebar";
+} from "./navigationConfig";
 
 function MobileNavigation({
   open,

@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import {
   getNumberType,
-} from "../common/RouletteNumber";
+} from "../../utils/roulette";
 
 const numbers = Array.from(
   {

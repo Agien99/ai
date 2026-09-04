@@ -4394,3 +4394,893 @@ small.valid-text {
     width: 100%;
   }
 }
+
+/* =========================
+   Phase 10 - Step 48
+   Prediction Engine UI V2
+   ========================= */
+
+.prediction-panel-v2 {
+  overflow: hidden;
+}
+
+
+.prediction-engine-header {
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  margin-bottom: 18px;
+}
+
+
+.prediction-engine-title h2 {
+  margin:
+    5px 0 5px;
+
+  font-size: 21px;
+}
+
+
+.prediction-engine-title p {
+  margin: 0;
+
+  color:
+    var(--text-secondary);
+
+  font-size: 11px;
+}
+
+
+.prediction-engine-title p strong {
+  color:
+    var(--text-primary);
+}
+
+
+.prediction-engine-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+}
+
+
+.prediction-ready {
+  display: flex;
+
+  min-height: 42px;
+
+  align-items: center;
+
+  gap: 7px;
+
+  padding:
+    9px 13px;
+
+  border:
+    1px solid
+    rgba(
+      0,
+      200,
+      107,
+      0.24
+    );
+
+  border-radius: 9px;
+
+  background:
+    rgba(
+      0,
+      200,
+      107,
+      0.07
+    );
+
+  color:
+    var(--green);
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+
+.prediction-ready > span {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background:
+    var(--green);
+
+  box-shadow:
+    0 0 10px
+    rgba(
+      0,
+      200,
+      107,
+      0.5
+    );
+}
+
+
+.prediction-refresh-button {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+}
+
+
+.prediction-refresh-icon {
+  display: inline-block;
+
+  font-size: 16px;
+
+  line-height: 1;
+}
+
+
+.prediction-refresh-icon-loading {
+  animation:
+    prediction-refresh-spin
+    0.8s linear
+    infinite;
+}
+
+
+@keyframes prediction-refresh-spin {
+  to {
+    transform:
+      rotate(360deg);
+  }
+}
+
+
+/* Prediction Sections */
+
+.prediction-section {
+  padding: 16px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.055
+    );
+
+  border-radius: 12px;
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.1
+    );
+}
+
+
+.prediction-section +
+.prediction-section {
+  margin-top: 14px;
+}
+
+
+.prediction-section-heading {
+  margin-bottom: 14px;
+}
+
+
+.prediction-section-heading > span {
+  display: block;
+
+  color:
+    var(--green);
+
+  font-size: 9px;
+  font-weight: 800;
+
+  letter-spacing:
+    0.1em;
+
+  text-transform:
+    uppercase;
+}
+
+
+.prediction-section-heading p {
+  margin:
+    4px 0 0;
+
+  color:
+    var(--text-muted);
+
+  font-size: 9px;
+
+  line-height: 1.5;
+}
+
+
+/* Primary:
+   Dozens + Columns */
+
+.primary-prediction-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap: 12px;
+}
+
+
+.primary-prediction-card {
+  min-width: 0;
+
+  padding: 14px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 10px;
+
+  background:
+    rgba(
+      8,
+      21,
+      29,
+      0.82
+    );
+}
+
+
+.prediction-category-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-bottom: 11px;
+}
+
+
+.prediction-category-header h3 {
+  margin: 0;
+
+  color:
+    var(--text-primary);
+
+  font-size: 11px;
+}
+
+
+.prediction-category-count {
+  display: grid;
+
+  min-width: 24px;
+  height: 24px;
+
+  place-items: center;
+
+  padding:
+    0 7px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.055
+    );
+
+  border-radius: 6px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.025
+    );
+
+  color:
+    var(--text-muted);
+
+  font-size: 8px;
+  font-weight: 800;
+}
+
+
+.primary-prediction-list {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+
+.primary-prediction-item {
+  display: grid;
+
+  grid-template-columns:
+    34px
+    minmax(0, 1fr);
+
+  align-items: center;
+
+  gap: 10px;
+
+  min-width: 0;
+
+  padding: 10px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.045
+    );
+
+  border-radius: 9px;
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.12
+    );
+}
+
+
+.primary-prediction-item-top {
+  border-color:
+    rgba(
+      0,
+      200,
+      107,
+      0.2
+    );
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(
+        0,
+        200,
+        107,
+        0.065
+      ),
+      rgba(
+        0,
+        0,
+        0,
+        0.1
+      )
+    );
+}
+
+
+.primary-prediction-rank {
+  display: grid;
+
+  width: 32px;
+  height: 32px;
+
+  place-items: center;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.08
+    );
+
+  border-radius: 50%;
+
+  color:
+    var(--text-muted);
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.025
+    );
+
+  font-size: 9px;
+  font-weight: 800;
+}
+
+
+.prediction-trophy {
+  display: grid;
+
+  width: 32px;
+  height: 32px;
+
+  place-items: center;
+
+  margin:
+    -1px;
+
+  border:
+    1px solid
+    rgba(
+      234,
+      179,
+      8,
+      0.45
+    );
+
+  border-radius: 50%;
+
+  color: #f4c542;
+
+  background:
+    rgba(
+      234,
+      179,
+      8,
+      0.09
+    );
+
+  font-size: 13px;
+}
+
+
+.primary-prediction-content {
+  min-width: 0;
+}
+
+
+.primary-prediction-heading {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-bottom: 7px;
+}
+
+
+.primary-prediction-heading strong {
+  overflow: hidden;
+
+  color:
+    var(--text-primary);
+
+  font-size: 11px;
+
+  text-overflow:
+    ellipsis;
+
+  white-space: nowrap;
+}
+
+
+.primary-prediction-heading > span {
+  flex:
+    0 0 auto;
+
+  color:
+    var(--green);
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+
+/* Score Bar */
+
+.prediction-score-block {
+  min-width: 0;
+}
+
+
+.prediction-score-meta {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 8px;
+
+  margin-bottom: 5px;
+}
+
+
+.prediction-score-meta span {
+  color:
+    var(--text-muted);
+
+  font-size: 7px;
+
+  text-transform:
+    uppercase;
+}
+
+
+.prediction-score-meta strong {
+  display: none;
+}
+
+
+.prediction-score-track,
+.table-score-track {
+  width: 100%;
+  height: 6px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background:
+    rgba(
+      148,
+      163,
+      184,
+      0.11
+    );
+}
+
+
+.prediction-score-fill,
+.table-score-fill {
+  height: 100%;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      90deg,
+      #00c86b,
+      #35e99b
+    );
+
+  transition:
+    width 220ms ease;
+}
+
+
+/* Streets / Splits /
+   Corners */
+
+.table-prediction-groups {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+
+.table-prediction-group {
+  min-width: 0;
+
+  padding: 13px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 10px;
+
+  background:
+    rgba(
+      8,
+      21,
+      29,
+      0.72
+    );
+}
+
+
+.table-prediction-list {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(
+        130px,
+        1fr
+      )
+    );
+
+  gap: 8px;
+}
+
+
+.table-prediction-item {
+  min-width: 0;
+
+  padding: 10px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.055
+    );
+
+  border-radius: 8px;
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.13
+    );
+}
+
+
+.table-prediction-item-top {
+  border-color:
+    rgba(
+      0,
+      200,
+      107,
+      0.28
+    );
+
+  background:
+    rgba(
+      0,
+      200,
+      107,
+      0.045
+    );
+}
+
+
+.table-prediction-top {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 8px;
+
+  margin-bottom: 7px;
+}
+
+
+.table-prediction-rank {
+  color:
+    var(--text-muted);
+
+  font-size: 7px;
+  font-weight: 800;
+}
+
+
+.table-prediction-top strong {
+  color:
+    var(--green);
+
+  font-size: 9px;
+}
+
+
+.table-prediction-value {
+  min-height: 18px;
+
+  overflow: hidden;
+
+  margin-bottom: 8px;
+
+  color:
+    var(--text-primary);
+
+  font-size: 10px;
+  font-weight: 800;
+
+  line-height: 1.4;
+
+  text-overflow:
+    ellipsis;
+
+  white-space: nowrap;
+}
+
+
+.table-score-track {
+  height: 5px;
+}
+
+
+.prediction-empty {
+  padding:
+    14px 0;
+
+  color:
+    var(--text-muted);
+
+  font-size: 10px;
+}
+
+
+/* =========================
+   Prediction Tablet
+   ========================= */
+
+@media (
+  max-width: 1024px
+) {
+  .prediction-engine-header {
+    gap: 18px;
+  }
+
+
+  .table-prediction-list {
+    grid-template-columns:
+      repeat(
+        3,
+        minmax(
+          0,
+          1fr
+        )
+      );
+  }
+}
+
+
+/* =========================
+   Prediction Phone
+   ========================= */
+
+@media (
+  max-width: 600px
+) {
+  .prediction-panel-v2 {
+    padding:
+      18px 12px;
+  }
+
+
+  .prediction-engine-header {
+    flex-direction:
+      column;
+
+    gap: 14px;
+  }
+
+
+  .prediction-engine-actions {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 1fr);
+  }
+
+
+  .prediction-ready,
+  .prediction-refresh-button {
+    justify-content: center;
+  }
+
+
+  .prediction-section {
+    padding: 11px;
+  }
+
+
+  .prediction-section-heading {
+    margin-bottom: 11px;
+  }
+
+
+  .primary-prediction-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .primary-prediction-card {
+    padding: 11px;
+  }
+
+
+  .primary-prediction-item {
+    grid-template-columns:
+      32px
+      minmax(0, 1fr);
+
+    gap: 9px;
+
+    padding:
+      9px 8px;
+  }
+
+
+  .primary-prediction-rank,
+  .prediction-trophy {
+    width: 30px;
+    height: 30px;
+  }
+
+
+  .table-prediction-group {
+    padding: 11px;
+  }
+
+
+  .table-prediction-list {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(
+          0,
+          1fr
+        )
+      );
+  }
+
+
+  .table-prediction-item {
+    padding: 9px;
+  }
+
+
+  .table-prediction-value {
+    font-size: 9px;
+
+    white-space: normal;
+  }
+}
+
+
+/* =========================
+   Very Small Phones
+   ========================= */
+
+@media (
+  max-width: 390px
+) {
+  .prediction-engine-actions {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .prediction-ready {
+    min-height: 38px;
+  }
+
+
+  .table-prediction-list {
+    grid-template-columns:
+      1fr;
+  }
+}

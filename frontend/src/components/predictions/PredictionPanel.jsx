@@ -25,20 +25,148 @@ function formatScore(
 }
 
 
-function PredictionGroup({
+function getScoreWidth(
+  score
+) {
+  const numericScore =
+    Number(score);
+
+  if (
+    !Number.isFinite(
+      numericScore
+    )
+  ) {
+    return 0;
+  }
+
+  return Math.max(
+    0,
+    Math.min(
+      100,
+      (numericScore / 3) * 100
+    )
+  );
+}
+
+
+function ScoreBar({
+  score,
+}) {
+  const formattedScore =
+    formatScore(score);
+
+  if (
+    formattedScore === null
+  ) {
+    return null;
+  }
+
+  return (
+    <div className="prediction-score-block">
+      <div className="prediction-score-meta">
+        <span>
+          Score
+        </span>
+
+        <strong>
+          {formattedScore}
+        </strong>
+      </div>
+
+      <div className="prediction-score-track">
+        <div
+          className="prediction-score-fill"
+          style={{
+            width:
+              `${getScoreWidth(
+                score
+              )}%`,
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+
+function PrimaryPredictionItem({
+  item,
+  index,
+  valueKey,
+  labelPrefix = "",
+}) {
+  const value =
+    formatGroup(
+      item[valueKey]
+    );
+
+  const isTop =
+    index === 0;
+
+
+  return (
+    <div
+      className={
+        isTop
+          ? "primary-prediction-item primary-prediction-item-top"
+          : "primary-prediction-item"
+      }
+    >
+      <div className="primary-prediction-rank">
+        {isTop ? (
+          <span
+            className="prediction-trophy"
+            aria-label="Top ranked prediction"
+            title="Top ranked prediction"
+          >
+            ★
+          </span>
+        ) : (
+          <span>
+            #{index + 1}
+          </span>
+        )}
+      </div>
+
+      <div className="primary-prediction-content">
+        <div className="primary-prediction-heading">
+          <strong>
+            {labelPrefix}
+            {value}
+          </strong>
+
+          <span>
+            {formatScore(
+              item.prediction_score
+            )}
+          </span>
+        </div>
+
+        <ScoreBar
+          score={
+            item.prediction_score
+          }
+        />
+      </div>
+    </div>
+  );
+}
+
+
+function PrimaryPredictionGroup({
   title,
   items = [],
   valueKey,
   labelPrefix = "",
 }) {
   return (
-    <div className="prediction-group">
-      <div className="prediction-group-header">
+    <article className="primary-prediction-card">
+      <div className="prediction-category-header">
         <h3>
           {title}
         </h3>
 
-        <span>
+        <span className="prediction-category-count">
           {items.length}
         </span>
       </div>
@@ -48,55 +176,130 @@ function PredictionGroup({
           No predictions.
         </div>
       ) : (
-        <div className="prediction-items">
+        <div className="primary-prediction-list">
           {items.map(
-            (item, index) => {
-              const score =
-                formatScore(
-                  item.prediction_score
-                );
-
-              return (
-                <div
-                  className="prediction-item"
-                  key={
-                    `${valueKey}-` +
-                    `${index}-` +
-                    `${JSON.stringify(
-                      item[valueKey]
-                    )}`
-                  }
-                >
-                  <div className="prediction-rank">
-                    #{index + 1}
-                  </div>
-
-                  <div className="prediction-value">
-                    {labelPrefix}
-
-                    {formatGroup(
-                      item[valueKey]
-                    )}
-                  </div>
-
-                  {score !== null && (
-                    <div className="prediction-score">
-                      <span>
-                        Score
-                      </span>
-
-                      <strong>
-                        {score}
-                      </strong>
-                    </div>
-                  )}
-                </div>
-              );
-            }
+            (item, index) => (
+              <PrimaryPredictionItem
+                key={
+                  `${valueKey}-` +
+                  `${index}-` +
+                  `${JSON.stringify(
+                    item[valueKey]
+                  )}`
+                }
+                item={item}
+                index={index}
+                valueKey={valueKey}
+                labelPrefix={
+                  labelPrefix
+                }
+              />
+            )
           )}
         </div>
       )}
+    </article>
+  );
+}
+
+
+function TablePredictionItem({
+  item,
+  index,
+  valueKey,
+}) {
+  const score =
+    formatScore(
+      item.prediction_score
+    );
+
+
+  return (
+    <div
+      className={
+        index === 0
+          ? "table-prediction-item table-prediction-item-top"
+          : "table-prediction-item"
+      }
+    >
+      <div className="table-prediction-top">
+        <span className="table-prediction-rank">
+          #{index + 1}
+        </span>
+
+        {score !== null && (
+          <strong>
+            {score}
+          </strong>
+        )}
+      </div>
+
+      <div className="table-prediction-value">
+        {formatGroup(
+          item[valueKey]
+        )}
+      </div>
+
+      {score !== null && (
+        <div className="table-score-track">
+          <div
+            className="table-score-fill"
+            style={{
+              width:
+                `${getScoreWidth(
+                  item.prediction_score
+                )}%`,
+            }}
+          />
+        </div>
+      )}
     </div>
+  );
+}
+
+
+function TablePredictionGroup({
+  title,
+  items = [],
+  valueKey,
+}) {
+  return (
+    <article className="table-prediction-group">
+      <div className="prediction-category-header">
+        <h3>
+          {title}
+        </h3>
+
+        <span className="prediction-category-count">
+          {items.length}
+        </span>
+      </div>
+
+      {items.length === 0 ? (
+        <div className="prediction-empty">
+          No predictions.
+        </div>
+      ) : (
+        <div className="table-prediction-list">
+          {items.map(
+            (item, index) => (
+              <TablePredictionItem
+                key={
+                  `${valueKey}-` +
+                  `${index}-` +
+                  `${JSON.stringify(
+                    item[valueKey]
+                  )}`
+                }
+                item={item}
+                index={index}
+                valueKey={valueKey}
+              />
+            )
+          )}
+        </div>
+      )}
+    </article>
   );
 }
 
@@ -111,7 +314,7 @@ function PredictionPanel({
     !prediction
   ) {
     return (
-      <div className="panel">
+      <div className="panel prediction-panel">
         <div className="panel-loading">
           Loading prediction...
         </div>
@@ -122,11 +325,11 @@ function PredictionPanel({
 
   if (!prediction) {
     return (
-      <div className="panel">
-        <div className="panel-header">
+      <div className="panel prediction-panel">
+        <div className="prediction-engine-header">
           <div>
             <span className="panel-eyebrow">
-              Prediction Engine
+              Prediction Engine V1
             </span>
 
             <h2>
@@ -167,9 +370,9 @@ function PredictionPanel({
 
 
   return (
-    <div className="panel prediction-panel">
-      <div className="panel-header">
-        <div>
+    <div className="panel prediction-panel prediction-panel-v2">
+      <div className="prediction-engine-header">
+        <div className="prediction-engine-title">
           <span className="panel-eyebrow">
             Prediction Engine V1
           </span>
@@ -190,67 +393,117 @@ function PredictionPanel({
           </p>
         </div>
 
-        <button
-          type="button"
-          className="button button-secondary"
-          disabled={loading}
-          onClick={onRefresh}
-        >
-          {loading
-            ? "Refreshing..."
-            : "Refresh"}
-        </button>
+
+        <div className="prediction-engine-actions">
+          <div className="prediction-ready">
+            <span />
+            Ready
+          </div>
+
+          <button
+            type="button"
+            className="button button-secondary prediction-refresh-button"
+            disabled={loading}
+            onClick={onRefresh}
+          >
+            <span
+              className={
+                loading
+                  ? "prediction-refresh-icon prediction-refresh-icon-loading"
+                  : "prediction-refresh-icon"
+              }
+              aria-hidden="true"
+            >
+              ↻
+            </span>
+
+            {loading
+              ? "Refreshing..."
+              : "Refresh"}
+          </button>
+        </div>
       </div>
 
 
-      <div className="prediction-grid">
-        <PredictionGroup
-          title="Dozens"
-          items={
-            predictions.dozens ||
-            []
-          }
-          valueKey="dozen"
-          labelPrefix="Dozen "
-        />
+      <section className="prediction-section prediction-primary-section">
+        <div className="prediction-section-heading">
+          <span>
+            Primary Predictions
+          </span>
 
-        <PredictionGroup
-          title="Columns"
-          items={
-            predictions.columns ||
-            []
-          }
-          valueKey="column"
-          labelPrefix="Column "
-        />
+          <p>
+            Top ranked broader
+            roulette groups.
+          </p>
+        </div>
 
-        <PredictionGroup
-          title="Streets"
-          items={
-            predictions.streets ||
-            []
-          }
-          valueKey="street"
-        />
 
-        <PredictionGroup
-          title="Splits"
-          items={
-            predictions.splits ||
-            []
-          }
-          valueKey="split"
-        />
+        <div className="primary-prediction-grid">
+          <PrimaryPredictionGroup
+            title="Dozens"
+            items={
+              predictions.dozens ||
+              []
+            }
+            valueKey="dozen"
+            labelPrefix="Dozen "
+          />
 
-        <PredictionGroup
-          title="Corners"
-          items={
-            predictions.corners ||
-            []
-          }
-          valueKey="corner"
-        />
-      </div>
+          <PrimaryPredictionGroup
+            title="Columns"
+            items={
+              predictions.columns ||
+              []
+            }
+            valueKey="column"
+            labelPrefix="Column "
+          />
+        </div>
+      </section>
+
+
+      <section className="prediction-section prediction-table-section">
+        <div className="prediction-section-heading">
+          <span>
+            Table Predictions
+          </span>
+
+          <p>
+            Ranked combinations from
+            the roulette table.
+          </p>
+        </div>
+
+
+        <div className="table-prediction-groups">
+          <TablePredictionGroup
+            title="Streets"
+            items={
+              predictions.streets ||
+              []
+            }
+            valueKey="street"
+          />
+
+          <TablePredictionGroup
+            title="Splits"
+            items={
+              predictions.splits ||
+              []
+            }
+            valueKey="split"
+          />
+
+          <TablePredictionGroup
+            title="Corners"
+            items={
+              predictions.corners ||
+              []
+            }
+            valueKey="corner"
+          />
+        </div>
+      </section>
     </div>
   );
 }

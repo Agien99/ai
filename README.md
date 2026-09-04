@@ -83,7 +83,7 @@ keeps its own short-term state.
 
 ``` text
 React Frontend
-agien99.github.io/ai/
+agien99.github.io/rouletteiq/
         │
         │ REST API
         ▼
@@ -519,7 +519,7 @@ through the FastAPI backend.
 Planned URL:
 
 ``` text
-https://agien99.github.io/ai/
+https://agien99.github.io/rouletteiq/
 ```
 
 Planned steps:
